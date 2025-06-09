@@ -30,8 +30,8 @@ function getPageHeader($title = '') {
                             <a href="<?php echo SITE_URL; ?>/pages/armor/armor_list.php" class="dropdown-link">Armor</a>
                             <a href="<?php echo SITE_URL; ?>/pages/items/items_list.php" class="dropdown-link">Items</a>
                             <a href="<?php echo SITE_URL; ?>/dolls/" class="dropdown-link">Dolls</a>
-                            <a href="<?php echo SITE_URL; ?>/maps/" class="dropdown-link">Maps</a>
-                            <a href="<?php echo SITE_URL; ?>/monsters/" class="dropdown-link">Monsters</a>
+                            <a href="<?php echo SITE_URL; ?>/pages/maps/map_list.php" class="dropdown-link">Maps</a>
+                            <a href="<?php echo SITE_URL; ?>/pages/monsters/monster_list.php" class="dropdown-link">Monsters</a>
                         </div>
                     </li>
                     <li class="nav-item">

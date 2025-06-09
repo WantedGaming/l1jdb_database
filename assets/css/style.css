@@ -997,3 +997,75 @@ body {
     border-radius: 8px;
     border: 1px solid var(--primary);
 }
+
+/* Single item grid for spawns only */
+.spawns-section .dropped-by-grid.single-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    margin: 1rem 0;
+    justify-items: stretch;
+}
+
+.spawns-section .dropped-by-grid.single-item .monster-card {
+    max-width: none;
+    width: 100%;
+}
+
+/* Multiple items grid for spawns only - ensure equal columns */
+.spawns-section .dropped-by-grid:not(.single-item) {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Ensure all monster cards in spawn section only have equal height */
+.spawns-section .monster-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.spawns-section .monster-info {
+    flex: 1;
+}
+
+/* Spawn section specific styling */
+.spawns-section .monster-image {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.spawns-section .monster-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.spawns-section .map-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    color: white;
+    padding: 1rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.spawns-section .monster-card:hover .map-overlay {
+    transform: translateY(0);
+}
+
+.spawns-section .map-overlay h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.spawns-section .map-overlay p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}

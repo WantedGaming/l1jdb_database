@@ -87,7 +87,7 @@ getPageHeader('Home');
                     </div>
                 </a>
 
-                <a href="<?php echo SITE_URL; ?>/maps/" class="card">
+                <a href="<?php echo SITE_URL; ?>/pages/maps/map_list.php" class="card">
                     <div class="card-header">
                         <h3 class="card-title">Maps</h3>
                     </div>
@@ -95,11 +95,11 @@ getPageHeader('Home');
                         <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/maps.png" alt="Maps" onerror="this.style.display='none'">
                     </div>
                     <div class="card-description">
-                        <p>Navigate through detailed maps with locations, NPCs, and important landmarks.</p>
+                        <p>Explore world maps with zone types, restrictions, monster spawns, and location details.</p>
                     </div>
                 </a>
 
-                <a href="<?php echo SITE_URL; ?>/monsters/" class="card">
+                <a href="<?php echo SITE_URL; ?>/pages/monsters/monster_list.php" class="card">
                     <div class="card-header">
                         <h3 class="card-title">Monsters</h3>
                     </div>

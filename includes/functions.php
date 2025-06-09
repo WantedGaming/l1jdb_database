@@ -137,7 +137,7 @@ function normalizeWeaponMaterial($material) {
 }
 
 function cleanDescriptionPrefix($desc) {
-    return preg_replace('/^\\\\a[HFG]/', '', $desc);
+    return preg_replace('/^\\\\a[HFGEJ]/', '', $desc);
 }
 
 // Item normalization function
