@@ -93,10 +93,13 @@ if (!empty($armor['Set_Id'])) {
                                 <label>Weight:</label>
                                 <span><?= number_format($armor['weight']) ?></span>
                             </div>
+                            <?php $gradeDisplay = displayGrade($armor['itemGrade']); ?>
+                            <?php if ($gradeDisplay): ?>
                             <div class="info-item">
                                 <label>Grade:</label>
-                                <span class="grade-<?= strtolower($armor['itemGrade']) ?>"><?= $armor['itemGrade'] ?></span>
+                                <?= $gradeDisplay ?>
                             </div>
+                            <?php endif; ?>
                             <div class="info-item">
                                 <label>Bless:</label>
                                 <span><?= $armor['bless'] == 1 ? 'Normal' : ($armor['bless'] == 0 ? 'Cursed' : 'Blessed') ?></span>
@@ -359,9 +362,8 @@ if (!empty($armor['Set_Id'])) {
             <div class="weapon-section">
                 <h2>Armor Set Bonuses</h2>
                 <div class="set-info">
-                    <h3>Set ID: <?= $armorSetInfo['id'] ?></h3>
                     <?php if (!empty($armorSetInfo['note'])): ?>
-                    <p><strong>Set Description:</strong> <?= htmlspecialchars($armorSetInfo['note']) ?></p>
+                    <p> <?= htmlspecialchars($armorSetInfo['note']) ?></p>
                     <?php endif; ?>
                     
                     <?php if ($armorSetInfo['min_enchant'] > 0): ?>
@@ -389,67 +391,206 @@ if (!empty($armor['Set_Id'])) {
                     </div>
                     <?php endif; ?>
                     
+					<!-- Use armor_set.sql file to get more fileds.  Some are left out, because there is no point, when all the stats are at 0.  We left off at "abnormalStatusDamageReduction" column, which hasn't been added to this list. -->
                     <div class="set-bonuses">
                         <h4>Set Bonuses:</h4>
                         <div class="bonus-grid">
                             <?php if ($armorSetInfo['ac']): ?>
                             <div class="bonus-item">
                                 <label>AC:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['ac'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['ac'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['hp']): ?>
                             <div class="bonus-item">
                                 <label>HP:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['hp'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['hp'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['mp']): ?>
                             <div class="bonus-item">
                                 <label>MP:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['mp'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['mp'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['mr']): ?>
                             <div class="bonus-item">
                                 <label>MR:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['mr'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['mr'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['str']): ?>
                             <div class="bonus-item">
                                 <label>STR:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['str'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['str'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['dex']): ?>
                             <div class="bonus-item">
                                 <label>DEX:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['dex'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['dex'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['con']): ?>
                             <div class="bonus-item">
                                 <label>CON:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['con'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['con'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['wis']): ?>
                             <div class="bonus-item">
                                 <label>WIS:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['wis'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['wis'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['intl']): ?>
                             <div class="bonus-item">
                                 <label>INT:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['intl'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['intl'] ?></span>
                             </div>
                             <?php endif; ?>
                             <?php if ($armorSetInfo['cha']): ?>
                             <div class="bonus-item">
                                 <label>CHA:</label>
-                                <span class="bonus-positive">+<?= $armorSetInfo['cha'] ?></span>
+                                <span class="bonus-positive"><?= $armorSetInfo['cha'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['hpr']): ?>
+                            <div class="bonus-item">
+                                <label>HPR:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['hpr'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['mpr']): ?>
+                            <div class="bonus-item">
+                                <label>MPR:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['mpr'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['shorthitup']): ?>
+                            <div class="bonus-item">
+                                <label>Melee Hit:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['shorthitup'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['shortCritical']): ?>
+                            <div class="bonus-item">
+                                <label>Melee Crit:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['shortCritical'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['longhitup']): ?>
+                            <div class="bonus-item">
+                                <label>Range Hit:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['longhitup'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['longdmgup']): ?>
+                            <div class="bonus-item">
+                                <label>Range Dmg:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['longdmgup'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['longCritical']): ?>
+                            <div class="bonus-item">
+                                <label>Range Crit:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['longCritical'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['sp']): ?>
+                            <div class="bonus-item">
+                                <label>SP:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['sp'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['magichitup']): ?>
+                            <div class="bonus-item">
+                                <label>Magic Hit:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['magichitup'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['magicCritical']): ?>
+                            <div class="bonus-item">
+                                <label>Magic Crit:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['magicCritical'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['earth']): ?>
+                            <div class="bonus-item">
+                                <label>Earth Resist:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['earth'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['fire']): ?>
+                            <div class="bonus-item">
+                                <label>Fire Resist:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['fire'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['wind']): ?>
+                            <div class="bonus-item">
+                                <label>Wind Resist:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['wind'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['water']): ?>
+                            <div class="bonus-item">
+                                <label>Water Resist:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['water'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['reduction']): ?>
+                            <div class="bonus-item">
+                                <label>Reduction:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['reduction'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['reductionEgnor']): ?>
+                            <div class="bonus-item">
+                                <label>Ignore Reduction:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['reductionEgnor'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['magicReduction']): ?>
+                            <div class="bonus-item">
+                                <label>Magic Reduction:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['magicReduction'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['PVPDamage']): ?>
+                            <div class="bonus-item">
+                                <label>PVP Damage:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['PVPDamage'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['PVPDamageReduction']): ?>
+                            <div class="bonus-item">
+                                <label>PVP Damage Reduction:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['PVPDamageReduction'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['PVPMagicDamageReduction']): ?>
+                            <div class="bonus-item">
+                                <label>PVP Damage Reduction (Magic):</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['PVPMagicDamageReduction'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['PVPReductionEgnor']): ?>
+                            <div class="bonus-item">
+                                <label>Ignore PVP Reduction:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['PVPReductionEgnor'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['PVPMagicDamageReductionEgnor']): ?>
+                            <div class="bonus-item">
+                                <label>Ignore PVP Reduction (Magic):</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['shorthitup'] ?></span>
+                            </div>
+                            <?php endif; ?>
+							<?php if ($armorSetInfo['shorthitup']): ?>
+                            <div class="bonus-item">
+                                <label>Melee Hit:</label>
+                                <span class="bonus-positive"><?= $armorSetInfo['shorthitup'] ?></span>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -503,6 +644,53 @@ if (!empty($armor['Set_Id'])) {
                         <span><?= $armor['cant_sell'] ? 'No' : 'Yes' ?></span>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Dropped By Section -->
+            <?php $droppedBy = getMonstersByItemDrop($armor['item_id']); ?>
+            <div class="weapon-section">
+                <h2>Dropped By</h2>
+                <?php if (!empty($droppedBy)): ?>
+                    <div class="dropped-by-grid">
+                        <?php foreach ($droppedBy as $monster): ?>
+                            <div class="monster-card">
+                                <div class="monster-info">
+                                    <div class="monster-image">
+                                        <img src="<?= SITE_URL ?>/assets/img/icons/<?= getMonsterImagePath($monster['spriteId']) ?>" 
+                                             alt="<?= htmlspecialchars($monster['desc_en']) ?>"
+                                             onerror="this.src='<?= SITE_URL ?>/assets/img/placeholders/0.png'">
+                                    </div>
+                                    <div class="monster-details">
+                                        <h4><?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?></h4>
+                                        <div class="monster-level">Level <?= $monster['lvl'] ?></div>
+                                    </div>
+                                </div>
+                                <div class="drop-stats">
+                                    <div class="drop-stat">
+                                        <span class="drop-stat-label">Chance:</span>
+                                        <span class="drop-stat-value"><?= formatDropChance($monster['chance']) ?></span>
+                                    </div>
+                                    <?php if ($monster['min'] > 0 || $monster['max'] > 0): ?>
+                                    <div class="drop-stat">
+                                        <span class="drop-stat-label">Quantity:</span>
+                                        <span class="drop-stat-value"><?= $monster['min'] == $monster['max'] ? $monster['min'] : $monster['min'] . '-' . $monster['max'] ?></span>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php if ($monster['Enchant'] > 0): ?>
+                                    <div class="drop-stat">
+                                        <span class="drop-stat-label">Enchant:</span>
+                                        <span class="drop-stat-value">+<?= $monster['Enchant'] ?></span>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="no-drops-message">
+                        There are no monsters that drop this item.
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

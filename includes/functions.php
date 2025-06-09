@@ -221,4 +221,77 @@ function normalizeArmorMaterial($material) {
     ];
     return $materials[$material] ?? $material;
 }
+
+// Grade normalization function
+function normalizeGrade($grade) {
+    $grades = [
+        'ONLY' => 'Only',
+        'MYTH' => 'Mythic',
+        'LEGEND' => 'Legendary', 
+        'HERO' => 'Hero',
+        'RARE' => 'Rare',
+        'ADVANC' => 'Advanced',
+        'NORMAL' => 'Normal'
+    ];
+    return $grades[strtoupper($grade)] ?? $grade;
+}
+
+// Function to display grade only if it's above normal
+function displayGrade($grade) {
+    $normalizedGrade = normalizeGrade($grade);
+    
+    // Don't display grade if it's normal or empty
+    if (empty($grade) || strtoupper($grade) === 'NORMAL') {
+        return '';
+    }
+    
+    // Return the grade with appropriate CSS class
+    $cssClass = 'grade-' . strtolower($grade);
+    return '<span class="' . $cssClass . '">' . $normalizedGrade . '</span>';
+}
+
+// Function to get grade CSS class
+function getGradeClass($grade) {
+    if (empty($grade)) {
+        return 'grade-normal';
+    }
+    return 'grade-' . strtolower($grade);
+}
+
+// Function to get monster image path
+function getMonsterImagePath($spriteId) {
+    return 'ms' . $spriteId . '.png';
+}
+
+// Function to get monsters that drop a specific item
+function getMonstersByItemDrop($itemId) {
+    global $pdo;
+    
+    try {
+        $sql = "SELECT DISTINCT n.npcid, n.desc_en, n.spriteId, n.lvl, d.chance, d.min, d.max, d.Enchant
+                FROM droplist d 
+                INNER JOIN npc n ON d.mobId = n.npcid 
+                WHERE d.itemId = :itemId 
+                AND n.impl IN ('L1Monster', 'L1BlackKnight', 'L1Doppelganger')
+                ORDER BY n.lvl ASC, n.desc_en ASC";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':itemId' => $itemId]);
+        return $stmt->fetchAll();
+    } catch(PDOException $e) {
+        return [];
+    }
+}
+
+// Function to format drop chance percentage
+function formatDropChance($chance) {
+    // 1000000 = 100%, 500000 = 50%, 100000 = 10%, 10000 = 1%
+    $percentage = ($chance / 10000);
+    
+    if ($percentage >= 1) {
+        return number_format($percentage, ($percentage == floor($percentage) ? 0 : 2)) . '%';
+    } else {
+        return number_format($percentage, 3) . '%';
+    }
+}
 ?>

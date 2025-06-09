@@ -14,6 +14,7 @@ $limit = 20;
 $offset = ($page - 1) * $limit;
 
 // Filters
+$searchFilter = isset($_GET['search']) ? trim($_GET['search']) : '';
 $typeFilter = isset($_GET['type']) ? $_GET['type'] : '';
 $materialFilter = isset($_GET['material']) ? $_GET['material'] : '';
 $classFilter = isset($_GET['class']) ? $_GET['class'] : '';
@@ -21,6 +22,11 @@ $classFilter = isset($_GET['class']) ? $_GET['class'] : '';
 // Build WHERE clause
 $whereConditions = [];
 $params = [];
+
+if (!empty($searchFilter)) {
+    $whereConditions[] = "desc_en LIKE :search";
+    $params[':search'] = '%' . $searchFilter . '%';
+}
 
 if (!empty($typeFilter)) {
     $whereConditions[] = "type = :type";
@@ -122,6 +128,11 @@ $classes = [
             <div class="weapon-filters">
                 <form method="GET" class="filter-form">
                     <div class="filter-group">
+                        <label for="search">Search:</label>
+                        <input type="text" name="search" id="search" placeholder="Search weapons..." value="<?= htmlspecialchars($searchFilter) ?>">
+                    </div>
+                    
+                    <div class="filter-group">
                         <label for="type">Type:</label>
                         <select name="type" id="type">
                             <option value="">All Types</option>
@@ -209,7 +220,7 @@ $classes = [
             <?php if ($totalPages > 1): ?>
                 <div class="pagination">
                     <?php if ($page > 1): ?>
-                        <a href="?page=<?= $page - 1 ?>&type=<?= urlencode($typeFilter) ?>&material=<?= urlencode($materialFilter) ?>&class=<?= urlencode($classFilter) ?>" class="page-btn prev">Previous</a>
+                        <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($searchFilter) ?>&type=<?= urlencode($typeFilter) ?>&material=<?= urlencode($materialFilter) ?>&class=<?= urlencode($classFilter) ?>" class="page-btn prev">Previous</a>
                     <?php endif; ?>
                     
                     <?php
@@ -217,23 +228,23 @@ $classes = [
                     $end = min($totalPages, $page + 2);
                     
                     if ($start > 1) {
-                        echo '<a href="?page=1&type=' . urlencode($typeFilter) . '&material=' . urlencode($materialFilter) . '&class=' . urlencode($classFilter) . '" class="page-btn">1</a>';
+                        echo '<a href="?page=1&search=' . urlencode($searchFilter) . '&type=' . urlencode($typeFilter) . '&material=' . urlencode($materialFilter) . '&class=' . urlencode($classFilter) . '" class="page-btn">1</a>';
                         if ($start > 2) echo '<span class="page-dots">...</span>';
                     }
                     
                     for ($i = $start; $i <= $end; $i++) {
                         $activeClass = $i === $page ? 'active' : '';
-                        echo '<a href="?page=' . $i . '&type=' . urlencode($typeFilter) . '&material=' . urlencode($materialFilter) . '&class=' . urlencode($classFilter) . '" class="page-btn ' . $activeClass . '">' . $i . '</a>';
+                        echo '<a href="?page=' . $i . '&search=' . urlencode($searchFilter) . '&type=' . urlencode($typeFilter) . '&material=' . urlencode($materialFilter) . '&class=' . urlencode($classFilter) . '" class="page-btn ' . $activeClass . '">' . $i . '</a>';
                     }
                     
                     if ($end < $totalPages) {
                         if ($end < $totalPages - 1) echo '<span class="page-dots">...</span>';
-                        echo '<a href="?page=' . $totalPages . '&type=' . urlencode($typeFilter) . '&material=' . urlencode($materialFilter) . '&class=' . urlencode($classFilter) . '" class="page-btn">' . $totalPages . '</a>';
+                        echo '<a href="?page=' . $totalPages . '&search=' . urlencode($searchFilter) . '&type=' . urlencode($typeFilter) . '&material=' . urlencode($materialFilter) . '&class=' . urlencode($classFilter) . '" class="page-btn">' . $totalPages . '</a>';
                     }
                     ?>
                     
                     <?php if ($page < $totalPages): ?>
-                        <a href="?page=<?= $page + 1 ?>&type=<?= urlencode($typeFilter) ?>&material=<?= urlencode($materialFilter) ?>&class=<?= urlencode($classFilter) ?>" class="page-btn next">Next</a>
+                        <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($searchFilter) ?>&type=<?= urlencode($typeFilter) ?>&material=<?= urlencode($materialFilter) ?>&class=<?= urlencode($classFilter) ?>" class="page-btn next">Next</a>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>

@@ -81,10 +81,11 @@ renderHero('items', $itemName, $heroText);
                                 <label>Bless:</label>
                                 <span><?= $item['bless'] == 1 ? 'Normal' : ($item['bless'] == 0 ? 'Cursed' : 'Blessed') ?></span>
                             </div>
-                            <?php if (!empty($item['itemGrade'])): ?>
+                            <?php $gradeDisplay = displayGrade($item['itemGrade'] ?? ''); ?>
+                            <?php if ($gradeDisplay): ?>
                             <div class="info-item">
                                 <label>Grade:</label>
-                                <span class="grade-<?= strtolower($item['itemGrade']) ?>"><?= $item['itemGrade'] ?></span>
+                                <?= $gradeDisplay ?>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -367,6 +368,53 @@ renderHero('items', $itemName, $heroText);
                     </div>
                     <?php endif; ?>
                 </div>
+            </div>
+            
+            <!-- Dropped By Section -->
+            <?php $droppedBy = getMonstersByItemDrop($item['item_id']); ?>
+            <div class="weapon-section">
+                <h2>Dropped By</h2>
+                <?php if (!empty($droppedBy)): ?>
+                    <div class="dropped-by-grid">
+                        <?php foreach ($droppedBy as $monster): ?>
+                            <div class="monster-card">
+                                <div class="monster-info">
+                                    <div class="monster-image">
+                                        <img src="<?= SITE_URL ?>/assets/img/icons/<?= getMonsterImagePath($monster['spriteId']) ?>" 
+                                             alt="<?= htmlspecialchars($monster['desc_en']) ?>"
+                                             onerror="this.src='<?= SITE_URL ?>/assets/img/placeholders/0.png'">
+                                    </div>
+                                    <div class="monster-details">
+                                        <h4><?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?></h4>
+                                        <div class="monster-level">Level <?= $monster['lvl'] ?></div>
+                                    </div>
+                                </div>
+                                <div class="drop-stats">
+                                    <div class="drop-stat">
+                                        <span class="drop-stat-label">Chance:</span>
+                                        <span class="drop-stat-value"><?= formatDropChance($monster['chance']) ?></span>
+                                    </div>
+                                    <?php if ($monster['min'] > 0 || $monster['max'] > 0): ?>
+                                    <div class="drop-stat">
+                                        <span class="drop-stat-label">Quantity:</span>
+                                        <span class="drop-stat-value"><?= $monster['min'] == $monster['max'] ? $monster['min'] : $monster['min'] . '-' . $monster['max'] ?></span>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php if ($monster['Enchant'] > 0): ?>
+                                    <div class="drop-stat">
+                                        <span class="drop-stat-label">Enchant:</span>
+                                        <span class="drop-stat-value">+<?= $monster['Enchant'] ?></span>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="no-drops-message">
+                        There are no monsters that drop this item.
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
