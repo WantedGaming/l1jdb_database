@@ -12,40 +12,6 @@ getPageHeader('Home');
     <?php renderHero('home'); ?>
 
     <div class="main">
-        <!-- Recent Updates Section -->
-        <section class="recent-updates">
-            <h2>Recent Updates</h2>
-            <?php if (!empty($recentUpdates)): ?>
-                <?php foreach ($recentUpdates as $update): ?>
-                    <div class="update-item">
-                        <div class="update-icon">
-                            <img src="<?php echo SITE_URL; ?>/assets/img/icons/<?php echo $update['icon']; ?>" 
-                                 alt="<?php echo ucfirst($update['category']); ?>" 
-                                 onerror="this.src='<?php echo SITE_URL; ?>/assets/img/icons/0.png'">
-                        </div>
-                        <div class="update-details">
-                            <div class="update-meta">
-                                <span class="category"><?php echo ucfirst($update['category']); ?></span>
-                                <span class="timestamp"><?php echo date('M j, Y g:i A', strtotime($update['updated_at'])); ?></span>
-                            </div>
-                            <div class="update-content">
-                                <strong><?php echo htmlspecialchars($update['item_name']); ?></strong>
-                                <?php echo htmlspecialchars($update['description']); ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="update-item no-updates">
-                    <div class="update-icon">
-                        <img src="<?php echo SITE_URL; ?>/assets/img/icons/0.png" alt="No updates">
-                    </div>
-                    <div class="update-details">
-                        <div class="update-content">No recent updates available.</div>
-                    </div>
-                </div>
-            <?php endif; ?>
-        </section>
 
         <!-- Database Categories -->
         <section class="database-categories">
@@ -59,7 +25,7 @@ getPageHeader('Home');
                         <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/weapons.png" alt="Weapons" onerror="this.style.display='none'">
                     </div>
                     <div class="card-description">
-                        <p>Browse all weapons including swords, bows, staffs, and magical weapons with detailed stats and requirements.</p>
+                        <p>Browse all weapons with detailed stats and requirements.</p>
                     </div>
                 </a>
 
@@ -71,7 +37,7 @@ getPageHeader('Home');
                         <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/armor.png" alt="Armor" onerror="this.style.display='none'">
                     </div>
                     <div class="card-description">
-                        <p>Explore armor sets, helmets, shields, and protective gear with defense ratings, set bonuses, and class requirements.</p>
+                        <p>Explore armor protective gear with defense ratings and class requirements.</p>
                     </div>
                 </a>
 
@@ -95,7 +61,7 @@ getPageHeader('Home');
                         <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/dolls.png" alt="Dolls" onerror="this.style.display='none'">
                     </div>
                     <div class="card-description">
-                        <p>Summon powerful companions with unique abilities, potential bonuses, and magical effects to aid your journey.</p>
+                        <p>Summon powerful companions with unique abilities to aid your journey.</p>
                     </div>
                 </a>
 
@@ -107,7 +73,7 @@ getPageHeader('Home');
                         <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/maps.png" alt="Maps" onerror="this.style.display='none'">
                     </div>
                     <div class="card-description">
-                        <p>Explore world maps with zone types, restrictions, monster spawns, and location details.</p>
+                        <p>Explore world maps with zone types and location details.</p>
                     </div>
                 </a>
 

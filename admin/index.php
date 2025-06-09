@@ -22,7 +22,7 @@ getPageHeader('Admin Dashboard');
 
         <div class="admin-actions">
             <div class="cards-grid">
-                <a href="<?php echo SITE_URL; ?>/admin/weapons/" class="card">
+                <a href="<?php echo SITE_URL; ?>/admin/pages/weapon_list.php" class="card">
                     <div class="card-header">
                         <h3 class="card-title">Manage Weapons</h3>
                     </div>
@@ -75,12 +75,12 @@ getPageHeader('Admin Dashboard');
                         <p>Add, edit, and delete monsters</p>
                     </div>
                 </a>
-				<a href="<?php echo SITE_URL; ?>/tools/table_extractor.php" class="card">
+				<a href="<?php echo SITE_URL; ?>/admin/pages/bin/items/" class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Table Extractor</h3>
+                        <h3 class="card-title">Bin Database</h3>
                     </div>
                     <div class="card-description">
-                        <p>Add, edit, and delete monsters</p>
+                        <p>Manage bin database tables</p>
                     </div>
                 </a>
             </div>
@@ -94,44 +94,6 @@ getPageHeader('Admin Dashboard');
     </div>
 </main>
 
-<style>
-.admin-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
 
-.admin-header h1 {
-    color: var(--accent);
-    margin-bottom: 0.5rem;
-}
-
-.admin-stats {
-    margin-bottom: 3rem;
-}
-
-.stat-card {
-    background-color: var(--primary);
-    padding: 2rem;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.stat-card h3 {
-    color: var(--accent);
-    margin-bottom: 1rem;
-}
-
-.access-denied {
-    text-align: center;
-    background-color: var(--primary);
-    padding: 3rem;
-    border-radius: 8px;
-}
-
-.access-denied h2 {
-    color: var(--accent);
-    margin-bottom: 1rem;
-}
-</style>
 
 <?php getPageFooter(); ?>

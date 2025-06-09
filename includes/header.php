@@ -46,6 +46,7 @@ function getPageHeader($title = '') {
                                     <a href="<?php echo SITE_URL; ?>/admin/dolls/" class="dropdown-link">Manage Magic Dolls</a>
                                     <a href="<?php echo SITE_URL; ?>/admin/maps/" class="dropdown-link">Manage Maps</a>
                                     <a href="<?php echo SITE_URL; ?>/admin/monsters/" class="dropdown-link">Manage Monsters</a>
+                                    <a href="<?php echo SITE_URL; ?>/admin/pages/bin/" class="dropdown-link">Manage Bin Database</a>
                                 <?php endif; ?>
                                 <a href="<?php echo SITE_URL; ?>/admin/logout.php" class="dropdown-link">Logout</a>
                             <?php else: ?>

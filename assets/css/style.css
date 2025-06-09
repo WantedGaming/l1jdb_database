@@ -150,137 +150,10 @@ body {
     color: var(--accent);
 }
 
-/* Recent Updates */
-.recent-updates {
-    background: linear-gradient(135deg, var(--primary) 0%, rgba(23, 23, 24, 0.95) 100%);
-    border-radius: 16px;
-    padding: 2.5rem;
-    margin-bottom: 4rem;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(253, 127, 68, 0.1);
-}
 
 @keyframes shimmer {
     0%, 100% { background-position: 200% 0; }
     50% { background-position: -200% 0; }
-}
-
-.recent-updates h2 {
-    margin-bottom: 2rem;
-    color: var(--accent);
-    font-size: 1.75rem;
-    font-weight: 600;
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.recent-updates h2::before {
-    content: '🔄';
-    font-size: 1.5rem;
-    filter: grayscale(0.3);
-}
-
-.update-item {
-    background: linear-gradient(135deg, var(--secondary) 0%, rgba(28, 28, 28, 0.95) 100%);
-    padding: 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 1.25rem;
-    border: 1px solid rgba(253, 127, 68, 0.15);
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    position: relative;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-}
-
-.update-item:last-child {
-    margin-bottom: 0;
-}
-
-.update-icon {
-    width: 64px;
-    height: 64px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 2px;
-    position: relative;
-}
-
-.update-icon img {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.update-details {
-    flex: 1;
-    min-width: 0;
-}
-
-.update-meta {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    letter-spacing: 0.025em;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.update-meta .category {
-    background: rgba(253, 127, 68, 0.15);
-    color: var(--accent);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border: 1px solid rgba(253, 127, 68, 0.2);
-}
-
-.update-meta .timestamp {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.8rem;
-}
-
-.update-content {
-    line-height: 1.5;
-    font-size: 0.95rem;
-}
-
-.update-content strong {
-    color: var(--accent);
-    font-weight: 600;
-    margin-right: 0.25rem;
-}
-
-.update-item.no-updates {
-    text-align: center;
-    padding: 3rem 2rem;
-    background: linear-gradient(135deg, rgba(28, 28, 28, 0.5) 0%, rgba(23, 23, 24, 0.8) 100%);
-    border: 2px dashed rgba(253, 127, 68, 0.2);
-}
-
-.update-item.no-updates .update-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 1rem;
-    opacity: 0.6;
-}
-
-.update-item.no-updates .update-content {
-    color: rgba(255, 255, 255, 0.7);
-    font-style: italic;
-    font-size: 1rem;
 }
 
 /* Cards Grid */
@@ -363,44 +236,7 @@ body {
     .nav-menu {
         gap: 1rem;
     }
-    
-    .recent-updates {
-        padding: 2rem 1.5rem;
-    }
-    
-    .recent-updates h2 {
-        font-size: 1.5rem;
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
-    
-    .update-item {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        padding: 1.5rem;
-        text-align: center;
-    }
-    
-    .update-icon {
-        width: 56px;
-        height: 56px;
-    }
-    
-    .update-icon img {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .update-meta {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: center;
-    }
-    
-    .update-content {
-        font-size: 0.9rem;
-    }
+
 }
 
 @media (max-width: 992px) and (min-width: 769px) {
