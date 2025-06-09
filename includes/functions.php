@@ -8,7 +8,7 @@ function getRecentUpdates($limit = 5) {
         // Try to get real database activity first
         $sql = "SELECT entity_type as category, entity_name as item_name, 
                        CONCAT(UPPER(activity_type), ' - ', COALESCE(details, 'Database update')) as description,
-                       timestamp as updated_at
+                       timestamp as updated_at, entity_id as item_id, icon_id
                 FROM database_activity 
                 ORDER BY timestamp DESC 
                 LIMIT :limit";
@@ -31,24 +31,62 @@ function getRecentUpdates($limit = 5) {
         
         // Add item icons to the results
         foreach ($result as &$update) {
-            $update['icon'] = getUpdateIcon($update['category'], $update['item_name'], $update['item_id'] ?? null);
+            // If icon_id is provided from database, use it directly
+            if (isset($update['icon_id']) && !empty($update['icon_id'])) {
+                $update['icon'] = $update['icon_id'] . '.png';
+            }
+            // When using placeholder data or no icon_id, ensure we use the right icon ID from the item database
+            else if (isset($update['item_id'])) {
+                $iconId = $update['item_id'];
+                
+                // Get actual item info from database if possible
+                if ($update['category'] === 'armor') {
+                    $sql = "SELECT iconId FROM armor WHERE item_id = :item_id";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([':item_id' => $iconId]);
+                    $itemInfo = $stmt->fetch();
+                    if ($itemInfo && !empty($itemInfo['iconId'])) {
+                        $iconId = $itemInfo['iconId'];
+                    }
+                } else if ($update['category'] === 'weapons') {
+                    $sql = "SELECT iconId FROM weapon WHERE item_id = :item_id";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([':item_id' => $iconId]);
+                    $itemInfo = $stmt->fetch();
+                    if ($itemInfo && !empty($itemInfo['iconId'])) {
+                        $iconId = $itemInfo['iconId'];
+                    }
+                } else if ($update['category'] === 'items') {
+                    $sql = "SELECT iconId FROM etcitem WHERE item_id = :item_id";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([':item_id' => $iconId]);
+                    $itemInfo = $stmt->fetch();
+                    if ($itemInfo && !empty($itemInfo['iconId'])) {
+                        $iconId = $itemInfo['iconId'];
+                    }
+                }
+                
+                $update['icon'] = $iconId . '.png';
+            } else {
+                $update['icon'] = getUpdateIcon($update['category'], $update['item_name'], $update['item_id'] ?? null);
+            }
+            
+            // Remove icon_id from the final result as it's not needed anymore
+            if (isset($update['icon_id'])) {
+                unset($update['icon_id']);
+            }
         }
         
         return $result;
     } catch(PDOException $e) {
         // Return placeholder data on error
         $result = [
-            ['category' => 'weapons', 'item_name' => 'Executioner\'s Sword', 'description' => 'Added new legendary weapon', 'updated_at' => date('Y-m-d H:i:s'), 'item_id' => 2],
-            ['category' => 'armor', 'item_name' => 'Plate Mail', 'description' => 'Updated defense values', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day')), 'item_id' => 20],
-            ['category' => 'items', 'item_name' => 'Health Potion', 'description' => 'Modified healing amount', 'updated_at' => date('Y-m-d H:i:s', strtotime('-2 days')), 'item_id' => 40017],
-            ['category' => 'monsters', 'item_name' => 'Orc Warrior', 'description' => 'Updated spawn rates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-3 days')), 'item_id' => null],
-            ['category' => 'maps', 'item_name' => 'Talking Island', 'description' => 'Fixed portal coordinates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-4 days')), 'item_id' => null]
+            ['category' => 'weapons', 'item_name' => 'Executioner\'s Sword', 'description' => 'Added new legendary weapon', 'updated_at' => date('Y-m-d H:i:s'), 'item_id' => 2, 'icon' => '2.png'],
+            ['category' => 'armor', 'item_name' => 'Plate Mail', 'description' => 'Updated defense values', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day')), 'item_id' => 20, 'icon' => '20.png'],
+            ['category' => 'items', 'item_name' => 'Health Potion', 'description' => 'Modified healing amount', 'updated_at' => date('Y-m-d H:i:s', strtotime('-2 days')), 'item_id' => 40017, 'icon' => '40017.png'],
+            ['category' => 'monsters', 'item_name' => 'Orc Warrior', 'description' => 'Updated spawn rates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-3 days')), 'item_id' => null, 'icon' => '45037.png'],
+            ['category' => 'maps', 'item_name' => 'Talking Island', 'description' => 'Fixed portal coordinates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-4 days')), 'item_id' => null, 'icon' => '40030.png']
         ];
-        
-        // Add item icons to the results
-        foreach ($result as &$update) {
-            $update['icon'] = getUpdateIcon($update['category'], $update['item_name'], $update['item_id'] ?? null);
-        }
         
         return $result;
     }
@@ -351,7 +389,7 @@ function getUpdateIcon($category, $itemName, $itemId = null) {
         'armor' => '20.png',       // Armor icon
         'items' => '40017.png',    // Potion icon
         'dolls' => '49150.png',    // Magic doll icon
-        'monsters' => '45037.png', // Monster icon
+        'monsters' => 'ms45037.png', // Monster icon (using ms prefix)
         'maps' => '40030.png'      // Map/scroll icon
     ];
     
@@ -362,16 +400,16 @@ function getUpdateIcon($category, $itemName, $itemId = null) {
             
             switch ($category) {
                 case 'weapons':
-                    $sql = "SELECT invgfx FROM weapon WHERE item_id = :item_id";
+                    $sql = "SELECT iconId FROM weapon WHERE item_id = :item_id";
                     break;
                 case 'armor':
-                    $sql = "SELECT invgfx FROM armor WHERE item_id = :item_id";
+                    $sql = "SELECT iconId FROM armor WHERE item_id = :item_id";
                     break;
                 case 'items':
-                    $sql = "SELECT invgfx FROM etcitem WHERE item_id = :item_id";
+                    $sql = "SELECT iconId FROM etcitem WHERE item_id = :item_id";
                     break;
                 case 'dolls':
-                    $sql = "SELECT invgfx FROM etcitem WHERE item_id = :item_id";
+                    $sql = "SELECT iconId FROM etcitem WHERE item_id = :item_id";
                     break;
             }
             
@@ -379,13 +417,50 @@ function getUpdateIcon($category, $itemName, $itemId = null) {
             $stmt->execute([':item_id' => $itemId]);
             $result = $stmt->fetch();
             
-            if ($result && $result['invgfx']) {
-                $iconPath = $result['invgfx'] . '.png';
+            if ($result && $result['iconId']) {
+                $iconPath = $result['iconId'] . '.png';
                 // Check if the icon file exists
                 if (file_exists(__DIR__ . '/../assets/img/icons/' . $iconPath)) {
                     return $iconPath;
                 }
             }
+        } catch (PDOException $e) {
+            // Fall back to category icon
+        }
+    } else if ($itemId && $category === 'monsters') {
+        // For monsters, use the ms prefix with spriteId
+        try {
+            $sql = "SELECT spriteId FROM npc WHERE npcid = :npc_id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':npc_id' => $itemId]);
+            $result = $stmt->fetch();
+            
+            if ($result && $result['spriteId']) {
+                $iconPath = 'ms' . $result['spriteId'] . '.png';
+                // Check if the icon file exists
+                if (file_exists(__DIR__ . '/../assets/img/icons/' . $iconPath)) {
+                    return $iconPath;
+                }
+            }
+        } catch (PDOException $e) {
+            // Fall back to category icon
+        }
+    } else if ($itemId && $category === 'maps') {
+        // For maps, check for pngId
+        try {
+            $sql = "SELECT pngId FROM mapids WHERE mapid = :map_id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':map_id' => $itemId]);
+            $result = $stmt->fetch();
+            
+            if ($result && $result['pngId']) {
+                $iconPath = $result['pngId'] . '.png';
+                // Check if the icon file exists
+                if (file_exists(__DIR__ . '/../assets/img/icons/' . $iconPath)) {
+                    return $iconPath;
+                }
+            }
+            return 'default-map.png';
         } catch (PDOException $e) {
             // Fall back to category icon
         }
