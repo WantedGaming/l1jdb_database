@@ -75,6 +75,14 @@ getPageHeader('Admin Dashboard');
                         <p>Add, edit, and delete monsters</p>
                     </div>
                 </a>
+				<a href="<?php echo SITE_URL; ?>/tools/table_extractor.php" class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Table Extractor</h3>
+                    </div>
+                    <div class="card-description">
+                        <p>Add, edit, and delete monsters</p>
+                    </div>
+                </a>
             </div>
         </div>
     <?php else: ?>

@@ -55,11 +55,15 @@ renderHero('weapons', $weaponName, $heroText);
                 <!-- Column 2: Basic Information -->
                 <div class="weapon-info-col">
                     <div class="weapon-basic-info">
-                        <h2>Basic Information</h2>
+                        <h2>Basic</h2>
                         <div class="info-grid">
-                            <div class="info-item">
-                                <label>Item ID:</label>
-                                <span><?= $weapon['item_id'] ?></span>
+							<div class="info-item">
+                                <label>S (Small):</label>
+                                <span><?= ($weapon['dmg_small']) ?></span>
+                            </div>
+							<div class="info-item">
+                                <label>L (Large):</label>
+                                <span><?= ($weapon['dmg_large']) ?></span>
                             </div>
                             <div class="info-item">
                                 <label>Type:</label>
@@ -71,15 +75,15 @@ renderHero('weapons', $weaponName, $heroText);
                             </div>
                             <div class="info-item">
                                 <label>Weight:</label>
-                                <span><?= number_format($weapon['weight']) ?></span>
+                                <span><?= ($weapon['weight']) ?></span>
                             </div>
                             <div class="info-item">
                                 <label>Grade:</label>
                                 <span class="grade-<?= strtolower($weapon['itemGrade']) ?>"><?= $weapon['itemGrade'] ?></span>
                             </div>
                             <div class="info-item">
-                                <label>Bless:</label>
-                                <span><?= $weapon['bless'] == 1 ? 'Normal' : ($weapon['bless'] == 0 ? 'Cursed' : 'Blessed') ?></span>
+                                <label>Safe:</label>
+                                <span><?= ($weapon['safenchant']) ?></span></span>
                             </div>
                         </div>
                     </div>
@@ -88,7 +92,7 @@ renderHero('weapons', $weaponName, $heroText);
             
             <!-- Combat Stats Section -->
             <div class="weapon-section">
-                <h2>Combat Statistics</h2>
+                <h2>Statistics</h2>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>Damage</h3>

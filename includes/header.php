@@ -28,7 +28,7 @@ function getPageHeader($title = '') {
                         <div class="dropdown">
                             <a href="<?php echo SITE_URL; ?>/pages/weapons/weapon_list.php" class="dropdown-link">Weapons</a>
                             <a href="<?php echo SITE_URL; ?>/pages/armor/armor_list.php" class="dropdown-link">Armor</a>
-                            <a href="<?php echo SITE_URL; ?>/items/" class="dropdown-link">Items</a>
+                            <a href="<?php echo SITE_URL; ?>/pages/items/items_list.php" class="dropdown-link">Items</a>
                             <a href="<?php echo SITE_URL; ?>/dolls/" class="dropdown-link">Dolls</a>
                             <a href="<?php echo SITE_URL; ?>/maps/" class="dropdown-link">Maps</a>
                             <a href="<?php echo SITE_URL; ?>/monsters/" class="dropdown-link">Monsters</a>

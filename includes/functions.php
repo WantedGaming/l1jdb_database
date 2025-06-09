@@ -140,6 +140,31 @@ function cleanDescriptionPrefix($desc) {
     return preg_replace('/^\\\\a[HFG]/', '', $desc);
 }
 
+// Item normalization function
+function normalizeItemType($type) {
+    $types = [
+        'ARROW' => 'Arrow',
+        'WAND' => 'Wand',
+        'LIGHT' => 'Light',
+        'GEM' => 'Gem',
+        'TOTEM' => 'Totem',
+        'FIRE_CRACKER' => 'Fire Cracker',
+        'POTION' => 'Potion',
+        'FOOD' => 'Food',
+        'SCROLL' => 'Scroll',
+        'QUEST_ITEM' => 'Quest Item',
+        'SPELL_BOOK' => 'Spell Book',
+        'PET_ITEM' => 'Pet Item',
+        'OTHER' => 'Other',
+        'MATERIAL' => 'Material',
+        'EVENT' => 'Event',
+        'STING' => 'Sting',
+        'TREASURE_BOX' => 'Treasure Box',
+        'MAGIC_DOLL' => 'Magic Doll'
+    ];
+    return $types[$type] ?? $type;
+}
+
 // Armor normalization functions
 function normalizeArmorType($type) {
     $types = [
