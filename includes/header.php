@@ -29,7 +29,7 @@ function getPageHeader($title = '') {
                             <a href="<?php echo SITE_URL; ?>/pages/weapons/weapon_list.php" class="dropdown-link">Weapons</a>
                             <a href="<?php echo SITE_URL; ?>/pages/armor/armor_list.php" class="dropdown-link">Armor</a>
                             <a href="<?php echo SITE_URL; ?>/pages/items/items_list.php" class="dropdown-link">Items</a>
-                            <a href="<?php echo SITE_URL; ?>/dolls/" class="dropdown-link">Dolls</a>
+                            <a href="<?php echo SITE_URL; ?>/pages/dolls/doll_list.php" class="dropdown-link">Magic Dolls</a>
                             <a href="<?php echo SITE_URL; ?>/pages/maps/map_list.php" class="dropdown-link">Maps</a>
                             <a href="<?php echo SITE_URL; ?>/pages/monsters/monster_list.php" class="dropdown-link">Monsters</a>
                         </div>
@@ -43,7 +43,7 @@ function getPageHeader($title = '') {
                                     <a href="<?php echo SITE_URL; ?>/admin/weapons/" class="dropdown-link">Manage Weapons</a>
                                     <a href="<?php echo SITE_URL; ?>/admin/armor/" class="dropdown-link">Manage Armor</a>
                                     <a href="<?php echo SITE_URL; ?>/admin/items/" class="dropdown-link">Manage Items</a>
-                                    <a href="<?php echo SITE_URL; ?>/admin/dolls/" class="dropdown-link">Manage Dolls</a>
+                                    <a href="<?php echo SITE_URL; ?>/admin/dolls/" class="dropdown-link">Manage Magic Dolls</a>
                                     <a href="<?php echo SITE_URL; ?>/admin/maps/" class="dropdown-link">Manage Maps</a>
                                     <a href="<?php echo SITE_URL; ?>/admin/monsters/" class="dropdown-link">Manage Monsters</a>
                                 <?php endif; ?>

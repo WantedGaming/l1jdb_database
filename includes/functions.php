@@ -19,22 +19,38 @@ function getRecentUpdates($limit = 5) {
         $result = $stmt->fetchAll();
         
         if (empty($result)) {
-            // Fallback to placeholder data
+            // Fallback to placeholder data with example items that have icons
             $result = [
-                ['category' => 'weapons', 'item_name' => 'Sword of Light', 'description' => 'Added new legendary weapon', 'updated_at' => date('Y-m-d H:i:s')],
-                ['category' => 'armor', 'item_name' => 'Dragon Scale Armor', 'description' => 'Updated defense values', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day'))],
-                ['category' => 'items', 'item_name' => 'Health Potion', 'description' => 'Modified healing amount', 'updated_at' => date('Y-m-d H:i:s', strtotime('-2 days'))]
+                ['category' => 'weapons', 'item_name' => 'Executioner\'s Sword', 'description' => 'Added new legendary weapon', 'updated_at' => date('Y-m-d H:i:s'), 'item_id' => 2],
+                ['category' => 'armor', 'item_name' => 'Plate Mail', 'description' => 'Updated defense values', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day')), 'item_id' => 20],
+                ['category' => 'items', 'item_name' => 'Health Potion', 'description' => 'Modified healing amount', 'updated_at' => date('Y-m-d H:i:s', strtotime('-2 days')), 'item_id' => 40017],
+                ['category' => 'monsters', 'item_name' => 'Orc Warrior', 'description' => 'Updated spawn rates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-3 days')), 'item_id' => null],
+                ['category' => 'maps', 'item_name' => 'Talking Island', 'description' => 'Fixed portal coordinates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-4 days')), 'item_id' => null]
             ];
+        }
+        
+        // Add item icons to the results
+        foreach ($result as &$update) {
+            $update['icon'] = getUpdateIcon($update['category'], $update['item_name'], $update['item_id'] ?? null);
         }
         
         return $result;
     } catch(PDOException $e) {
         // Return placeholder data on error
-        return [
-            ['category' => 'weapons', 'item_name' => 'Sword of Light', 'description' => 'Added new legendary weapon', 'updated_at' => date('Y-m-d H:i:s')],
-            ['category' => 'armor', 'item_name' => 'Dragon Scale Armor', 'description' => 'Updated defense values', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day'))],
-            ['category' => 'items', 'item_name' => 'Health Potion', 'description' => 'Modified healing amount', 'updated_at' => date('Y-m-d H:i:s', strtotime('-2 days'))]
+        $result = [
+            ['category' => 'weapons', 'item_name' => 'Executioner\'s Sword', 'description' => 'Added new legendary weapon', 'updated_at' => date('Y-m-d H:i:s'), 'item_id' => 2],
+            ['category' => 'armor', 'item_name' => 'Plate Mail', 'description' => 'Updated defense values', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day')), 'item_id' => 20],
+            ['category' => 'items', 'item_name' => 'Health Potion', 'description' => 'Modified healing amount', 'updated_at' => date('Y-m-d H:i:s', strtotime('-2 days')), 'item_id' => 40017],
+            ['category' => 'monsters', 'item_name' => 'Orc Warrior', 'description' => 'Updated spawn rates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-3 days')), 'item_id' => null],
+            ['category' => 'maps', 'item_name' => 'Talking Island', 'description' => 'Fixed portal coordinates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-4 days')), 'item_id' => null]
         ];
+        
+        // Add item icons to the results
+        foreach ($result as &$update) {
+            $update['icon'] = getUpdateIcon($update['category'], $update['item_name'], $update['item_id'] ?? null);
+        }
+        
+        return $result;
     }
 }
 
@@ -293,5 +309,94 @@ function formatDropChance($chance) {
     } else {
         return number_format($percentage, 3) . '%';
     }
+}
+
+// Magic Doll specific functions
+function cleanDollName($name) {
+    if (empty($name)) return 'Unknown Doll';
+    return preg_replace('/^Magic Doll:\s*/i', '', $name);
+}
+
+function getDollGradeDisplay($grade) {
+    $gradeMap = [
+        0 => 'Common',
+        1 => 'Uncommon',
+        2 => 'Rare',
+        3 => 'Epic',
+        4 => 'Legendary',
+        5 => 'Mythic'
+    ];
+    return $gradeMap[$grade] ?? 'Unknown';
+}
+
+function getDollGradeClass($grade) {
+    $gradeClasses = [
+        0 => 'grade-common',
+        1 => 'grade-uncommon',
+        2 => 'grade-rare',
+        3 => 'grade-epic',
+        4 => 'grade-legendary',
+        5 => 'grade-mythic'
+    ];
+    return $gradeClasses[$grade] ?? 'grade-common';
+}
+
+// Function to get icon for recent updates
+function getUpdateIcon($category, $itemName, $itemId = null) {
+    global $pdo;
+    
+    // Default category icons
+    $categoryIcons = [
+        'weapons' => '2.png',      // Sword icon
+        'armor' => '20.png',       // Armor icon
+        'items' => '40017.png',    // Potion icon
+        'dolls' => '49150.png',    // Magic doll icon
+        'monsters' => '45037.png', // Monster icon
+        'maps' => '40030.png'      // Map/scroll icon
+    ];
+    
+    // If we have an item ID, try to get the specific icon
+    if ($itemId && ($category === 'weapons' || $category === 'armor' || $category === 'items' || $category === 'dolls')) {
+        try {
+            $iconPath = null;
+            
+            switch ($category) {
+                case 'weapons':
+                    $sql = "SELECT invgfx FROM weapon WHERE item_id = :item_id";
+                    break;
+                case 'armor':
+                    $sql = "SELECT invgfx FROM armor WHERE item_id = :item_id";
+                    break;
+                case 'items':
+                    $sql = "SELECT invgfx FROM etcitem WHERE item_id = :item_id";
+                    break;
+                case 'dolls':
+                    $sql = "SELECT invgfx FROM etcitem WHERE item_id = :item_id";
+                    break;
+            }
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':item_id' => $itemId]);
+            $result = $stmt->fetch();
+            
+            if ($result && $result['invgfx']) {
+                $iconPath = $result['invgfx'] . '.png';
+                // Check if the icon file exists
+                if (file_exists(__DIR__ . '/../assets/img/icons/' . $iconPath)) {
+                    return $iconPath;
+                }
+            }
+        } catch (PDOException $e) {
+            // Fall back to category icon
+        }
+    }
+    
+    // Return category default icon
+    return $categoryIcons[$category] ?? '0.png';
+}
+
+// Function to get item icon path for any category
+function getItemIcon($category, $itemId) {
+    return getUpdateIcon($category, '', $itemId);
 }
 ?>

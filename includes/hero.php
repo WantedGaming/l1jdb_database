@@ -49,10 +49,11 @@ class HeroGenerator {
         return [
             'title' => 'L1J Database',
             'subtitle' => sprintf(
-                'Explore %s weapons, %s armor pieces, %s items and more',
+                'Explore %s weapons, %s armor pieces, %s items, %s magic dolls and more',
                 number_format($stats['weapons']),
                 number_format($stats['armor']),
-                number_format($stats['items'])
+                number_format($stats['items']),
+                number_format($stats['dolls'])
             ),
             'background' => SITE_URL . '/assets/img/favicon/hero_bg.png'
         ];
@@ -86,9 +87,10 @@ class HeroGenerator {
     }
     
     private function getDollsHero($data = null) {
+        $count = $this->getTableCount('magicdoll_info');
         return [
             'title' => 'Magic Dolls',
-            'subtitle' => 'Summon powerful companions to aid your journey',
+            'subtitle' => sprintf('Summon %s powerful companions to aid your journey', number_format($count)),
             'background' => SITE_URL . '/assets/img/favicon/hero_bg.png'
         ];
     }
@@ -146,12 +148,13 @@ class HeroGenerator {
      * Get database statistics
      */
     private function getDatabaseStats() {
-        $stats = ['weapons' => 0, 'armor' => 0, 'items' => 0];
+        $stats = ['weapons' => 0, 'armor' => 0, 'items' => 0, 'dolls' => 0];
         
         try {
             $stats['weapons'] = $this->getTableCount('weapon');
             $stats['armor'] = $this->getTableCount('armor');
             $stats['items'] = $this->getTableCount('etcitem');
+            $stats['dolls'] = $this->getTableCount('magicdoll_info');
         } catch(PDOException $e) {
             // Return defaults on error
         }

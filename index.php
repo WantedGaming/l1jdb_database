@@ -18,19 +18,31 @@ getPageHeader('Home');
             <?php if (!empty($recentUpdates)): ?>
                 <?php foreach ($recentUpdates as $update): ?>
                     <div class="update-item">
-                        <div class="update-meta">
-                            <?php echo ucfirst($update['category']); ?> • 
-                            <?php echo date('M j, Y g:i A', strtotime($update['updated_at'])); ?>
+                        <div class="update-icon">
+                            <img src="<?php echo SITE_URL; ?>/assets/img/icons/<?php echo $update['icon']; ?>" 
+                                 alt="<?php echo ucfirst($update['category']); ?>" 
+                                 onerror="this.src='<?php echo SITE_URL; ?>/assets/img/icons/0.png'">
                         </div>
-                        <div class="update-content">
-                            <strong><?php echo htmlspecialchars($update['item_name']); ?></strong>: 
-                            <?php echo htmlspecialchars($update['description']); ?>
+                        <div class="update-details">
+                            <div class="update-meta">
+                                <span class="category"><?php echo ucfirst($update['category']); ?></span>
+                                <span class="timestamp"><?php echo date('M j, Y g:i A', strtotime($update['updated_at'])); ?></span>
+                            </div>
+                            <div class="update-content">
+                                <strong><?php echo htmlspecialchars($update['item_name']); ?></strong>
+                                <?php echo htmlspecialchars($update['description']); ?>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <div class="update-item">
-                    <div class="update-content">No recent updates available.</div>
+                <div class="update-item no-updates">
+                    <div class="update-icon">
+                        <img src="<?php echo SITE_URL; ?>/assets/img/icons/0.png" alt="No updates">
+                    </div>
+                    <div class="update-details">
+                        <div class="update-content">No recent updates available.</div>
+                    </div>
                 </div>
             <?php endif; ?>
         </section>
@@ -75,15 +87,15 @@ getPageHeader('Home');
                     </div>
                 </a>
 
-                <a href="<?php echo SITE_URL; ?>/dolls/" class="card">
+                <a href="<?php echo SITE_URL; ?>/pages/dolls/doll_list.php" class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Dolls</h3>
+                        <h3 class="card-title">Magic Dolls</h3>
                     </div>
                     <div class="card-image">
                         <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/dolls.png" alt="Dolls" onerror="this.style.display='none'">
                     </div>
                     <div class="card-description">
-                        <p>View magical dolls and their enchantment effects, summoning requirements, and abilities.</p>
+                        <p>Summon powerful companions with unique abilities, potential bonuses, and magical effects to aid your journey.</p>
                     </div>
                 </a>
 
