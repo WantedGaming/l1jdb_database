@@ -22,7 +22,7 @@ getPageHeader('Admin Dashboard');
 
         <div class="admin-actions">
             <div class="cards-grid">
-                <a href="<?php echo SITE_URL; ?>/admin/pages/weapon_list.php" class="card">
+                <a href="<?php echo SITE_URL; ?>/admin/pages/weapon/weapon_list.php" class="card">
                     <div class="card-header">
                         <h3 class="card-title">Manage Weapons</h3>
                     </div>

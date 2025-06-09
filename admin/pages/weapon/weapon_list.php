@@ -1,5 +1,5 @@
 <?php
-require_once '../../includes/header.php';
+require_once '../../../includes/header.php';
 
 requireAdmin();
 
@@ -98,7 +98,7 @@ getPageHeader('Weapon Management');
         <div class="admin-header">
             <h1>Weapon Management</h1>
             <div class="admin-header-actions">
-                <a href="<?php echo SITE_URL; ?>/admin/pages/weapon_add.php" class="admin-btn admin-btn-primary">
+                <a href="<?php echo SITE_URL; ?>/admin/pages/weapon/weapon_add.php" class="admin-btn admin-btn-primary">
                     ➕ Add New Weapon
                 </a>
                 <a href="<?php echo SITE_URL; ?>/admin/" class="admin-btn admin-btn-secondary">
@@ -180,7 +180,7 @@ getPageHeader('Weapon Management');
                     </select>
                 </div>
                 <button type="submit" class="admin-btn admin-btn-primary">Filter</button>
-                <a href="<?php echo SITE_URL; ?>/admin/pages/weapon_list.php" class="admin-btn admin-btn-secondary">Clear</a>
+                <a href="<?php echo SITE_URL; ?>/admin/pages/weapon/weapon_list.php" class="admin-btn admin-btn-secondary">Clear</a>
             </form>
         </div>
 
@@ -214,7 +214,7 @@ getPageHeader('Weapon Management');
                                 <div class="admin-empty">
                                     <h3>No weapons found</h3>
                                     <p>No weapons match your current filters.</p>
-                                    <a href="<?php echo SITE_URL; ?>/admin/pages/weapon_add.php" class="admin-btn admin-btn-primary">
+                                    <a href="<?php echo SITE_URL; ?>/admin/pages/weapon/weapon_add.php" class="admin-btn admin-btn-primary">
                                         Add First Weapon
                                     </a>
                                 </div>
@@ -230,7 +230,7 @@ getPageHeader('Weapon Management');
                                 </td>
                                 <td class="table-cell-id"><?php echo $weapon['item_id']; ?></td>
                                 <td class="table-cell-name">
-                                    <a href="<?php echo SITE_URL; ?>/pages/weapon/weapon_detail.php?id=<?php echo $weapon['item_id']; ?>" 
+                                    <a href="<?php echo SITE_URL; ?>/pages/weapons/weapon_detail.php?id=<?php echo $weapon['item_id']; ?>" 
                                        class="weapon-link" target="_blank">
                                         <?php echo htmlspecialchars(cleanDescriptionPrefix($weapon['desc_en'])); ?>
                                     </a>
@@ -260,11 +260,11 @@ getPageHeader('Weapon Management');
                                 <td class="table-cell-number"><?php echo ($weapon['weight']); ?></td>
                                 <td class="table-cell-actions">
                                     <div class="btn-group">
-                                        <a href="<?php echo SITE_URL; ?>/admin/pages/weapon_edit.php?id=<?php echo $weapon['item_id']; ?>" 
+                                        <a href="<?php echo SITE_URL; ?>/admin/pages/weapon/weapon_edit.php?id=<?php echo $weapon['item_id']; ?>" 
                                            class="admin-btn admin-btn-small admin-btn-secondary" title="Edit">
                                             ✏️
                                         </a>
-                                        <a href="<?php echo SITE_URL; ?>/admin/pages/weapon_list.php?action=delete&id=<?php echo $weapon['item_id']; ?>" 
+                                        <a href="<?php echo SITE_URL; ?>/admin/pages/weapon/weapon_list.php?action=delete&id=<?php echo $weapon['item_id']; ?>" 
                                            class="admin-btn admin-btn-small admin-btn-danger" 
                                            onclick="return confirm('Are you sure you want to delete this weapon?')" title="Delete">
                                             🗑️
