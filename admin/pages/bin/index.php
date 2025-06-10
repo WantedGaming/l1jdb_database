@@ -7,17 +7,11 @@ require_once __DIR__ . '/../../includes/header.php';
 $bin_tables = [
     'bin_armor_element_common' => 'Armor Element',
     'bin_catalyst_common' => 'Catalyst',
-    'bin_charged_time_map_common' => 'Charged Time Map',
     'bin_companion_class_common' => 'Companion Class',
-    'bin_companion_enchant_common' => 'Companion Enchant',
     'bin_companion_skill_common' => 'Companion Skill',
-    'bin_companion_stat_common' => 'Companion Stat',
     'bin_craft_common' => 'Craft',
     'bin_einpoint_cost_common' => 'Einpoint Cost',
-    'bin_einpoint_faith_common' => 'Einpoint Faith',
-    'bin_einpoint_meta_common' => 'Einpoint Meta ',
     'bin_einpoint_normal_prob_common' => 'Einpoint Normal Rate',
-    'bin_einpoint_overstat_prob_common' => 'Einpoint Overstat Rate',
     'bin_einpoint_prob_table_common' => 'Einpoint Rate Table',
     'bin_einpoint_stat_common' => 'Einpoint Stat',
     'bin_element_enchant_common' => 'Element Enchant',
@@ -27,19 +21,12 @@ $bin_tables = [
     'bin_favorbook_common' => 'Favorbook',
     'bin_general_goods_common' => 'General Goods',
     'bin_huntingquest_common' => 'Hunting Quest',
-    'bin_indun_common' => 'Instance Dungeon',
     'bin_item_common' => 'Item',
     'bin_ndl_common' => 'NDL',
     'bin_npc_common' => 'NPC',
     'bin_passivespell_common' => 'Passive Spell',
-    'bin_pc_master_common' => 'PC Master',
-    'bin_portrait_common' => 'Portrait',
     'bin_potential_common' => 'Potential',
-    'bin_ship_common' => 'Ship',
     'bin_spell_common' => 'Spell',
-    'bin_timecollection_common' => 'Time Collection',
-    'bin_treasureboxreward_common' => 'Treasure Box Reward',
-    'bin_treasurebox_common' => 'Treasure Box'
 ];
 
 // Get statistics for each table
@@ -112,4 +99,4 @@ document.getElementById('tableSearch').addEventListener('input', function(e) {
 });
 </script>
 
-<?php require_once __DIR__ . '/../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
