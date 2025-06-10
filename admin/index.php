@@ -1,99 +1,104 @@
 <?php
-require_once '../includes/header.php';
+require_once __DIR__ . '/includes/auth_check.php';
+require_once __DIR__ . '/../includes/db.php';
+require_once __DIR__ . '/includes/header.php';
 
-requireAuth();
+// Get database statistics
+$stats = [];
 
-getPageHeader('Admin Dashboard');
+// Total accounts
+$stats['accounts'] = getSingleValue($conn, "SELECT COUNT(*) FROM accounts");
+
+// Total characters
+$stats['characters'] = getSingleValue($conn, "SELECT COUNT(*) FROM characters");
+
+// Total clans
+$stats['clans'] = getSingleValue($conn, "SELECT COUNT(*) FROM clan_data");
+
+// Total items
+$stats['items'] = getSingleValue($conn, "SELECT COUNT(*) FROM etcitem") + 
+                  getSingleValue($conn, "SELECT COUNT(*) FROM weapon") + 
+                  getSingleValue($conn, "SELECT COUNT(*) FROM armor");
+
+// Total NPCs
+$stats['npcs'] = getSingleValue($conn, "SELECT COUNT(*) FROM npc");
+
+// Total skills
+$stats['skills'] = getSingleValue($conn, "SELECT COUNT(*) FROM skills");
+
+// Binary tables count
+$stats['bin_tables'] = 35; // We know there are 35 bin tables
+
+// Get recent activity (dummy data for now)
+$recent_activities = [
+    ['action' => 'Login', 'user' => 'Admin', 'time' => date('Y-m-d H:i:s')],
+];
 ?>
 
-<main>
-    <!-- Dynamic Hero Section -->
-    <?php renderHero('admin'); ?>
 
-    <div class="main">
 
-    <?php if (isAdmin()): ?>
-        <div class="admin-stats">
-            <div class="stat-card">
-                <h3>Database Management</h3>
-                <p>Manage all database categories and content</p>
-            </div>
+<div class="content-wrapper">
+    <h1>Admin Dashboard</h1>
+    
+    <div class="dashboard-grid">
+        <div class="stat-card">
+            <h3>Total Accounts</h3>
+            <div class="value"><?php echo number_format($stats['accounts']); ?></div>
         </div>
-
-        <div class="admin-actions">
-            <div class="cards-grid">
-                <a href="<?php echo SITE_URL; ?>/admin/pages/weapon/weapon_list.php" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Manage Weapons</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Add, edit, and delete weapons</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/admin/armor/" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Manage Armor</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Add, edit, and delete armor</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/admin/items/" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Manage Items</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Add, edit, and delete items</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/admin/dolls/" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Manage Dolls</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Add, edit, and delete dolls</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/admin/maps/" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Manage Maps</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Add, edit, and delete maps</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/admin/monsters/" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Manage Monsters</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Add, edit, and delete monsters</p>
-                    </div>
-                </a>
-				<a href="<?php echo SITE_URL; ?>/admin/pages/bin/items/" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Bin Database</h3>
-                    </div>
-                    <div class="card-description">
-                        <p>Manage bin database tables</p>
-                    </div>
-                </a>
-            </div>
+        
+        <div class="stat-card">
+            <h3>Total Characters</h3>
+            <div class="value"><?php echo number_format($stats['characters']); ?></div>
         </div>
-    <?php else: ?>
-        <div class="access-denied">
-            <h2>Access Denied</h2>
-            <p>You don't have admin privileges to access this area.</p>
+        
+        <div class="stat-card">
+            <h3>Total Clans</h3>
+            <div class="value"><?php echo number_format($stats['clans']); ?></div>
         </div>
-    <?php endif; ?>
+        
+        <div class="stat-card">
+            <h3>Total Items</h3>
+            <div class="value"><?php echo number_format($stats['items']); ?></div>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Total NPCs</h3>
+            <div class="value"><?php echo number_format($stats['npcs']); ?></div>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Total Skills</h3>
+            <div class="value"><?php echo number_format($stats['skills']); ?></div>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Binary Tables</h3>
+            <div class="value"><?php echo $stats['bin_tables']; ?></div>
+        </div>
     </div>
-</main>
+    
+    <div class="quick-links">
+        <h2>Quick Links</h2>
+        <div class="links-grid">
+            <a href="pages/bin/index.php" class="link-item">Binary Tables</a>
+            <a href="pages/" class="link-item">Manage Pages</a>
+            <a href="tools/" class="link-item">Admin Tools</a>
+            <a href="../" class="link-item" target="_blank">View Site</a>
+        </div>
+    </div>
+    
+    <div class="activity-section">
+        <h2>Recent Activity</h2>
+        <ul class="activity-list">
+            <?php foreach ($recent_activities as $activity): ?>
+                <li>
+                    <strong><?php echo htmlspecialchars($activity['action']); ?></strong> by 
+                    <?php echo htmlspecialchars($activity['user']); ?> at 
+                    <?php echo htmlspecialchars($activity['time']); ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
 
-
-
-<?php getPageFooter(); ?>
+<?php require_once __DIR__ . '/includes/footer.php'; ?>

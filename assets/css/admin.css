@@ -187,13 +187,15 @@
 .admin-table-container {
     background-color: var(--primary);
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto;
     margin-bottom: 2rem;
+    max-width: 100%;
 }
 
 .admin-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;
 }
 
 .admin-table th {
@@ -205,15 +207,38 @@
     font-size: 0.9rem;
     border-bottom: 1px solid var(--primary);
     white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .admin-table td {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--secondary);
     vertical-align: middle;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.admin-table tr:hover {
+/* Expandable cell content on hover */
+.admin-table td:hover {
+    max-width: none;
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    z-index: 5;
+    position: relative;
+}
+
+/* Clickable table rows */
+.admin-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
     background-color: var(--secondary);
 }
 
@@ -249,7 +274,9 @@
 .table-cell-actions {
     white-space: nowrap;
     text-align: right;
-    min-width: 120px;
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
 }
 
 .table-cell-number {
@@ -624,10 +651,6 @@
         overflow-x: auto;
     }
     
-    .admin-table {
-        min-width: 800px;
-    }
-    
     .admin-stats {
         grid-template-columns: 1fr;
     }
@@ -751,6 +774,83 @@
 .material-silver { color: #bdc3c7; }
 .material-iron { color: #7f8c8d; }
 
+/* Binary Data Table Styles */
+.bin-table-view .admin-table {
+    font-size: 0.9rem;
+}
+
+.bin-table-view .admin-table td {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bin-table-view .admin-table td.expanded {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.table-cell-null-value {
+    color: var(--text);
+    opacity: 0.5;
+    font-style: italic;
+}
+
+.table-cell-enum-value {
+    color: #4CAF50;
+}
+
+.table-cell-text-value {
+    color: var(--text);
+}
+
+.table-cell-number-value {
+    text-align: right;
+    font-family: 'Courier New', monospace;
+}
+
+.table-cell-blob {
+    color: #9C27B0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85em;
+}
+
+/* Binary Data Details Styles */
+.bin-detail-field {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--secondary);
+}
+
+.bin-detail-field:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.bin-detail-label {
+    color: var(--text);
+    opacity: 0.8;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.bin-detail-value {
+    color: var(--text);
+    font-size: 1rem;
+}
+
+.bin-detail-value code {
+    background-color: var(--secondary);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
 /* Utility Classes */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
@@ -806,6 +906,176 @@
 /* Admin Form Container Layout */
 .admin-form-container {
     margin-bottom: 2rem;
+}
+
+/* Dashboard Styles */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.dashboard-grid .stat-card {
+    background: var(--primary);
+    border: 1px solid var(--secondary);
+    border-radius: 8px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.dashboard-grid .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-color: var(--accent);
+}
+
+.dashboard-grid .stat-card h3 {
+    color: var(--accent);
+    font-size: 1.1em;
+    text-transform: uppercase;
+    margin: 0 0 15px 0;
+    font-weight: 600;
+}
+
+.dashboard-grid .stat-card .value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--text);
+    margin: 10px 0;
+}
+
+.quick-links {
+    background: var(--primary);
+    border: 1px solid var(--secondary);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 40px;
+}
+
+.quick-links h2 {
+    color: var(--accent);
+    margin-bottom: 20px;
+}
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.link-item {
+    display: block;
+    padding: 15px 20px;
+    background: var(--secondary);
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 500;
+}
+
+.link-item:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.activity-section {
+    background: var(--primary);
+    border: 1px solid var(--secondary);
+    border-radius: 8px;
+    padding: 25px;
+}
+
+.activity-section h2 {
+    color: var(--accent);
+    margin-bottom: 20px;
+}
+
+.activity-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.activity-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--secondary);
+}
+
+.activity-list li:last-child {
+    border-bottom: none;
+}
+
+/* Bin Pages Styles */
+.bin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.bin-card {
+    background: var(--primary);
+    border: 1px solid var(--secondary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.bin-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-color: var(--accent);
+}
+
+.bin-card h3 {
+    color: var(--accent);
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.bin-card .table-name {
+    color: var(--text);
+    opacity: 0.7;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: var(--secondary);
+    border-radius: 4px;
+}
+
+.bin-card .record-count {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.bin-card .record-count .count {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.bin-card .actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+}
+
+.bin-card .actions .admin-btn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
 }
 
 /* Enhanced Detail Section Styles */
@@ -1003,4 +1273,20 @@
         flex-wrap: nowrap;
         overflow-x: auto;
     }
+}
+
+/* Binary table specific column hiding for certain tables */
+.bin-table-view.bin-enchant-table-common .admin-table th:nth-child(n+6),
+.bin-table-view.bin-enchant-table-common .admin-table td:nth-child(n+6) {
+    display: none;
+}
+
+.bin-table-view.bin-npc-common .admin-table th:nth-child(n+10),
+.bin-table-view.bin-npc-common .admin-table td:nth-child(n+10) {
+    display: none;
+}
+
+.bin-table-view.bin-item-common .admin-table th:nth-child(n+8),
+.bin-table-view.bin-item-common .admin-table td:nth-child(n+8) {
+    display: none;
 }

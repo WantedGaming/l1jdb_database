@@ -1,7 +1,8 @@
 <?php
-require_once '../../../includes/header.php';
-
-requireAdmin();
+require_once __DIR__ . '/../../includes/auth_check.php';
+require_once __DIR__ . '/../../../includes/config.php';
+require_once __DIR__ . '/../../../includes/functions.php';
+require_once __DIR__ . '/../../includes/header.php';
 
 // Handle form submissions
 $message = '';
@@ -86,14 +87,7 @@ $weapons = $stmt->fetchAll();
 $typeOptions = $pdo->query("SELECT DISTINCT type FROM weapon ORDER BY type")->fetchAll(PDO::FETCH_COLUMN);
 $gradeOptions = $pdo->query("SELECT DISTINCT itemGrade FROM weapon ORDER BY itemGrade")->fetchAll(PDO::FETCH_COLUMN);
 $materialOptions = $pdo->query("SELECT DISTINCT material FROM weapon ORDER BY material")->fetchAll(PDO::FETCH_COLUMN);
-
-getPageHeader('Weapon Management');
 ?>
-
-<link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/admin.css">
-
-<main>
-    <div class="main">
         <!-- Admin Header -->
         <div class="admin-header">
             <h1>Weapon Management</h1>
@@ -101,7 +95,7 @@ getPageHeader('Weapon Management');
                 <a href="<?php echo SITE_URL; ?>/admin/pages/weapon/weapon_add.php" class="admin-btn admin-btn-primary">
                     ➕ Add New Weapon
                 </a>
-                <a href="<?php echo SITE_URL; ?>/admin/" class="admin-btn admin-btn-secondary">
+                <a href="/l1jdb_database/admin/" class="admin-btn admin-btn-secondary">
                     ← Back to Admin
                 </a>
             </div>
@@ -110,7 +104,7 @@ getPageHeader('Weapon Management');
         <!-- Breadcrumb -->
         <nav class="admin-breadcrumb">
             <ul class="breadcrumb-list">
-                <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/admin/">Admin</a></li>
+                <li class="breadcrumb-item"><a href="/l1jdb_database/admin/">Admin</a></li>
                 <li class="breadcrumb-separator">›</li>
                 <li class="breadcrumb-item">Weapon Management</li>
             </ul>
@@ -338,4 +332,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php getPageFooter(); ?>
+<?php require_once __DIR__ . '/../../includes/footer.php'; ?>
