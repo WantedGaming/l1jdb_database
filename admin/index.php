@@ -81,6 +81,9 @@ $recent_activities = [
         <h2>Quick Links</h2>
         <div class="links-grid">
             <a href="pages/bin/index.php" class="link-item">Binary Tables</a>
+            <a href="pages/bin/catalyst/catalyst_list_view.php" class="link-item">Catalyst Data</a>
+            <a href="pages/weapon/weapon_list.php" class="link-item">Weapon Management</a>
+            <a href="pages/weapon/admin_weapon_list.php" class="link-item">Advanced Weapon Management</a>
             <a href="pages/" class="link-item">Manage Pages</a>
             <a href="tools/" class="link-item">Admin Tools</a>
             <a href="../" class="link-item" target="_blank">View Site</a>

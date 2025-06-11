@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 09, 2025 at 11:38 PM
+-- Generation Time: Jun 10, 2025 at 08:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,24 +24,39 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bin_treasureboxreward_common`
+-- Table structure for table `0_translations`
 --
 
-CREATE TABLE `bin_treasureboxreward_common` (
-  `nameid` int(6) NOT NULL DEFAULT 0,
-  `desc_kr` varchar(50) DEFAULT NULL,
-  `grade` enum('Common(0)','Good(1)','Prime(2)','Legendary(3)') NOT NULL DEFAULT 'Common(0)'
-) ENGINE=InnoDB DEFAULT CHARSET=euckr COLLATE=euckr_korean_ci;
+CREATE TABLE `0_translations` (
+  `id` int(11) NOT NULL,
+  `text_korean` text NOT NULL,
+  `text_english` text NOT NULL,
+  `source` varchar(200) DEFAULT NULL,
+  `line_number` int(11) DEFAULT NULL,
+  `validated` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `bin_treasureboxreward_common`
+-- Indexes for table `0_translations`
 --
-ALTER TABLE `bin_treasureboxreward_common`
-  ADD PRIMARY KEY (`nameid`);
+ALTER TABLE `0_translations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_transl_source_line` (`source`,`line_number`),
+  ADD KEY `idx_transl_korean_text` (`text_korean`(768));
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `0_translations`
+--
+ALTER TABLE `0_translations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

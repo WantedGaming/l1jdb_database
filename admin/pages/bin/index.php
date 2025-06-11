@@ -5,26 +5,12 @@ require_once __DIR__ . '/../../includes/header.php';
 
 // Get list of all bin tables
 $bin_tables = [
-    'bin_armor_element_common' => 'Armor Element',
     'bin_catalyst_common' => 'Catalyst',
-    'bin_companion_class_common' => 'Companion Class',
-    'bin_companion_skill_common' => 'Companion Skill',
     'bin_craft_common' => 'Craft',
-    'bin_einpoint_cost_common' => 'Einpoint Cost',
-    'bin_einpoint_normal_prob_common' => 'Einpoint Normal Rate',
-    'bin_einpoint_prob_table_common' => 'Einpoint Rate Table',
-    'bin_einpoint_stat_common' => 'Einpoint Stat',
-    'bin_element_enchant_common' => 'Element Enchant',
-    'bin_enchant_scroll_table_common' => 'Enchant Scroll Table',
-    'bin_enchant_table_common' => 'Enchant Table ',
     'bin_entermaps_common' => 'Enter Maps',
-    'bin_favorbook_common' => 'Favorbook',
-    'bin_general_goods_common' => 'General Goods',
-    'bin_huntingquest_common' => 'Hunting Quest',
     'bin_item_common' => 'Item',
     'bin_ndl_common' => 'NDL',
     'bin_npc_common' => 'NPC',
-    'bin_passivespell_common' => 'Passive Spell',
     'bin_potential_common' => 'Potential',
     'bin_spell_common' => 'Spell',
 ];
@@ -49,10 +35,6 @@ foreach ($bin_tables as $table => $description) {
 
 <h1>Binary Data Tables</h1>
     
-    <div class="admin-search">
-        <input type="text" id="tableSearch" placeholder="Search tables..." autocomplete="off">
-    </div>
-
     <div class="admin-stats">
         <div class="stat-card">
             <h3>Total Tables</h3>
@@ -74,29 +56,31 @@ foreach ($bin_tables as $table => $description) {
                     <span class="count"><?php echo number_format($table_stats[$table]); ?></span>
                 </div>
                 <div class="actions">
-                    <a href="view.php?table=<?php echo urlencode($table); ?>" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php if ($table === 'bin_catalyst_common'): ?>
+                        <a href="catalyst/catalyst_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php elseif ($table === 'bin_craft_common'): ?>
+                        <a href="craft_common/craft_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php elseif ($table === 'bin_enchant_scroll_table_common'): ?>
+                        <a href="enchant_scroll_table_common/enchant_scroll_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php elseif ($table === 'bin_entermaps_common'): ?>
+                        <a href="entermaps_common/entermaps_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php elseif ($table === 'bin_spell_common'): ?>
+                        <a href="spell_common/spell_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php elseif ($table === 'bin_potential_common'): ?>
+                        <a href="potential_common/potential_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php elseif ($table === 'bin_npc_common'): ?>
+                        <a href="npc_common/npc_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php elseif ($table === 'bin_ndl_common'): ?>
+                        <a href="ndl_common/ndl_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php elseif ($table === 'bin_item_common'): ?>
+                        <a href="item_common/item_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php else: ?>
+                        <a href="view.php?table=<?php echo urlencode($table); ?>" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
+                    <?php endif; ?>
                     <a href="detail.php?table=<?php echo urlencode($table); ?>" class="admin-btn admin-btn-secondary admin-btn-small">Details</a>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
-
-<script>
-document.getElementById('tableSearch').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const cards = document.querySelectorAll('.bin-card');
-    
-    cards.forEach(card => {
-        const tableName = card.getAttribute('data-table');
-        const description = card.getAttribute('data-description');
-        
-        if (tableName.includes(searchTerm) || description.includes(searchTerm)) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-});
-</script>
 
 <?php require_once __DIR__ . '/../../includes/footer.php'; ?>

@@ -15,7 +15,9 @@ try {
 }
 
 // Session start
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Site configuration
 define('SITE_NAME', 'L1J Database');
