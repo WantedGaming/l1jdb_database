@@ -1,107 +1,88 @@
 <?php
-require_once __DIR__ . '/includes/auth_check.php';
-require_once __DIR__ . '/../includes/db.php';
-require_once __DIR__ . '/includes/header.php';
+// Admin panel for L1J Database Management
+session_start();
+$page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
-// Get database statistics
-$stats = [];
+// Database connection
+function getDbConnection() {
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "l1j_remastered";
+    
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    
+    return $conn;
+}
 
-// Total accounts
-$stats['accounts'] = getSingleValue($conn, "SELECT COUNT(*) FROM accounts");
+// Function to sanitize input
+function sanitizeInput($input) {
+    return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+}
 
-// Total characters
-$stats['characters'] = getSingleValue($conn, "SELECT COUNT(*) FROM characters");
-
-// Total clans
-$stats['clans'] = getSingleValue($conn, "SELECT COUNT(*) FROM clan_data");
-
-// Total items
-$stats['items'] = getSingleValue($conn, "SELECT COUNT(*) FROM etcitem") + 
-                  getSingleValue($conn, "SELECT COUNT(*) FROM weapon") + 
-                  getSingleValue($conn, "SELECT COUNT(*) FROM armor");
-
-// Total NPCs
-$stats['npcs'] = getSingleValue($conn, "SELECT COUNT(*) FROM npc");
-
-// Total skills
-$stats['skills'] = getSingleValue($conn, "SELECT COUNT(*) FROM skills");
-
-// Binary tables count
-$stats['bin_tables'] = 35; // We know there are 35 bin tables
-
-// Get recent activity (dummy data for now)
-$recent_activities = [
-    ['action' => 'Login', 'user' => 'Admin', 'time' => date('Y-m-d H:i:s')],
-];
+// Function to validate numeric input
+function validateNumeric($input, $fieldName, $min = null, $max = null) {
+    if (!is_numeric($input)) {
+        return "$fieldName must be a number.";
+    }
+    
+    if ($min !== null && $input < $min) {
+        return "$fieldName must be at least $min.";
+    }
+    
+    if ($max !== null && $input > $max) {
+        return "$fieldName must not exceed $max.";
+    }
+    
+    return null; // No error
+}
 ?>
-
-
-
-<div class="content-wrapper">
-    <h1>Admin Dashboard</h1>
-    
-    <div class="dashboard-grid">
-        <div class="stat-card">
-            <h3>Total Accounts</h3>
-            <div class="value"><?php echo number_format($stats['accounts']); ?></div>
-        </div>
-        
-        <div class="stat-card">
-            <h3>Total Characters</h3>
-            <div class="value"><?php echo number_format($stats['characters']); ?></div>
-        </div>
-        
-        <div class="stat-card">
-            <h3>Total Clans</h3>
-            <div class="value"><?php echo number_format($stats['clans']); ?></div>
-        </div>
-        
-        <div class="stat-card">
-            <h3>Total Items</h3>
-            <div class="value"><?php echo number_format($stats['items']); ?></div>
-        </div>
-        
-        <div class="stat-card">
-            <h3>Total NPCs</h3>
-            <div class="value"><?php echo number_format($stats['npcs']); ?></div>
-        </div>
-        
-        <div class="stat-card">
-            <h3>Total Skills</h3>
-            <div class="value"><?php echo number_format($stats['skills']); ?></div>
-        </div>
-        
-        <div class="stat-card">
-            <h3>Binary Tables</h3>
-            <div class="value"><?php echo $stats['bin_tables']; ?></div>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L1J Database Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="admin-content-wrapper mt-4">
+        <?php
+        // Include the appropriate page based on the 'page' parameter
+        switch ($page) {
+            case 'spawn':
+                include 'pages/spawn.php';
+                break;
+            case 'drops':
+                include 'pages/drops.php';
+                break;
+            case 'monsters':
+                include 'pages/monsters.php';
+                break;
+            case 'beginner':
+                include 'pages/beginner.php';
+                break;
+            default:
+                include 'pages/home.php';
+                break;
+        }
+        ?>
     </div>
-    
-    <div class="quick-links">
-        <h2>Quick Links</h2>
-        <div class="links-grid">
-            <a href="pages/bin/index.php" class="link-item">Binary Tables</a>
-            <a href="pages/bin/catalyst/catalyst_list_view.php" class="link-item">Catalyst Data</a>
-            <a href="pages/weapon/weapon_list.php" class="link-item">Weapon Management</a>
-            <a href="pages/weapon/admin_weapon_list.php" class="link-item">Advanced Weapon Management</a>
-            <a href="pages/" class="link-item">Manage Pages</a>
-            <a href="tools/" class="link-item">Admin Tools</a>
-            <a href="../" class="link-item" target="_blank">View Site</a>
-        </div>
-    </div>
-    
-    <div class="activity-section">
-        <h2>Recent Activity</h2>
-        <ul class="activity-list">
-            <?php foreach ($recent_activities as $activity): ?>
-                <li>
-                    <strong><?php echo htmlspecialchars($activity['action']); ?></strong> by 
-                    <?php echo htmlspecialchars($activity['user']); ?> at 
-                    <?php echo htmlspecialchars($activity['time']); ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</div>
 
-<?php require_once __DIR__ . '/includes/footer.php'; ?>
+    <footer class="admin-footer mt-auto py-3">
+        <div class="admin-footer-container text-center">
+            <span>L1J Database Admin Panel &copy; <?php echo date('Y'); ?></span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
