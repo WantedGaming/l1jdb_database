@@ -634,35 +634,57 @@ a:hover {
     height: 20px;
     margin-right: 0.5rem;
     vertical-align: middle;
-    font-style: normal;
-    font-weight: bold;
-    text-align: center;
-    line-height: 20px;
-    font-size: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 3px;
+    border: 1px solid var(--accent);
+    position: relative;
 }
 
-.admin-icon-dashboard::before {
-    content: "📊";
+/* Icon placeholders - replace background-image with your actual icon images */
+.admin-icon-dashboard {
+    background-color: rgba(253, 127, 68, 0.2);
+    /* Replace with: background-image: url('../img/icons/dashboard.png'); */
 }
 
-.admin-icon-stats::before {
-    content: "📈";
+.admin-icon-stats {
+    background-color: rgba(253, 127, 68, 0.2);
+    /* Replace with: background-image: url('../img/icons/stats.png'); */
 }
 
-.admin-icon-spawn::before {
-    content: "🏃";
+.admin-icon-spawn {
+    background-color: rgba(253, 127, 68, 0.2);
+    /* Replace with: background-image: url('../img/icons/spawn.png'); */
 }
 
-.admin-icon-drops::before {
-    content: "💎";
+.admin-icon-drops {
+    background-color: rgba(253, 127, 68, 0.2);
+    /* Replace with: background-image: url('../img/icons/drops.png'); */
 }
 
-.admin-icon-monsters::before {
-    content: "👹";
+.admin-icon-monsters {
+    background-color: rgba(253, 127, 68, 0.2);
+    /* Replace with: background-image: url('../img/icons/monsters.png'); */
 }
 
-.admin-icon-beginner::before {
-    content: "🎒";
+.admin-icon-beginner {
+    background-color: rgba(253, 127, 68, 0.2);
+    /* Replace with: background-image: url('../img/icons/beginner.png'); */
+}
+
+/* Placeholder content for when no image is loaded */
+.admin-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    opacity: 0.6;
 }
 
 /* Management Cards */
