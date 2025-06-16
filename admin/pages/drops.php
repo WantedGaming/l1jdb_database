@@ -165,167 +165,103 @@ $conn->close();
                 
                 <div id="alertPlaceholder"></div>
                 
-                <ul class="nav nav-tabs" id="dropTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="add-drop-tab" data-bs-toggle="tab" data-bs-target="#add-drop" type="button" role="tab" aria-controls="add-drop" aria-selected="true">Add Drop</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="view-drops-tab" data-bs-toggle="tab" data-bs-target="#view-drops" type="button" role="tab" aria-controls="view-drops" aria-selected="false">View Drops</button>
-                    </li>
-                </ul>
+                <!-- Add New Drop Button -->
+                <div class="admin-header mb-4">
+                    <h3 class="text-accent">Drop Management</h3>
+                    <div class="admin-header-actions">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDropModal">
+                            <span class="admin-icon admin-icon-drops"></span>Add New Drop
+                        </button>
+                    </div>
+                </div>
                 
-                <div class="tab-content" id="dropTabsContent">
-                    <div class="tab-pane fade show active" id="add-drop" role="tabpanel" aria-labelledby="add-drop-tab">
-                        <div class="form-section mt-4">
-                            <form id="dropForm" method="post" action="index.php?page=drops">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="monsterSearch" class="form-label">Search Monster</label>
-                                            <input type="text" class="form-control" id="monsterSearch" placeholder="Search by monster name">
-                                            <div id="monsterSuggestions" class="list-group mt-2"></div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="mobId" class="form-label">Monster ID</label>
-                                            <input type="number" class="form-control" id="mobId" name="mobId" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="itemSearch" class="form-label">Search Item</label>
-                                            <input type="text" class="form-control" id="itemSearch" placeholder="Search by item name">
-                                            <div id="itemSuggestions" class="list-group mt-2"></div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="itemId" class="form-label">Item ID</label>
-                                            <input type="number" class="form-control" id="itemId" name="itemId" required>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="min" class="form-label">Min Quantity</label>
-                                                    <input type="number" class="form-control" id="min" name="min" min="1" value="1" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="max" class="form-label">Max Quantity</label>
-                                                    <input type="number" class="form-control" id="max" name="max" min="1" value="1" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="chance" class="form-label">Drop Chance (1 = 0.0001%, 1000000 = 100%)</label>
-                                            <input type="number" class="form-control" id="chance" name="chance" min="1" max="1000000" value="100000" required>
-                                            <div class="form-text">Enter a value between 1 and 1,000,000. Higher values = better drop rate.</div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label class="form-label">Drop Rate Preview</label>
-                                            <div class="form-control" id="chancePreview" style="background-color: var(--secondary); color: var(--text);">10%</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-primary">Add Drop</button>
-                            </form>
+                <!-- Drop List View -->
+                <div class="form-section">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="search" class="form-label">Search Drops</label>
+                            <input type="text" class="form-control search-input" id="search" data-table="dropsTable" placeholder="Search by monster or item name...">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Total Drops</label>
+                            <div class="form-control" style="background-color: var(--secondary); color: var(--accent);"><?php echo number_format($totalDrops); ?> drops</div>
                         </div>
                     </div>
                     
-                    <div class="tab-pane fade" id="view-drops" role="tabpanel" aria-labelledby="view-drops-tab">
-                        <div class="form-section mt-4">
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <label for="search" class="form-label">Search Drops</label>
-                                    <input type="text" class="form-control search-input" id="search" data-table="dropsTable" placeholder="Search by monster or item name...">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Total Drops</label>
-                                    <div class="form-control" style="background-color: var(--secondary); color: var(--accent);"><?php echo number_format($totalDrops); ?> drops</div>
-                                </div>
-                            </div>
-                            
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover data-table" id="dropsTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Monster ID</th>
-                                            <th>Monster Name</th>
-                                            <th>Item ID</th>
-                                            <th>Item Name</th>
-                                            <th>Type</th>
-                                            <th>Quantity</th>
-                                            <th>Drop Rate</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($drops as $drop): ?>
-                                        <tr>
-                                            <td><?php echo $drop['mobId']; ?></td>
-                                            <td><?php echo $drop['monster_name'] ?: 'Unknown Monster'; ?></td>
-                                            <td><?php echo $drop['itemId']; ?></td>
-                                            <td><?php echo $drop['item_name'] ?: 'Unknown Item'; ?></td>
-                                            <td>
-                                                <span class="badge badge-<?php echo strtolower($drop['item_type']); ?>">
-                                                    <?php echo $drop['item_type']; ?>
-                                                </span>
-                                            </td>
-                                            <td><?php echo $drop['min']; ?><?php echo ($drop['max'] > $drop['min']) ? ' - ' . $drop['max'] : ''; ?></td>
-                                            <td><?php echo number_format(($drop['chance'] / 10000), 2); ?>%</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editDropModal" 
-                                                        data-mobid="<?php echo $drop['mobId']; ?>" 
-                                                        data-itemid="<?php echo $drop['itemId']; ?>">
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDropModal" 
-                                                        data-mobid="<?php echo $drop['mobId']; ?>" 
-                                                        data-itemid="<?php echo $drop['itemId']; ?>">
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <?php if (empty($drops)): ?>
-                            <div class="alert alert-info">No drops found.</div>
-                            <?php endif; ?>
-                            
-                            <!-- Pagination -->
-                            <?php if ($totalPages > 1): ?>
-                            <nav aria-label="Drop pagination">
-                                <ul class="pagination justify-content-center mt-4">
-                                    <?php if ($page > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="index.php?page=drops&drop_page=<?php echo $page - 1; ?>">Previous</a>
-                                    </li>
-                                    <?php endif; ?>
-                                    
-                                    <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
-                                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="index.php?page=drops&drop_page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                    </li>
-                                    <?php endfor; ?>
-                                    
-                                    <?php if ($page < $totalPages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="index.php?page=drops&drop_page=<?php echo $page + 1; ?>">Next</a>
-                                    </li>
-                                    <?php endif; ?>
-                                </ul>
-                            </nav>
-                            <?php endif; ?>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover data-table" id="dropsTable">
+                            <thead>
+                                <tr>
+                                    <th>Monster ID</th>
+                                    <th>Monster Name</th>
+                                    <th>Item ID</th>
+                                    <th>Item Name</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                    <th>Drop Rate</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($drops as $drop): ?>
+                                <tr>
+                                    <td><?php echo $drop['mobId']; ?></td>
+                                    <td><?php echo $drop['monster_name'] ?: 'Unknown Monster'; ?></td>
+                                    <td><?php echo $drop['itemId']; ?></td>
+                                    <td><?php echo $drop['item_name'] ?: 'Unknown Item'; ?></td>
+                                    <td>
+                                        <span class="badge badge-<?php echo strtolower($drop['item_type']); ?>">
+                                            <?php echo $drop['item_type']; ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo $drop['min']; ?><?php echo ($drop['max'] > $drop['min']) ? ' - ' . $drop['max'] : ''; ?></td>
+                                    <td><?php echo number_format(($drop['chance'] / 10000), 2); ?>%</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editDropModal" 
+                                                data-mobid="<?php echo $drop['mobId']; ?>" 
+                                                data-itemid="<?php echo $drop['itemId']; ?>">
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteDropModal" 
+                                                data-mobid="<?php echo $drop['mobId']; ?>" 
+                                                data-itemid="<?php echo $drop['itemId']; ?>">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
+                    
+                    <?php if (empty($drops)): ?>
+                    <div class="alert alert-info">No drops found.</div>
+                    <?php endif; ?>
+                    
+                    <!-- Pagination -->
+                    <?php if ($totalPages > 1): ?>
+                    <nav aria-label="Drop pagination">
+                        <ul class="pagination justify-content-center mt-4">
+                            <?php if ($page > 1): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="index.php?page=drops&drop_page=<?php echo $page - 1; ?>">Previous</a>
+                            </li>
+                            <?php endif; ?>
+                            
+                            <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
+                            <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                <a class="page-link" href="index.php?page=drops&drop_page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                            <?php endfor; ?>
+                            
+                            <?php if ($page < $totalPages): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="index.php?page=drops&drop_page=<?php echo $page + 1; ?>">Next</a>
+                            </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

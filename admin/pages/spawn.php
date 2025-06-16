@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $conn = getDbConnection();
 $npc_list = [];
 
-$sql = "SELECT npcid, desc_en FROM npc ORDER BY npcid LIMIT 100";
+$sql = "SELECT npcid, desc_en, spriteId FROM npc ORDER BY npcid";
 $result = $conn->query($sql);
 
 if ($result && $result->num_rows > 0) {
@@ -97,7 +97,7 @@ if (!array_key_exists($selectedTable, $spawn_tables)) {
     $selectedTable = 'spawnlist';
 }
 
-$sql = "SELECT s.*, n.desc_en as npc_name 
+$sql = "SELECT s.*, n.desc_en as npc_name, n.spriteId 
         FROM $selectedTable s 
         LEFT JOIN npc n ON s.npc_templateid = n.npcid 
         ORDER BY s.id DESC 
@@ -121,6 +121,136 @@ $conn->close();
                 <span class="admin-icon admin-icon-dashboard"></span>Back to Dashboard
             </a>
         </div>
+
+<!-- Add New Spawn Modal -->
+<div class="modal fade" id="addSpawnModal" tabindex="-1" aria-labelledby="addSpawnModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSpawnModalLabel"><span class="admin-icon admin-icon-spawn"></span>Add New Spawn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addSpawnForm" method="post" action="index.php?page=spawn">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="add_spawnlist_type" class="form-label">Spawn List Type</label>
+                                <select class="form-select" id="add_spawnlist_type" name="spawnlist_type">
+                                    <?php foreach ($spawn_tables as $table => $label): ?>
+                                    <option value="<?php echo $table; ?>"><?php echo $label; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="add_name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="add_name" name="name" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="add_count" class="form-label">Count</label>
+                                <input type="number" class="form-control" id="add_count" name="count" min="1" value="1" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="add_npcSearch" class="form-label">Search NPC</label>
+                                <input type="text" class="form-control" id="add_npcSearch" placeholder="Search by NPC name">
+                                <div id="add_npcSuggestions" class="list-group mt-2"></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="add_npc_templateid" class="form-label">NPC Template ID</label>
+                                <input type="number" class="form-control" id="add_npc_templateid" name="npc_templateid" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Monster Preview</label>
+                                <div id="add_monster_preview" class="d-flex align-items-center">
+                                    <img id="add_monster_image" src="/l1jdb_database/assets/img/placeholders/monsters.png" 
+                                         alt="Monster Preview" 
+                                         class="monster-preview-img">
+                                    <span id="add_monster_name">Select an NPC to see preview</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_locx" class="form-label">Location X</label>
+                                        <input type="number" class="form-control" id="add_locx" name="locx" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_locy" class="form-label">Location Y</label>
+                                        <input type="number" class="form-control" id="add_locy" name="locy" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_randomx" class="form-label">Random X</label>
+                                        <input type="number" class="form-control" id="add_randomx" name="randomx" value="0">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_randomy" class="form-label">Random Y</label>
+                                        <input type="number" class="form-control" id="add_randomy" name="randomy" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="add_heading" class="form-label">Heading</label>
+                                <input type="number" class="form-control" id="add_heading" name="heading" value="0" min="0" max="7">
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_min_respawn_delay" class="form-label">Min Respawn Delay</label>
+                                        <input type="number" class="form-control" id="add_min_respawn_delay" name="min_respawn_delay" value="60">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_max_respawn_delay" class="form-label">Max Respawn Delay</label>
+                                        <input type="number" class="form-control" id="add_max_respawn_delay" name="max_respawn_delay" value="120">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_mapid" class="form-label">Map ID</label>
+                                        <input type="number" class="form-control" id="add_mapid" name="mapid" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_movement_distance" class="form-label">Movement Distance</label>
+                                        <input type="number" class="form-control" id="add_movement_distance" name="movement_distance" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveNewSpawn">Add Spawn</button>
+            </div>
+        </div>
+    </div>
+</div>
         
         <div class="card mb-4">
             <div class="card-header">
@@ -137,192 +267,87 @@ $conn->close();
                 
                 <div id="alertPlaceholder"></div>
                 
-                <ul class="nav nav-tabs" id="spawnTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="add-tab" data-bs-toggle="tab" data-bs-target="#add" type="button" role="tab" aria-controls="add" aria-selected="true">Add Spawn</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="view-tab" data-bs-toggle="tab" data-bs-target="#view" type="button" role="tab" aria-controls="view" aria-selected="false">View Spawns</button>
-                    </li>
-                </ul>
+                <!-- Add New Spawn Button -->
+                <div class="admin-header mb-4">
+                    <h3 class="text-accent">Spawn Management</h3>
+                    <div class="admin-header-actions">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSpawnModal">
+                            <span class="admin-icon admin-icon-spawn"></span>Add New Spawn
+                        </button>
+                    </div>
+                </div>
                 
-                <div class="tab-content" id="spawnTabsContent">
-                    <div class="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
-                        <div class="form-section mt-4">
-                            <form id="spawnForm" method="post" action="index.php?page=spawn">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="spawnlist_type" class="form-label">Spawn List Type</label>
-                                            <select class="form-select" id="spawnlist_type" name="spawnlist_type">
-                                                <?php foreach ($spawn_tables as $table => $label): ?>
-                                                <option value="<?php echo $table; ?>"><?php echo $label; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="name" name="name" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="count" class="form-label">Count</label>
-                                            <input type="number" class="form-control" id="count" name="count" min="1" value="1" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="npcSearch" class="form-label">Search NPC</label>
-                                            <input type="text" class="form-control" id="npcSearch" placeholder="Search by NPC name">
-                                            <div id="npcSuggestions" class="list-group mt-2"></div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="npc_templateid" class="form-label">NPC Template ID</label>
-                                            <input type="number" class="form-control" id="npc_templateid" name="npc_templateid" required>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="locx" class="form-label">Location X</label>
-                                                    <input type="number" class="form-control" id="locx" name="locx" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="locy" class="form-label">Location Y</label>
-                                                    <input type="number" class="form-control" id="locy" name="locy" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="randomx" class="form-label">Random X</label>
-                                                    <input type="number" class="form-control" id="randomx" name="randomx" value="0">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="randomy" class="form-label">Random Y</label>
-                                                    <input type="number" class="form-control" id="randomy" name="randomy" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="heading" class="form-label">Heading</label>
-                                            <input type="number" class="form-control" id="heading" name="heading" value="0" min="0" max="7">
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="min_respawn_delay" class="form-label">Min Respawn Delay</label>
-                                                    <input type="number" class="form-control" id="min_respawn_delay" name="min_respawn_delay" value="60">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="max_respawn_delay" class="form-label">Max Respawn Delay</label>
-                                                    <input type="number" class="form-control" id="max_respawn_delay" name="max_respawn_delay" value="120">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="mapid" class="form-label">Map ID</label>
-                                                    <input type="number" class="form-control" id="mapid" name="mapid" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="movement_distance" class="form-label">Movement Distance</label>
-                                                    <input type="number" class="form-control" id="movement_distance" name="movement_distance" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-primary">Add Spawn</button>
-                            </form>
+                <!-- Spawn List View -->
+                <div class="form-section">
+                    <form method="get" action="index.php" class="mb-4">
+                        <input type="hidden" name="page" value="spawn">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="spawnlist_type_view" class="form-label">Select Spawn List Type</label>
+                                <select class="form-select" id="spawnlist_type_view" name="spawnlist_type" onchange="this.form.submit()">
+                                    <?php foreach ($spawn_tables as $table => $label): ?>
+                                    <option value="<?php echo $table; ?>" <?php echo ($selectedTable === $table) ? 'selected' : ''; ?>><?php echo $label; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="search" class="form-label">Search</label>
+                                <input type="text" class="form-control search-input" id="search" data-table="spawnsTable" placeholder="Search spawns...">
+                            </div>
                         </div>
+                    </form>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover data-table" id="spawnsTable">
+                            <thead>
+                                <tr>
+                                    <th data-sort="id">ID</th>
+                                    <th>Monster</th>
+                                    <th data-sort="name">Name</th>
+                                    <th data-sort="npc_templateid">NPC ID</th>
+                                    <th>NPC Name</th>
+                                    <th data-sort="count">Count</th>
+                                    <th>Location</th>
+                                    <th>Map ID</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($spawns as $spawn): ?>
+                                <tr>
+                                    <td data-column="id"><?php echo $spawn['id']; ?></td>
+                                    <td class="icon-cell">
+                                        <img src="<?php echo '/l1jdb_database/assets/img/icons/ms' . $spawn['spriteId'] . '.png'; ?>" 
+                                             alt="Monster Icon" 
+                                             onerror="this.src='/l1jdb_database/assets/img/icons/ms<?php echo $spawn['spriteId']; ?>.gif'; this.onerror=function(){this.src='/l1jdb_database/assets/img/placeholders/monsters.png';}">
+                                    </td>
+                                    <td data-column="name"><?php echo $spawn['name']; ?></td>
+                                    <td data-column="npc_templateid"><?php echo $spawn['npc_templateid']; ?></td>
+                                    <td><?php echo $spawn['npc_name']; ?></td>
+                                    <td data-column="count"><?php echo $spawn['count']; ?></td>
+                                    <td>(<?php echo $spawn['locx']; ?>, <?php echo $spawn['locy']; ?>)</td>
+                                    <td><?php echo $spawn['mapid']; ?></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editSpawnModal" 
+                                                data-id="<?php echo $spawn['id']; ?>" 
+                                                data-table="<?php echo $selectedTable; ?>">
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSpawnModal" 
+                                                data-id="<?php echo $spawn['id']; ?>" 
+                                                data-table="<?php echo $selectedTable; ?>">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                     
-                    <div class="tab-pane fade" id="view" role="tabpanel" aria-labelledby="view-tab">
-                        <div class="form-section mt-4">
-                            <form method="get" action="index.php" class="mb-4">
-                                <input type="hidden" name="page" value="spawn">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="spawnlist_type_view" class="form-label">Select Spawn List Type</label>
-                                        <select class="form-select" id="spawnlist_type_view" name="spawnlist_type" onchange="this.form.submit()">
-                                            <?php foreach ($spawn_tables as $table => $label): ?>
-                                            <option value="<?php echo $table; ?>" <?php echo ($selectedTable === $table) ? 'selected' : ''; ?>><?php echo $label; ?></option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="search" class="form-label">Search</label>
-                                        <input type="text" class="form-control search-input" id="search" data-table="spawnsTable" placeholder="Search spawns...">
-                                    </div>
-                                </div>
-                            </form>
-                            
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover data-table" id="spawnsTable">
-                                    <thead>
-                                        <tr>
-                                            <th data-sort="id">ID</th>
-                                            <th data-sort="name">Name</th>
-                                            <th data-sort="npc_templateid">NPC ID</th>
-                                            <th>NPC Name</th>
-                                            <th data-sort="count">Count</th>
-                                            <th>Location</th>
-                                            <th>Map ID</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($spawns as $spawn): ?>
-                                        <tr>
-                                            <td data-column="id"><?php echo $spawn['id']; ?></td>
-                                            <td data-column="name"><?php echo $spawn['name']; ?></td>
-                                            <td data-column="npc_templateid"><?php echo $spawn['npc_templateid']; ?></td>
-                                            <td><?php echo $spawn['npc_name']; ?></td>
-                                            <td data-column="count"><?php echo $spawn['count']; ?></td>
-                                            <td>(<?php echo $spawn['locx']; ?>, <?php echo $spawn['locy']; ?>)</td>
-                                            <td><?php echo $spawn['mapid']; ?></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editSpawnModal" 
-                                                        data-id="<?php echo $spawn['id']; ?>" 
-                                                        data-table="<?php echo $selectedTable; ?>">
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSpawnModal" 
-                                                        data-id="<?php echo $spawn['id']; ?>" 
-                                                        data-table="<?php echo $selectedTable; ?>">
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <?php if (empty($spawns)): ?>
-                            <div class="alert alert-info">No spawns found in the selected table.</div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                    <?php if (empty($spawns)): ?>
+                    <div class="alert alert-info">No spawns found in the selected table.</div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -357,6 +382,16 @@ $conn->close();
                             <div class="mb-3">
                                 <label for="editNpcId" class="form-label">NPC Template ID</label>
                                 <input type="number" class="form-control" id="editNpcId" name="npc_templateid" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Monster Preview</label>
+                                <div id="edit_monster_preview" class="monster-preview-vertical">
+                                    <img id="edit_monster_image" src="/l1jdb_database/assets/img/placeholders/monsters.png" 
+                                         alt="Monster Preview" 
+                                         class="monster-preview-img-large">
+                                    <span id="edit_monster_name">Loading...</span>
+                                </div>
                             </div>
                         </div>
                         
@@ -443,6 +478,101 @@ $conn->close();
 <script>
 // Handle edit spawn modal
 document.addEventListener('DOMContentLoaded', function() {
+    // NPC search functionality for Add modal
+    const addNpcSearch = document.getElementById('add_npcSearch');
+    const addNpcSuggestions = document.getElementById('add_npcSuggestions');
+    const addNpcIdInput = document.getElementById('add_npc_templateid');
+    
+    const npcList = <?php echo json_encode($npc_list); ?>;
+    
+    // Function to update monster preview
+    function updateMonsterPreview(modalType, npcId, npcName, spriteId) {
+        const imageElement = document.getElementById(modalType + '_monster_image');
+        const nameElement = document.getElementById(modalType + '_monster_name');
+        
+        if (npcId && spriteId) {
+            const imagePath = `/l1jdb_database/assets/img/icons/ms${spriteId}.png`;
+            imageElement.src = imagePath;
+            imageElement.onerror = function() {
+                this.src = `/l1jdb_database/assets/img/icons/ms${spriteId}.gif`;
+                this.onerror = function() {
+                    this.src = '/l1jdb_database/assets/img/placeholders/monsters.png';
+                };
+            };
+            nameElement.textContent = npcName || `NPC ID: ${npcId}`;
+        } else {
+            imageElement.src = '/l1jdb_database/assets/img/placeholders/monsters.png';
+            nameElement.textContent = modalType === 'add' ? 'Select an NPC to see preview' : 'Unknown NPC';
+        }
+    }
+    
+    // Function to find NPC data by ID
+    function findNpcById(npcId) {
+        return npcList.find(npc => npc.npcid == npcId);
+    }
+    
+    if (addNpcSearch) {
+        addNpcSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            addNpcSuggestions.innerHTML = '';
+            
+            if (searchTerm.length < 2) return;
+            
+            const filteredNpcs = npcList.filter(npc => 
+                npc.desc_en.toLowerCase().includes(searchTerm)
+            ).slice(0, 10);
+            
+            filteredNpcs.forEach(npc => {
+                const suggestion = document.createElement('div');
+                suggestion.className = 'list-group-item list-group-item-action';
+                suggestion.style.cursor = 'pointer';
+                suggestion.textContent = `${npc.desc_en} (ID: ${npc.npcid})`;
+                
+                suggestion.addEventListener('click', function() {
+                    addNpcSearch.value = npc.desc_en;
+                    addNpcIdInput.value = npc.npcid;
+                    addNpcSuggestions.innerHTML = '';
+                    updateMonsterPreview('add', npc.npcid, npc.desc_en, npc.spriteId);
+                });
+                
+                addNpcSuggestions.appendChild(suggestion);
+            });
+        });
+        
+        // Listen for manual NPC ID input
+        addNpcIdInput.addEventListener('input', function() {
+            const npcId = this.value;
+            const npc = findNpcById(npcId);
+            if (npc) {
+                updateMonsterPreview('add', npc.npcid, npc.desc_en, npc.spriteId);
+            } else {
+                updateMonsterPreview('add', null, null, null);
+            }
+        });
+    }
+    
+    // Listen for manual NPC ID input in edit modal
+    const editNpcIdInput = document.getElementById('editNpcId');
+    if (editNpcIdInput) {
+        editNpcIdInput.addEventListener('input', function() {
+            const npcId = this.value;
+            const npc = findNpcById(npcId);
+            if (npc) {
+                updateMonsterPreview('edit', npc.npcid, npc.desc_en, npc.spriteId);
+            } else {
+                updateMonsterPreview('edit', npcId, null, null);
+            }
+        });
+    }
+    
+    // Handle save new spawn
+    const saveNewSpawn = document.getElementById('saveNewSpawn');
+    if (saveNewSpawn) {
+        saveNewSpawn.addEventListener('click', function() {
+            document.getElementById('addSpawnForm').submit();
+        });
+    }
+    
     const editSpawnModal = document.getElementById('editSpawnModal');
     if (editSpawnModal) {
         editSpawnModal.addEventListener('show.bs.modal', function(event) {
@@ -466,6 +596,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('editMovementDistance').value = data.movement_distance;
                     document.getElementById('editMinRespawn').value = data.min_respawn_delay;
                     document.getElementById('editMaxRespawn').value = data.max_respawn_delay;
+                    
+                    // Update monster preview
+                    const npc = findNpcById(data.npc_templateid);
+                    if (npc) {
+                        updateMonsterPreview('edit', npc.npcid, npc.desc_en, npc.spriteId);
+                    } else {
+                        updateMonsterPreview('edit', data.npc_templateid, null, null);
+                    }
                 })
                 .catch(error => {
                     console.error('Error fetching spawn data:', error);

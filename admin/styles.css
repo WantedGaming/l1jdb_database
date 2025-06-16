@@ -843,6 +843,68 @@ a:hover {
     background: #e06b3c;
 }
 
+/* Icon Cell Styles for Tables */
+.icon-cell {
+    text-align: center;
+    vertical-align: middle;
+    width: 60px;
+    padding: 0.5rem !important;
+}
+
+.icon-cell img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary);
+    padding: 2px;
+    transition: transform 0.2s ease;
+}
+
+.icon-cell img:hover {
+    transform: scale(1.1);
+    border-color: var(--accent);
+}
+
+/* Monster Preview Images in Modals */
+.monster-preview-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-right: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary);
+    padding: 2px;
+}
+
+.monster-preview-img-large {
+    width: auto;
+    height: auto;
+    max-width: 120px;
+    max-height: 120px;
+    object-fit: contain;
+    margin-right: 15px;
+    border-radius: 6px;
+    border: 2px solid var(--secondary);
+    background-color: var(--secondary);
+    padding: 4px;
+}
+
+/* Vertical monster preview layout for edit modal */
+.monster-preview-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.monster-preview-vertical .monster-preview-img-large {
+    margin-right: 0;
+    margin-bottom: 10px;
+}
+
 /* Tab Content */
 .tab-content {
     background-color: var(--primary);

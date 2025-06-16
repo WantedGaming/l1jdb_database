@@ -100,6 +100,151 @@ $conn->close();
                 <span class="admin-icon admin-icon-dashboard"></span>Back to Dashboard
             </a>
         </div>
+
+<!-- Add New Monster Modal -->
+<div class="modal fade" id="addMonsterModal" tabindex="-1" aria-labelledby="addMonsterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addMonsterModalLabel"><span class="admin-icon admin-icon-monsters"></span>Add New Monster</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addMonsterForm" method="post" action="index.php?page=monsters">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-accent mb-3">Basic Information</h5>
+                            
+                            <div class="mb-3">
+                                <label for="add_desc_en" class="form-label">Monster Name</label>
+                                <input type="text" class="form-control" id="add_desc_en" name="desc_en" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_level" class="form-label">Level</label>
+                                        <input type="number" class="form-control" id="add_level" name="level" min="1" max="100" value="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_size" class="form-label">Size</label>
+                                        <select class="form-select" id="add_size" name="size">
+                                            <option value="small">Small</option>
+                                            <option value="large">Large</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_impl" class="form-label">Implementation</label>
+                                        <select class="form-select" id="add_impl" name="impl">
+                                            <option value="L1Monster">L1Monster</option>
+                                            <option value="L1Npc">L1Npc</option>
+                                            <option value="L1Merchant">L1Merchant</option>
+                                            <option value="L1Guard">L1Guard</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_classId" class="form-label">Class ID</label>
+                                        <input type="number" class="form-control" id="add_classId" name="classId" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5 class="text-accent mb-3">Combat Stats</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_hp" class="form-label">Hit Points</label>
+                                        <input type="number" class="form-control" id="add_hp" name="hp" min="1" value="10" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_mp" class="form-label">Magic Points</label>
+                                        <input type="number" class="form-control" id="add_mp" name="mp" min="0" value="1">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="add_ac" class="form-label">Armor Class</label>
+                                <input type="number" class="form-control" id="add_ac" name="ac" value="0">
+                                <div class="form-text">Lower values = better armor (can be negative)</div>
+                            </div>
+                            
+                            <h6 class="text-accent mb-2">Attributes</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="add_str" class="form-label">STR</label>
+                                        <input type="number" class="form-control" id="add_str" name="str" min="1" max="50" value="8">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="add_con" class="form-label">CON</label>
+                                        <input type="number" class="form-control" id="add_con" name="con" min="1" max="50" value="8">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="add_dex" class="form-label">DEX</label>
+                                        <input type="number" class="form-control" id="add_dex" name="dex" min="1" max="50" value="8">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="add_wis" class="form-label">WIS</label>
+                                        <input type="number" class="form-control" id="add_wis" name="wis" min="1" max="50" value="8">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="add_intel" class="form-label">INT</label>
+                                        <input type="number" class="form-control" id="add_intel" name="intel" min="1" max="50" value="8">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label for="add_karma" class="form-label">Alignment</label>
+                                        <input type="number" class="form-control" id="add_karma" name="karma" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="add_exp" class="form-label">Experience Points</label>
+                                        <input type="number" class="form-control" id="add_exp" name="exp" min="0" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveNewMonster">Add Monster</button>
+            </div>
+        </div>
+    </div>
+</div>
         
         <div class="card mb-4">
             <div class="card-header">
@@ -116,242 +261,106 @@ $conn->close();
                 
                 <div id="alertPlaceholder"></div>
                 
-                <ul class="nav nav-tabs" id="monsterTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="add-monster-tab" data-bs-toggle="tab" data-bs-target="#add-monster" type="button" role="tab" aria-controls="add-monster" aria-selected="true">Add Monster</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="view-monsters-tab" data-bs-toggle="tab" data-bs-target="#view-monsters" type="button" role="tab" aria-controls="view-monsters" aria-selected="false">View Monsters</button>
-                    </li>
-                </ul>
+                <!-- Add New Monster Button -->
+                <div class="admin-header mb-4">
+                    <h3 class="text-accent">Monster Management</h3>
+                    <div class="admin-header-actions">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMonsterModal">
+                            <span class="admin-icon admin-icon-monsters"></span>Add New Monster
+                        </button>
+                    </div>
+                </div>
                 
-                <div class="tab-content" id="monsterTabsContent">
-                    <div class="tab-pane fade show active" id="add-monster" role="tabpanel" aria-labelledby="add-monster-tab">
-                        <div class="form-section mt-4">
-                            <form id="monsterForm" method="post" action="index.php?page=monsters">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="text-accent mb-3">Basic Information</h5>
-                                        
-                                        <div class="mb-3">
-                                            <label for="desc_en" class="form-label">Monster Name</label>
-                                            <input type="text" class="form-control" id="desc_en" name="desc_en" required>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="level" class="form-label">Level</label>
-                                                    <input type="number" class="form-control" id="level" name="level" min="1" max="100" value="1" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="size" class="form-label">Size</label>
-                                                    <select class="form-select" id="size" name="size">
-                                                        <option value="small">Small</option>
-                                                        <option value="large">Large</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="type" class="form-label">Implementation</label>
-                                                    <select class="form-select" id="impl" name="impl">
-                                                        <option value="L1Monster">L1Monster</option>
-                                                        <option value="L1Npc">L1Npc</option>
-                                                        <option value="L1Merchant">L1Merchant</option>
-                                                        <option value="L1Guard">L1Guard</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="classId" class="form-label">Class ID</label>
-                                                    <input type="number" class="form-control" id="classId" name="classId" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <h5 class="text-accent mb-3">Combat Stats</h5>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="hp" class="form-label">Hit Points</label>
-                                                    <input type="number" class="form-control" id="hp" name="hp" min="1" value="10" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="mp" class="form-label">Magic Points</label>
-                                                    <input type="number" class="form-control" id="mp" name="mp" min="0" value="1">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="ac" class="form-label">Armor Class</label>
-                                            <input type="number" class="form-control" id="ac" name="ac" value="0">
-                                            <div class="form-text">Lower values = better armor (can be negative)</div>
-                                        </div>
-                                        
-                                        <h6 class="text-accent mb-2">Attributes</h6>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="mb-3">
-                                                    <label for="str" class="form-label">STR</label>
-                                                    <input type="number" class="form-control" id="str" name="str" min="1" max="50" value="8">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="mb-3">
-                                                    <label for="con" class="form-label">CON</label>
-                                                    <input type="number" class="form-control" id="con" name="con" min="1" max="50" value="8">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="mb-3">
-                                                    <label for="dex" class="form-label">DEX</label>
-                                                    <input type="number" class="form-control" id="dex" name="dex" min="1" max="50" value="8">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="mb-3">
-                                                    <label for="wis" class="form-label">WIS</label>
-                                                    <input type="number" class="form-control" id="wis" name="wis" min="1" max="50" value="8">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="mb-3">
-                                                    <label for="intel" class="form-label">INT</label>
-                                                    <input type="number" class="form-control" id="intel" name="intel" min="1" max="50" value="8">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="mb-3">
-                                                    <label for="karma" class="form-label">Alignment</label>
-                                                    <input type="number" class="form-control" id="karma" name="karma" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="exp" class="form-label">Experience Points</label>
-                                                    <input type="number" class="form-control" id="exp" name="exp" min="0" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-primary">Add Monster</button>
-                            </form>
+                <!-- Monster List View -->
+                <div class="form-section">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="search" class="form-label">Search Monsters</label>
+                            <input type="text" class="form-control search-input" id="search" data-table="monstersTable" placeholder="Search by name or ID...">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Total Monsters</label>
+                            <div class="form-control" style="background-color: var(--secondary); color: var(--accent);"><?php echo number_format($totalMonsters); ?> monsters</div>
                         </div>
                     </div>
                     
-                    <div class="tab-pane fade" id="view-monsters" role="tabpanel" aria-labelledby="view-monsters-tab">
-                        <div class="form-section mt-4">
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <label for="search" class="form-label">Search Monsters</label>
-                                    <input type="text" class="form-control search-input" id="search" data-table="monstersTable" placeholder="Search by name or ID...">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Total Monsters</label>
-                                    <div class="form-control" style="background-color: var(--secondary); color: var(--accent);"><?php echo number_format($totalMonsters); ?> monsters</div>
-                                </div>
-                            </div>
-                            
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover data-table" id="monstersTable">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Level</th>
-                                            <th>HP</th>
-                                            <th>MP</th>
-                                            <th>AC</th>
-                                            <th>EXP</th>
-                                            <th>Size</th>
-                                            <th>Implementation</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($monsters as $monster): ?>
-                                        <tr>
-                                            <td><?php echo $monster['npcid']; ?></td>
-                                            <td class="text-highlight"><?php echo $monster['desc_en']; ?></td>
-                                            <td><?php echo $monster['lvl']; ?></td>
-                                            <td><?php echo number_format($monster['hp']); ?></td>
-                                            <td><?php echo number_format($monster['mp']); ?></td>
-                                            <td><?php echo $monster['ac']; ?></td>
-                                            <td><?php echo number_format($monster['exp']); ?></td>
-                                            <td>
-                                                <span class="badge badge-<?php echo $monster['big'] === 'true' ? 'large' : 'small'; ?>">
-                                                    <?php echo $monster['big'] === 'true' ? 'Large' : 'Small'; ?>
-                                                </span>
-                                            </td>
-                                            <td><?php echo $monster['impl']; ?></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editMonsterModal" 
-                                                        data-id="<?php echo $monster['npcid']; ?>">
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteMonsterModal" 
-                                                        data-id="<?php echo $monster['npcid']; ?>" 
-                                                        data-name="<?php echo htmlspecialchars($monster['desc_en']); ?>">
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <?php if (empty($monsters)): ?>
-                            <div class="alert alert-info">No monsters found.</div>
-                            <?php endif; ?>
-                            
-                            <!-- Pagination -->
-                            <?php if ($totalPages > 1): ?>
-                            <nav aria-label="Monster pagination">
-                                <ul class="pagination justify-content-center mt-4">
-                                    <?php if ($page > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="index.php?page=monsters&monster_page=<?php echo $page - 1; ?>">Previous</a>
-                                    </li>
-                                    <?php endif; ?>
-                                    
-                                    <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
-                                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="index.php?page=monsters&monster_page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                    </li>
-                                    <?php endfor; ?>
-                                    
-                                    <?php if ($page < $totalPages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="index.php?page=monsters&monster_page=<?php echo $page + 1; ?>">Next</a>
-                                    </li>
-                                    <?php endif; ?>
-                                </ul>
-                            </nav>
-                            <?php endif; ?>
-                        </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover data-table" id="monstersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Level</th>
+                                    <th>HP</th>
+                                    <th>MP</th>
+                                    <th>AC</th>
+                                    <th>EXP</th>
+                                    <th>Size</th>
+                                    <th>Implementation</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($monsters as $monster): ?>
+                                <tr>
+                                    <td><?php echo $monster['npcid']; ?></td>
+                                    <td class="text-highlight"><?php echo $monster['desc_en']; ?></td>
+                                    <td><?php echo $monster['lvl']; ?></td>
+                                    <td><?php echo number_format($monster['hp']); ?></td>
+                                    <td><?php echo number_format($monster['mp']); ?></td>
+                                    <td><?php echo $monster['ac']; ?></td>
+                                    <td><?php echo number_format($monster['exp']); ?></td>
+                                    <td>
+                                        <span class="badge badge-<?php echo $monster['big'] === 'true' ? 'large' : 'small'; ?>">
+                                            <?php echo $monster['big'] === 'true' ? 'Large' : 'Small'; ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo $monster['impl']; ?></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editMonsterModal" 
+                                                data-id="<?php echo $monster['npcid']; ?>">
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteMonsterModal" 
+                                                data-id="<?php echo $monster['npcid']; ?>" 
+                                                data-name="<?php echo htmlspecialchars($monster['desc_en']); ?>">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
+                    
+                    <?php if (empty($monsters)): ?>
+                    <div class="alert alert-info">No monsters found.</div>
+                    <?php endif; ?>
+                    
+                    <!-- Pagination -->
+                    <?php if ($totalPages > 1): ?>
+                    <nav aria-label="Monster pagination">
+                        <ul class="pagination justify-content-center mt-4">
+                            <?php if ($page > 1): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="index.php?page=monsters&monster_page=<?php echo $page - 1; ?>">Previous</a>
+                            </li>
+                            <?php endif; ?>
+                            
+                            <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
+                            <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                <a class="page-link" href="index.php?page=monsters&monster_page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                            <?php endfor; ?>
+                            
+                            <?php if ($page < $totalPages): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="index.php?page=monsters&monster_page=<?php echo $page + 1; ?>">Next</a>
+                            </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -399,6 +408,14 @@ $conn->close();
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle save new monster
+    const saveNewMonster = document.getElementById('saveNewMonster');
+    if (saveNewMonster) {
+        saveNewMonster.addEventListener('click', function() {
+            document.getElementById('addMonsterForm').submit();
+        });
+    }
+    
     // Handle delete monster modal
     const deleteMonsterModal = document.getElementById('deleteMonsterModal');
     if (deleteMonsterModal) {

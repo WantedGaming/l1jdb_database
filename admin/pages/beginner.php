@@ -198,7 +198,7 @@ $class_mappings = [
         
         <div class="card mb-4">
             <div class="card-header">
-                <h2><span class="admin-icon admin-icon-beginner"></span>Beginner Items Management</h2>
+                <h2><span class="admin-icon admin-icon-beginner"></span>Manage Beginner Items</h2>
             </div>
             <div class="card-body">
                 <p>Configure starting items that new characters will receive when they create their character. Set item quantities, enchantment levels, and class restrictions.</p>
@@ -211,185 +211,194 @@ $class_mappings = [
                 
                 <div id="alertPlaceholder"></div>
                 
-                <ul class="nav nav-tabs" id="beginnerTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="add-item-tab" data-bs-toggle="tab" data-bs-target="#add-item" type="button" role="tab" aria-controls="add-item" aria-selected="true">Add Beginner Item</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="view-items-tab" data-bs-toggle="tab" data-bs-target="#view-items" type="button" role="tab" aria-controls="view-items" aria-selected="false">View Beginner Items</button>
-                    </li>
-                </ul>
+                <!-- Add New Beginner Item Button -->
+                <div class="admin-header mb-4">
+                    <h3 class="text-accent">Beginner Item Management</h3>
+                    <div class="admin-header-actions">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBeginnerItemModal">
+                            <span class="admin-icon admin-icon-beginner"></span>Add New Beginner Item
+                        </button>
+                    </div>
+                </div>
                 
-                <div class="tab-content" id="beginnerTabsContent">
-                    <div class="tab-pane fade show active" id="add-item" role="tabpanel" aria-labelledby="add-item-tab">
-                        <div class="form-section mt-4">
-                            <form id="beginnerForm" method="post" action="index.php?page=beginner">
-                                <input type="hidden" name="action" value="add">
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="text-accent mb-3">Item Selection</h5>
-                                        
-                                        <div class="mb-3">
-                                            <label for="itemSearch" class="form-label">Search Item</label>
-                                            <input type="text" class="form-control" id="itemSearch" placeholder="Search by item name">
-                                            <div id="itemSuggestions" class="list-group mt-2"></div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="item_id" class="form-label">Item ID</label>
-                                            <input type="number" class="form-control" id="item_id" name="item_id" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="item_name" class="form-label">Item Name</label>
-                                            <input type="text" class="form-control" id="item_name" name="item_name" required>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="desc_kr" class="form-label">Korean Description</label>
-                                            <input type="text" class="form-control" id="desc_kr" name="desc_kr">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-6">
-                                        <h5 class="text-accent mb-3">Item Properties</h5>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="count" class="form-label">Count</label>
-                                                    <input type="number" class="form-control" id="count" name="count" min="1" value="1" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="charge_count" class="form-label">Charge Count</label>
-                                                    <input type="number" class="form-control" id="charge_count" name="charge_count" min="0" value="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="enchantlvl" class="form-label">Enchantment Level</label>
-                                            <input type="number" class="form-control" id="enchantlvl" name="enchantlvl" min="0" max="15" value="0">
-                                            <div class="form-text">Enchantment level (0-15)</div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="activate" class="form-label">Character Class Restriction</label>
-                                            <select class="form-select" id="activate" name="activate">
-                                                <?php foreach ($class_mappings as $code => $name): ?>
-                                                <option value="<?php echo $code; ?>" <?php echo ($code === 'A') ? 'selected' : ''; ?>><?php echo $name; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-primary">Add Beginner Item</button>
-                            </form>
+                <!-- Beginner Items List View -->
+                <div class="form-section">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="search" class="form-label">Search Beginner Items</label>
+                            <input type="text" class="form-control search-input" id="search" data-table="beginnerTable" placeholder="Search by item name...">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Total Items</label>
+                            <div class="form-control" style="background-color: var(--secondary); color: var(--accent);"><?php echo number_format($totalItems); ?> items</div>
                         </div>
                     </div>
                     
-                    <div class="tab-pane fade" id="view-items" role="tabpanel" aria-labelledby="view-items-tab">
-                        <div class="form-section mt-4">
-                            <div class="row mb-4">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover data-table" id="beginnerTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Item ID</th>
+                                    <th>Item Name</th>
+                                    <th>Type</th>
+                                    <th>Count</th>
+                                    <th>Enchant</th>
+                                    <th>Charges</th>
+                                    <th>Class</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($beginner_items as $item): ?>
+                                <tr>
+                                    <td><?php echo $item['id']; ?></td>
+                                    <td><?php echo $item['item_id']; ?></td>
+                                    <td class="text-highlight"><?php echo $item['item_name']; ?></td>
+                                    <td>
+                                        <span class="badge badge-<?php echo strtolower($item['item_type']); ?>">
+                                            <?php echo $item['item_type']; ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo $item['count']; ?></td>
+                                    <td><?php echo $item['enchantlvl'] > 0 ? '+' . $item['enchantlvl'] : '0'; ?></td>
+                                    <td><?php echo $item['charge_count']; ?></td>
+                                    <td><?php echo $class_mappings[$item['activate']] ?? $item['activate']; ?></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editItemModal" 
+                                                data-id="<?php echo $item['id']; ?>"
+                                                data-item-id="<?php echo $item['item_id']; ?>"
+                                                data-item-name="<?php echo htmlspecialchars($item['item_name']); ?>"
+                                                data-count="<?php echo $item['count']; ?>"
+                                                data-charge-count="<?php echo $item['charge_count']; ?>"
+                                                data-enchantlvl="<?php echo $item['enchantlvl']; ?>"
+                                                data-desc-kr="<?php echo htmlspecialchars($item['desc_kr']); ?>"
+                                                data-activate="<?php echo $item['activate']; ?>">
+                                            Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal" 
+                                                data-id="<?php echo $item['id']; ?>"
+                                                data-name="<?php echo htmlspecialchars($item['item_name']); ?>">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <?php if (empty($beginner_items)): ?>
+                    <div class="alert alert-info">No beginner items found.</div>
+                    <?php endif; ?>
+                    
+                    <!-- Pagination -->
+                    <?php if ($totalPages > 1): ?>
+                    <nav aria-label="Beginner items pagination">
+                        <ul class="pagination justify-content-center mt-4">
+                            <?php if ($page > 1): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="index.php?page=beginner&beginner_page=<?php echo $page - 1; ?>">Previous</a>
+                            </li>
+                            <?php endif; ?>
+                            
+                            <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
+                            <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                <a class="page-link" href="index.php?page=beginner&beginner_page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                            <?php endfor; ?>
+                            
+                            <?php if ($page < $totalPages): ?>
+                            <li class="page-item">
+                                <a class="page-link" href="index.php?page=beginner&beginner_page=<?php echo $page + 1; ?>">Next</a>
+                            </li>
+                            <?php endif; ?>
+                        </ul>
+                    </nav>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add New Beginner Item Modal -->
+<div class="modal fade" id="addBeginnerItemModal" tabindex="-1" aria-labelledby="addBeginnerItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBeginnerItemModalLabel"><span class="admin-icon admin-icon-beginner"></span>Add New Beginner Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="beginnerForm" method="post" action="index.php?page=beginner">
+                    <input type="hidden" name="action" value="add">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-accent mb-3">Item Selection</h5>
+                            
+                            <div class="mb-3">
+                                <label for="itemSearch" class="form-label">Search Item</label>
+                                <input type="text" class="form-control" id="itemSearch" placeholder="Search by item name">
+                                <div id="itemSuggestions" class="list-group mt-2"></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="item_id" class="form-label">Item ID</label>
+                                <input type="number" class="form-control" id="item_id" name="item_id" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="item_name" class="form-label">Item Name</label>
+                                <input type="text" class="form-control" id="item_name" name="item_name" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="desc_kr" class="form-label">Korean Description</label>
+                                <input type="text" class="form-control" id="desc_kr" name="desc_kr">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5 class="text-accent mb-3">Item Properties</h5>
+                            
+                            <div class="row">
                                 <div class="col-md-6">
-                                    <label for="search" class="form-label">Search Beginner Items</label>
-                                    <input type="text" class="form-control search-input" id="search" data-table="beginnerTable" placeholder="Search by item name...">
+                                    <div class="mb-3">
+                                        <label for="count" class="form-label">Count</label>
+                                        <input type="number" class="form-control" id="count" name="count" min="1" value="1" required>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Total Items</label>
-                                    <div class="form-control" style="background-color: var(--secondary); color: var(--accent);"><?php echo number_format($totalItems); ?> items</div>
+                                    <div class="mb-3">
+                                        <label for="charge_count" class="form-label">Charge Count</label>
+                                        <input type="number" class="form-control" id="charge_count" name="charge_count" min="0" value="0">
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover data-table" id="beginnerTable">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Item ID</th>
-                                            <th>Item Name</th>
-                                            <th>Type</th>
-                                            <th>Count</th>
-                                            <th>Enchant</th>
-                                            <th>Charges</th>
-                                            <th>Class</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($beginner_items as $item): ?>
-                                        <tr>
-                                            <td><?php echo $item['id']; ?></td>
-                                            <td><?php echo $item['item_id']; ?></td>
-                                            <td class="text-highlight"><?php echo $item['item_name']; ?></td>
-                                            <td>
-                                                <span class="badge badge-<?php echo strtolower($item['item_type']); ?>">
-                                                    <?php echo $item['item_type']; ?>
-                                                </span>
-                                            </td>
-                                            <td><?php echo $item['count']; ?></td>
-                                            <td><?php echo $item['enchantlvl'] > 0 ? '+' . $item['enchantlvl'] : '0'; ?></td>
-                                            <td><?php echo $item['charge_count']; ?></td>
-                                            <td><?php echo $class_mappings[$item['activate']] ?? $item['activate']; ?></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editItemModal" 
-                                                        data-id="<?php echo $item['id']; ?>"
-                                                        data-item-id="<?php echo $item['item_id']; ?>"
-                                                        data-item-name="<?php echo htmlspecialchars($item['item_name']); ?>"
-                                                        data-count="<?php echo $item['count']; ?>"
-                                                        data-charge-count="<?php echo $item['charge_count']; ?>"
-                                                        data-enchantlvl="<?php echo $item['enchantlvl']; ?>"
-                                                        data-desc-kr="<?php echo htmlspecialchars($item['desc_kr']); ?>"
-                                                        data-activate="<?php echo $item['activate']; ?>">
-                                                    Edit
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal" 
-                                                        data-id="<?php echo $item['id']; ?>"
-                                                        data-name="<?php echo htmlspecialchars($item['item_name']); ?>">
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                            <div class="mb-3">
+                                <label for="enchantlvl" class="form-label">Enchantment Level</label>
+                                <input type="number" class="form-control" id="enchantlvl" name="enchantlvl" min="0" max="15" value="0">
+                                <div class="form-text">Enchantment level (0-15)</div>
                             </div>
                             
-                            <?php if (empty($beginner_items)): ?>
-                            <div class="alert alert-info">No beginner items found.</div>
-                            <?php endif; ?>
-                            
-                            <!-- Pagination -->
-                            <?php if ($totalPages > 1): ?>
-                            <nav aria-label="Beginner items pagination">
-                                <ul class="pagination justify-content-center mt-4">
-                                    <?php if ($page > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="index.php?page=beginner&beginner_page=<?php echo $page - 1; ?>">Previous</a>
-                                    </li>
-                                    <?php endif; ?>
-                                    
-                                    <?php for ($i = max(1, $page - 2); $i <= min($totalPages, $page + 2); $i++): ?>
-                                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="index.php?page=beginner&beginner_page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                    </li>
-                                    <?php endfor; ?>
-                                    
-                                    <?php if ($page < $totalPages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="index.php?page=beginner&beginner_page=<?php echo $page + 1; ?>">Next</a>
-                                    </li>
-                                    <?php endif; ?>
-                                </ul>
-                            </nav>
-                            <?php endif; ?>
+                            <div class="mb-3">
+                                <label for="activate" class="form-label">Character Class Restriction</label>
+                                <select class="form-select" id="activate" name="activate">
+                                    <?php foreach ($class_mappings as $code => $name): ?>
+                                    <option value="<?php echo $code; ?>" <?php echo ($code === 'A') ? 'selected' : ''; ?>><?php echo $name; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveNewBeginnerItem">Add Beginner Item</button>
             </div>
         </div>
     </div>
@@ -527,6 +536,14 @@ document.addEventListener('DOMContentLoaded', function() {
             itemSuggestions.appendChild(suggestion);
         });
     });
+    
+    // Handle save new beginner item
+    const saveNewBeginnerItem = document.getElementById('saveNewBeginnerItem');
+    if (saveNewBeginnerItem) {
+        saveNewBeginnerItem.addEventListener('click', function() {
+            document.getElementById('beginnerForm').submit();
+        });
+    }
     
     // Handle edit item modal
     const editItemModal = document.getElementById('editItemModal');
