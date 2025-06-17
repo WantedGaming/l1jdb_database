@@ -89,7 +89,7 @@ $spawn_tables = [
     'spawnlist_worldwar' => 'World War Spawn'
 ];
 
-// Get the list of existing spawns
+// Get the list of existing spawns with table-specific queries
 $spawns = [];
 $selectedTable = isset($_GET['spawnlist_type']) ? sanitizeInput($_GET['spawnlist_type']) : 'spawnlist';
 
@@ -97,11 +97,109 @@ if (!array_key_exists($selectedTable, $spawn_tables)) {
     $selectedTable = 'spawnlist';
 }
 
-$sql = "SELECT s.*, n.desc_en as npc_name, n.spriteId 
-        FROM $selectedTable s 
-        LEFT JOIN npc n ON s.npc_templateid = n.npcid 
-        ORDER BY s.id DESC 
-        LIMIT 50";
+// Build SQL query based on specific table structure
+switch ($selectedTable) {
+    case 'spawnlist':
+        $sql = "SELECT s.id, s.name, s.count, s.npc_templateid, s.mapid, s.locx, s.locy,
+                       n.desc_en as npc_name, n.spriteId, m.locationname as map_name,
+                       s.npc_templateid as npc_templateid_normalized, s.mapid as mapid_normalized
+                FROM spawnlist s 
+                LEFT JOIN npc n ON s.npc_templateid = n.npcid 
+                LEFT JOIN mapids m ON s.mapid = m.mapid
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    case 'spawnlist_boss':
+        $sql = "SELECT s.id, s.name, 1 as count, s.npcid as npc_templateid, s.spawnMapId as mapid, s.spawnX as locx, s.spawnY as locy,
+                       n.desc_en as npc_name, n.spriteId, m.locationname as map_name,
+                       s.npcid as npc_templateid_normalized, s.spawnMapId as mapid_normalized
+                FROM spawnlist_boss s 
+                LEFT JOIN npc n ON s.npcid = n.npcid 
+                LEFT JOIN mapids m ON s.spawnMapId = m.mapid
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    case 'spawnlist_other':
+        $sql = "SELECT s.id, s.name, s.count, s.npc_id as npc_templateid, s.mapId as mapid, s.locx, s.locy,
+                       n.desc_en as npc_name, n.spriteId, m.locationname as map_name,
+                       s.npc_id as npc_templateid_normalized, s.mapId as mapid_normalized
+                FROM spawnlist_other s 
+                LEFT JOIN npc n ON s.npc_id = n.npcid 
+                LEFT JOIN mapids m ON s.mapId = m.mapid
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    case 'spawnlist_ub':
+        $sql = "SELECT s.id, s.name, s.count, s.npc_templateid, 0 as mapid, 0 as locx, 0 as locy,
+                       n.desc_en as npc_name, n.spriteId, 'Underground Battle' as map_name,
+                       s.npc_templateid as npc_templateid_normalized, 0 as mapid_normalized
+                FROM spawnlist_ub s 
+                LEFT JOIN npc n ON s.npc_templateid = n.npcid 
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    case 'spawnlist_clandungeon':
+        $sql = "SELECT s.id, s.name, s.count, s.npc_templateid, 0 as mapid, 0 as locx, 0 as locy,
+                       n.desc_en as npc_name, n.spriteId, 'Clan Dungeon' as map_name,
+                       s.npc_templateid as npc_templateid_normalized, 0 as mapid_normalized
+                FROM spawnlist_clandungeon s 
+                LEFT JOIN npc n ON s.npc_templateid = n.npcid 
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    case 'spawnlist_indun':
+        $sql = "SELECT s.id, s.name, 1 as count, s.npc_id as npc_templateid, s.mapId as mapid, s.locx, s.locy,
+                       n.desc_en as npc_name, n.spriteId, m.locationname as map_name,
+                       s.npc_id as npc_templateid_normalized, s.mapId as mapid_normalized
+                FROM spawnlist_indun s 
+                LEFT JOIN npc n ON s.npc_id = n.npcid 
+                LEFT JOIN mapids m ON s.mapId = m.mapid
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    case 'spawnlist_ruun':
+        $sql = "SELECT s.id, s.name, s.count, s.npcId as npc_templateid, s.mapId as mapid, s.locX as locx, s.locY as locy,
+                       n.desc_en as npc_name, n.spriteId, m.locationname as map_name,
+                       s.npcId as npc_templateid_normalized, s.mapId as mapid_normalized
+                FROM spawnlist_ruun s 
+                LEFT JOIN npc n ON s.npcId = n.npcid 
+                LEFT JOIN mapids m ON s.mapId = m.mapid
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    case 'spawnlist_unicorntemple':
+        $sql = "SELECT s.id, s.name, s.count, s.npc_id as npc_templateid, s.mapId as mapid, s.locx, s.locy,
+                       n.desc_en as npc_name, n.spriteId, m.locationname as map_name,
+                       s.npc_id as npc_templateid_normalized, s.mapId as mapid_normalized
+                FROM spawnlist_unicorntemple s 
+                LEFT JOIN npc n ON s.npc_id = n.npcid 
+                LEFT JOIN mapids m ON s.mapId = m.mapid
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    case 'spawnlist_worldwar':
+        $sql = "SELECT s.id, s.name, 1 as count, s.npc_id as npc_templateid, s.mapid, s.locx, s.locy,
+                       n.desc_en as npc_name, n.spriteId, m.locationname as map_name,
+                       s.npc_id as npc_templateid_normalized, s.mapid as mapid_normalized
+                FROM spawnlist_worldwar s 
+                LEFT JOIN npc n ON s.npc_id = n.npcid 
+                LEFT JOIN mapids m ON s.mapid = m.mapid
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+        
+    default:
+        // For unknown tables, assume basic structure without location info
+        $sql = "SELECT s.id, s.name, s.count, s.npc_templateid, 0 as mapid, 0 as locx, 0 as locy,
+                       n.desc_en as npc_name, n.spriteId, 'Unknown Location' as map_name,
+                       s.npc_templateid as npc_templateid_normalized, 0 as mapid_normalized
+                FROM $selectedTable s 
+                LEFT JOIN npc n ON s.npc_templateid = n.npcid 
+                ORDER BY s.id DESC LIMIT 50";
+        break;
+}
+
+// Debug: uncomment to see the SQL query
+// echo "<pre>Spawn SQL Query: " . htmlspecialchars($sql) . "</pre>";
 
 $result = $conn->query($sql);
 
@@ -307,14 +405,13 @@ $conn->close();
                                     <th data-sort="npc_templateid">NPC ID</th>
                                     <th>NPC Name</th>
                                     <th data-sort="count">Count</th>
-                                    <th>Location</th>
-                                    <th>Map ID</th>
+                                    <th>Map Name</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($spawns as $spawn): ?>
-                                <tr>
+                                <tr class="clickable-row" data-spawn-id="<?php echo $spawn['id']; ?>" data-table="<?php echo $selectedTable; ?>">
                                     <td data-column="id"><?php echo $spawn['id']; ?></td>
                                     <td class="icon-cell">
                                         <img src="<?php echo '/l1jdb_database/assets/img/icons/ms' . $spawn['spriteId'] . '.png'; ?>" 
@@ -322,20 +419,21 @@ $conn->close();
                                              onerror="this.src='/l1jdb_database/assets/img/icons/ms<?php echo $spawn['spriteId']; ?>.gif'; this.onerror=function(){this.src='/l1jdb_database/assets/img/placeholders/monsters.png';}">
                                     </td>
                                     <td data-column="name"><?php echo $spawn['name']; ?></td>
-                                    <td data-column="npc_templateid"><?php echo $spawn['npc_templateid']; ?></td>
+                                    <td data-column="npc_templateid"><?php echo $spawn['npc_templateid_normalized']; ?></td>
                                     <td><?php echo $spawn['npc_name']; ?></td>
-                                    <td data-column="count"><?php echo $spawn['count']; ?></td>
-                                    <td>(<?php echo $spawn['locx']; ?>, <?php echo $spawn['locy']; ?>)</td>
-                                    <td><?php echo $spawn['mapid']; ?></td>
-                                    <td>
+                                    <td data-column="count"><?php echo isset($spawn['count']) ? $spawn['count'] : 'N/A'; ?></td>
+                                    <td><?php echo $spawn['map_name'] ? $spawn['map_name'] : ($spawn['mapid_normalized'] ? 'Map ' . $spawn['mapid_normalized'] : 'N/A'); ?></td>
+                                    <td class="table-cell-actions">
                                         <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editSpawnModal" 
                                                 data-id="<?php echo $spawn['id']; ?>" 
-                                                data-table="<?php echo $selectedTable; ?>">
+                                                data-table="<?php echo $selectedTable; ?>" 
+                                                onclick="event.stopPropagation();">
                                             Edit
                                         </button>
                                         <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteSpawnModal" 
                                                 data-id="<?php echo $spawn['id']; ?>" 
-                                                data-table="<?php echo $selectedTable; ?>">
+                                                data-table="<?php echo $selectedTable; ?>" 
+                                                onclick="event.stopPropagation();">
                                             Delete
                                         </button>
                                     </td>
@@ -476,8 +574,26 @@ $conn->close();
 </div>
 
 <script>
-// Handle edit spawn modal
+// Handle clickable rows and edit spawn modal
 document.addEventListener('DOMContentLoaded', function() {
+    // Make table rows clickable
+    document.querySelectorAll('.clickable-row').forEach(function(row) {
+        row.addEventListener('click', function(e) {
+            // Don't trigger if clicking on buttons
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                return;
+            }
+            
+            const spawnId = this.getAttribute('data-spawn-id');
+            const table = this.getAttribute('data-table');
+            
+            // Trigger edit modal
+            const editButton = this.querySelector('[data-bs-target="#editSpawnModal"]');
+            if (editButton) {
+                editButton.click();
+            }
+        });
+    });
     // NPC search functionality for Add modal
     const addNpcSearch = document.getElementById('add_npcSearch');
     const addNpcSuggestions = document.getElementById('add_npcSuggestions');

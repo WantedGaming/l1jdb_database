@@ -566,6 +566,24 @@ body.login-page {
     background-color: var(--secondary);
 }
 
+/* Specific styles for spawn table clickable rows */
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.clickable-row:hover {
+    background-color: rgba(253, 127, 68, 0.1);
+}
+
+.clickable-row:hover td {
+    color: var(--text);
+}
+
+.clickable-row .table-cell-actions {
+    cursor: default;
+}
+
 .admin-table tr:last-child td {
     border-bottom: none;
 }
@@ -1215,7 +1233,175 @@ body.login-page {
     font-size: 0.9em;
 }
 
-/* Utility Classes */
+/* Monster and Item Preview Styles */
+.monster-preview-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    margin-right: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary);
+}
+
+.monster-preview-img-large {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    margin-right: 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary);
+}
+
+.monster-preview-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--secondary);
+    border-radius: 4px;
+    border: 1px solid var(--primary);
+}
+
+.preview-container {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--secondary);
+    border-radius: 4px;
+    border: 1px solid var(--primary);
+    min-height: 80px;
+}
+
+.preview-container img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    margin-right: 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--primary);
+    background-color: var(--primary);
+    flex-shrink: 0;
+}
+
+.preview-container .preview-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.preview-container .preview-name {
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+}
+
+.preview-container .preview-id {
+    font-size: 0.85rem;
+    color: var(--text);
+    opacity: 0.7;
+    font-family: 'Courier New', monospace;
+}
+
+.preview-placeholder {
+    color: var(--text);
+    opacity: 0.6;
+    font-style: italic;
+}
+
+/* Drop Rate Preview Styles */
+.drop-rate-preview {
+    background-color: var(--secondary);
+    color: var(--accent);
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    padding: 0.75rem;
+    text-align: center;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* Modal Form Layout Improvements */
+.modal-form-section {
+    margin-bottom: 2rem;
+}
+
+.modal-form-section:last-child {
+    margin-bottom: 0;
+}
+
+.modal-section-title {
+    color: var(--accent);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--secondary);
+}
+
+/* Suggestion List Improvements */
+.suggestion-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid var(--secondary);
+    border-radius: 4px;
+    background-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: none;
+}
+
+.suggestion-list:empty {
+    display: none;
+}
+
+/* Close suggestion lists when clicking outside */
+.suggestion-list.show {
+    display: block;
+}
+
+.suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--secondary);
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background-color: var(--secondary);
+    color: var(--accent);
+}
+
+.suggestion-item img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    margin-right: 0.75rem;
+    border-radius: 3px;
+    border: 1px solid var(--primary);
+    background-color: var(--primary);
+}
+
+.suggestion-text {
+    flex-grow: 1;
+}
+
+.suggestion-type {
+    font-size: 0.75rem;
+    color: var(--accent);
+    background-color: var(--primary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+}
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
