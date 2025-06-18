@@ -26,16 +26,7 @@ require_once 'includes/header.php';
 
 <!-- Quick Actions Section -->
 <section class="admin-quick-actions">
-    <div class="admin-header">
-        <h2>Quick Actions</h2>
-        <div class="admin-header-actions">
-            <a href="/l1jdb_database/admin/tools/" class="admin-btn admin-btn-primary">
-                <span class="admin-icon admin-icon-stats"></span>
-                Advanced Tools
-            </a>
-        </div>
-    </div>
-    
+        
     <div class="admin-dashboard-grid">
         <!-- Binary Data Management -->
         <div class="dashboard-card">
