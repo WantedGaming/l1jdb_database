@@ -9,8 +9,8 @@ require_once 'auth_check.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>L1J Database Admin</title>
     <link rel="icon" type="image/x-icon" href="/l1jdb_database/assets/img/favicon/favicon.ico">
-    <!-- Include main style.css for CSS variables -->
-    <link rel="stylesheet" href="/l1jdb_database/assets/css/style.css">
+    <!-- Include base styles with CSS variables -->
+    <link rel="stylesheet" href="/l1jdb_database/assets/css/base.css">
     <!-- Include admin-specific styles -->
     <link rel="stylesheet" href="/l1jdb_database/assets/css/admin.css">
 

@@ -1,7 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../includes/auth_check.php';
-require_once __DIR__ . '/../../../../includes/db.php';
-require_once __DIR__ . '/../../../includes/header.php';
+require_once __DIR__ . '/../common/detail_header.php';
 
 // Get parameters from URL (composite primary key)
 $map_number = isset($_GET['map']) ? (int)$_GET['map'] : 0;
@@ -11,7 +9,7 @@ $territory_endXY = isset($_GET['end']) ? (int)$_GET['end'] : 0;
 
 if ($map_number <= 0 || $npc_classId <= 0) {
     echo "<div class='alert alert-error'>Invalid NDL parameters provided.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -33,7 +31,7 @@ $ndl = $result->fetch_assoc();
 
 if (!$ndl) {
     echo "<div class='alert alert-error'>NDL record not found with the provided parameters.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -81,20 +79,39 @@ function formatAverage($value, $suffix = '') {
 </div>
 
 <div class="detail-container">
-    <div class="detail-section">
-        <h2>Basic Information</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Map Number:</label>
-                <span><?php echo formatMapNumber($ndl['map_number']); ?></span>
+    <!-- Main Content Row -->
+    <div class="weapon-detail-row">
+        <!-- Column 1: Image Preview (or placeholder) -->
+        <div class="weapon-image-col">
+            <div class="weapon-image-container">
+                <img src="../../../../assets/img/icons/ndl.png" 
+                     alt="NDL Icon" 
+                     class="weapon-main-image"
+                     onerror="this.src='../../../../assets/img/icons/0.png'">
             </div>
-            <div class="detail-item">
-                <label>NPC Class ID:</label>
-                <span><?php echo htmlspecialchars($ndl['npc_classId']); ?></span>
+            <div class="icon-id-display">
+                <span>Map: <?php echo $map_number; ?>, Class: <?php echo $npc_classId; ?></span>
             </div>
-            <div class="detail-item">
-                <label>Territory Location Desc:</label>
-                <span><?php echo htmlspecialchars($ndl['territory_location_desc']); ?></span>
+        </div>
+        
+        <!-- Column 2: Basic Information -->
+        <div class="weapon-info-col">
+            <div class="weapon-basic-info">
+                <h2>Basic Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Map Number:</label>
+                        <span><?php echo formatMapNumber($ndl['map_number']); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>NPC Class ID:</label>
+                        <span><?php echo htmlspecialchars($ndl['npc_classId']); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Territory Location Desc:</label>
+                        <span><?php echo htmlspecialchars($ndl['territory_location_desc']); ?></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -182,4 +199,4 @@ function formatAverage($value, $suffix = '') {
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../common/detail_footer.php'; ?>

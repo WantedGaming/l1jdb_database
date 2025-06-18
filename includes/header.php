@@ -12,6 +12,7 @@ function getPageHeader($title = '') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($siteTitle); ?></title>
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/base.css">
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/style.css">
 </head>
 <body>

@@ -1,5 +1,9 @@
 <?php
-session_start();
+// Include session helper functions
+require_once __DIR__ . '/includes/session_helper.php';
+
+// Ensure session is started
+ensureSessionStarted();
 
 // Simple admin login for bin tables access
 $error = '';
@@ -10,10 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Simple hardcoded admin credentials - change these in production!
     if ($username === 'admin' && $password === 'admin123') {
-        $_SESSION['admin_logged_in'] = true;
-        $_SESSION['admin_username'] = $username;
-        $_SESSION['last_activity'] = time();
-        
+        setAdminLogin($username);
         header('Location: index.php');
         exit();
     } else {
@@ -22,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // If already logged in, redirect
-if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+if (isAdminLoggedIn()) {
     header('Location: index.php');
     exit();
 }
@@ -35,8 +36,8 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - L1J Database</title>
     <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico">
-    <!-- Include main style.css for CSS variables -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <!-- Include base styles with CSS variables -->
+    <link rel="stylesheet" href="../assets/css/base.css">
     <!-- Include admin-specific styles -->
     <link rel="stylesheet" href="../assets/css/admin.css">
 

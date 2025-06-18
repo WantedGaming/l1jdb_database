@@ -1,14 +1,12 @@
 <?php
-require_once __DIR__ . '/../../../includes/auth_check.php';
-require_once __DIR__ . '/../../../../includes/db.php';
-require_once __DIR__ . '/../../../includes/header.php';
+require_once __DIR__ . '/../common/detail_header.php';
 
 // Get craft_id from URL
 $craft_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($craft_id <= 0) {
     echo "<div class='alert alert-error'>Invalid craft ID provided.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -30,7 +28,7 @@ $craft = $result->fetch_assoc();
 
 if (!$craft) {
     echo "<div class='alert alert-error'>Craft with ID $craft_id not found.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -102,24 +100,39 @@ function formatSuccessCountType($type) {
 </div>
 
 <div class="detail-container">
-    <div class="detail-section">
-        <h2>Basic Information</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Craft ID:</label>
-                <span><?php echo htmlspecialchars($craft['craft_id']); ?></span>
+    <!-- Main Content Row -->
+    <div class="weapon-detail-row">
+        <!-- Column 1: Image Preview (or placeholder) -->
+        <div class="weapon-image-col">
+            <div class="weapon-image-container">
+                <img src="../../../../assets/img/icons/craft.png" 
+                     alt="Craft Icon" 
+                     class="weapon-main-image"
+                     onerror="this.src='../../../../assets/img/icons/0.png'">
             </div>
-            <div class="detail-item">
-                <label>Description ID:</label>
-                <span><?php echo htmlspecialchars($craft['desc_id']); ?></span>
+            <div class="icon-id-display">
+                <span>Craft ID: <?php echo htmlspecialchars($craft['craft_id']); ?></span>
             </div>
-            <div class="detail-item">
-                <label>Description (Korean):</label>
-                <span><?php echo htmlspecialchars($craft['desc_kr']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Description (English):</label>
-                <span><?php echo htmlspecialchars($craft['desc_en'] ?: 'Not translated'); ?></span>
+        </div>
+        
+        <!-- Column 2: Basic Information -->
+        <div class="weapon-info-col">
+            <div class="weapon-basic-info">
+                <h2>Basic Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Description ID:</label>
+                        <span><?php echo htmlspecialchars($craft['desc_id']); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Description (Korean):</label>
+                        <span><?php echo htmlspecialchars($craft['desc_kr']); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Description (English):</label>
+                        <span><?php echo htmlspecialchars($craft['desc_en'] ?: 'Not translated'); ?></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -269,4 +282,4 @@ function formatSuccessCountType($type) {
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../common/detail_footer.php'; ?>

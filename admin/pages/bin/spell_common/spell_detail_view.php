@@ -1,14 +1,12 @@
 <?php
-require_once __DIR__ . '/../../../includes/auth_check.php';
-require_once __DIR__ . '/../../../../includes/db.php';
-require_once __DIR__ . '/../../../includes/header.php';
+require_once __DIR__ . '/../common/detail_header.php';
 
 // Get spell_id from URL
 $spell_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($spell_id <= 0) {
     echo "<div class='alert alert-error'>Invalid spell ID provided.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -30,7 +28,7 @@ $spell = $result->fetch_assoc();
 
 if (!$spell) {
     echo "<div class='alert alert-error'>Spell with ID $spell_id not found.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -223,5 +221,6 @@ function formatDurationShowType($type) {
             </div>
         </div>
     </div>
+</div>
 
-<?php require_once __DIR__ . '/../../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../common/detail_footer.php'; ?>

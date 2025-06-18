@@ -1,14 +1,12 @@
 <?php
-require_once __DIR__ . '/../../../includes/auth_check.php';
-require_once __DIR__ . '/../../../../includes/db.php';
-require_once __DIR__ . '/../../../includes/header.php';
+require_once __DIR__ . '/../common/detail_header.php';
 
 // Get name_id from URL
 $name_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($name_id <= 0) {
     echo "<div class='alert alert-error'>Invalid item ID provided.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -30,7 +28,7 @@ $item = $result->fetch_assoc();
 
 if (!$item) {
     echo "<div class='alert alert-error'>Item with ID $name_id not found.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -427,4 +425,4 @@ function formatComplexText($text) {
     <?php endif; ?>
 </div>
 
-<?php require_once __DIR__ . '/../../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../common/detail_footer.php'; ?>

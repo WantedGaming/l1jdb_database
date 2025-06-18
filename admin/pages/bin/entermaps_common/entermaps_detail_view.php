@@ -1,7 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../includes/auth_check.php';
-require_once __DIR__ . '/../../../../includes/db.php';
-require_once __DIR__ . '/../../../includes/header.php';
+require_once __DIR__ . '/../common/detail_header.php';
 
 // Get parameters from URL
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -9,7 +7,7 @@ $action_name = isset($_GET['action_name']) ? $_GET['action_name'] : '';
 
 if ($id <= 0 || empty($action_name)) {
     echo "<div class='alert alert-error'>Invalid entry ID or action name provided.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -31,7 +29,7 @@ $entry = $result->fetch_assoc();
 
 if (!$entry) {
     echo "<div class='alert alert-error'>Entry with ID $id and action name '$action_name' not found.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -98,24 +96,39 @@ function formatDestinations($destinations) {
 </div>
 
 <div class="detail-container">
-    <div class="detail-section">
-        <h2>Basic Information</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Entry ID:</label>
-                <span><?php echo htmlspecialchars($entry['id']); ?></span>
+    <!-- Main Content Row -->
+    <div class="weapon-detail-row">
+        <!-- Column 1: Image Preview (or placeholder) -->
+        <div class="weapon-image-col">
+            <div class="weapon-image-container">
+                <img src="../../../../assets/img/icons/map.png" 
+                     alt="Map Icon" 
+                     class="weapon-main-image"
+                     onerror="this.src='../../../../assets/img/icons/0.png'">
             </div>
-            <div class="detail-item">
-                <label>Action Name (Korean):</label>
-                <span><?php echo htmlspecialchars($entry['action_name']); ?></span>
+            <div class="icon-id-display">
+                <span>Entry ID: <?php echo htmlspecialchars($entry['id']); ?></span>
             </div>
-            <div class="detail-item">
-                <label>Action Name (English):</label>
-                <span><?php echo htmlspecialchars($entry['action_name_en'] ?: 'Not translated'); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Number ID:</label>
-                <span><?php echo htmlspecialchars($entry['number_id']); ?></span>
+        </div>
+        
+        <!-- Column 2: Basic Information -->
+        <div class="weapon-info-col">
+            <div class="weapon-basic-info">
+                <h2>Basic Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Action Name (Korean):</label>
+                        <span><?php echo htmlspecialchars($entry['action_name']); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Action Name (English):</label>
+                        <span><?php echo htmlspecialchars($entry['action_name_en'] ?: 'Not translated'); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Number ID:</label>
+                        <span><?php echo htmlspecialchars($entry['number_id']); ?></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -171,4 +184,4 @@ function formatDestinations($destinations) {
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../common/detail_footer.php'; ?>

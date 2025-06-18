@@ -1,14 +1,12 @@
 <?php
-require_once __DIR__ . '/../../../includes/auth_check.php';
-require_once __DIR__ . '/../../../../includes/db.php';
-require_once __DIR__ . '/../../../includes/header.php';
+require_once __DIR__ . '/../common/detail_header.php';
 
 // Get id from URL
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id <= 0) {
     echo "<div class='alert alert-error'>Invalid potential ID provided.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -30,7 +28,7 @@ $potential = $result->fetch_assoc();
 
 if (!$potential) {
     echo "<div class='alert alert-error'>Potential with ID $id not found.</div>";
-    require_once __DIR__ . '/../../../includes/footer.php';
+    require_once __DIR__ . '/../common/detail_footer.php';
     exit;
 }
 
@@ -100,20 +98,34 @@ function formatEventConfig($event_config) {
 </div>
 
 <div class="detail-container">
-    <div class="detail-section">
-        <h2>Basic Information</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Potential ID:</label>
-                <span><?php echo htmlspecialchars($potential['id']); ?></span>
+    <!-- Main Content Row -->
+    <div class="weapon-detail-row">
+        <!-- Column 1: Image Preview (or placeholder) -->
+        <div class="weapon-image-col">
+            <div class="weapon-image-container">
+                <img src="../../../../assets/img/icons/0.png" 
+                     alt="Potential Icon" 
+                     class="weapon-main-image">
             </div>
-            <div class="detail-item">
-                <label>Grade:</label>
-                <span><?php echo formatGrade($potential['grade']); ?></span>
+            <div class="icon-id-display">
+                <span>Potential ID: <?php echo htmlspecialchars($potential['id']); ?></span>
             </div>
-            <div class="detail-item">
-                <label>Description ID:</label>
-                <span><?php echo htmlspecialchars($potential['desc_id']); ?></span>
+        </div>
+        
+        <!-- Column 2: Basic Information -->
+        <div class="weapon-info-col">
+            <div class="weapon-basic-info">
+                <h2>Basic Information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Grade:</label>
+                        <span><?php echo formatGrade($potential['grade']); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <label>Description ID:</label>
+                        <span><?php echo htmlspecialchars($potential['desc_id']); ?></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -172,4 +184,4 @@ function formatEventConfig($event_config) {
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../../includes/footer.php'; ?>
+<?php require_once __DIR__ . '/../common/detail_footer.php'; ?>
