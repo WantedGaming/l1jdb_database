@@ -13,7 +13,6 @@ $bin_tables = [
     'bin_npc_common' => 'NPC',
     'bin_potential_common' => 'Potential',
     'bin_spell_common' => 'Spell',
-    'spawnlist' => 'Spawns',
 ];
 
 // Get statistics for each table
@@ -75,8 +74,6 @@ foreach ($bin_tables as $table => $description) {
                         <a href="ndl_common/ndl_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
                     <?php elseif ($table === 'bin_item_common'): ?>
                         <a href="item_common/item_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
-                    <?php elseif ($table === 'spawnlist'): ?>
-                        <a href="spawn_common/spawn_list_view.php" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
                     <?php else: ?>
                         <a href="view.php?table=<?php echo urlencode($table); ?>" class="admin-btn admin-btn-primary admin-btn-small">View Data</a>
                     <?php endif; ?>

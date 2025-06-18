@@ -51,7 +51,7 @@ require_once 'includes/header.php';
                 <div class="dashboard-quick-links">
                     <a href="/l1jdb_database/admin/pages/bin/item_common/item_list_view.php">Items</a>
                     <a href="/l1jdb_database/admin/pages/bin/npc_common/npc_list_view.php">NPCs</a>
-                    <a href="/l1jdb_database/admin/pages/bin/spawn_common/spawn_list_view.php">Spawns</a>
+                    <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php">Spawns</a>
                     <a href="/l1jdb_database/admin/pages/bin/spell_common/spell_list_view.php">Spells</a>
                     <a href="/l1jdb_database/admin/pages/bin/catalyst/catalyst_list_view.php">Catalyst</a>
                 </div>
@@ -136,12 +136,12 @@ require_once 'includes/header.php';
             <div class="dashboard-card-content">
                 <p>Manage all spawns in the game world from various spawn tables.</p>
                 <div class="dashboard-card-links">
-                    <a href="/l1jdb_database/admin/pages/bin/spawn_common/spawn_list_view.php" class="admin-btn admin-btn-secondary admin-btn-small">View Spawns</a>
+                    <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php" class="admin-btn admin-btn-secondary admin-btn-small">View Spawns</a>
                 </div>
                 <div class="dashboard-quick-links">
-                    <a href="/l1jdb_database/admin/pages/bin/spawn_common/spawn_list_view.php?table=spawnlist">Regular Spawns</a>
-                    <a href="/l1jdb_database/admin/pages/bin/spawn_common/spawn_list_view.php?table=spawnlist_boss">Boss Spawns</a>
-                    <a href="/l1jdb_database/admin/pages/bin/spawn_common/spawn_list_view.php?table=spawnlist_clandungeon">Clan Dungeon</a>
+                    <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php?table=spawnlist">Regular Spawns</a>
+                    <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php?table=spawnlist_boss">Boss Spawns</a>
+                    <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php?table=spawnlist_clandungeon">Clan Dungeon</a>
                 </div>
             </div>
         </div>
