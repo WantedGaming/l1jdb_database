@@ -131,7 +131,7 @@ require_once 'includes/header.php';
                 </div>
                 <div class="dashboard-quick-links">
                     <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php?table=spawnlist">Regular Spawns</a>
-                    <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php?table=spawnlist_boss">Boss Spawns</a>
+                    <a href="/l1jdb_database/admin/pages/spawn/boss/boss_list_view.php">Boss Spawns</a>
                     <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php?table=spawnlist_clandungeon">Clan Dungeon</a>
                 </div>
             </div>

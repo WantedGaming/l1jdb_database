@@ -126,303 +126,323 @@ function formatComplexText($text) {
 
 <div class="detail-container">
     <!-- Main Content Row -->
-    <div class="weapon-detail-row">
-        <!-- Column 1: Image Preview -->
-        <div class="weapon-image-col">
-            <div class="weapon-image-container">
-                <?php if ($item['icon_id'] > 0): ?>
-                    <img src="../../../../assets/img/icons/<?php echo $item['icon_id']; ?>.png" 
-                         alt="Item Icon" 
-                         class="weapon-main-image"
-                         onerror="this.src='../../../../assets/img/icons/0.png'">
-                <?php else: ?>
-                    <img src="../../../../assets/img/icons/0.png" 
-                         alt="No Icon" 
-                         class="weapon-main-image">
-                <?php endif; ?>
+    <div class="detail-content">
+        <div class="flex flex-wrap">
+            <!-- Column 1: Image Preview Card -->
+            <div class="weapon-image-card">
+                <div class="weapon-image-container">
+                    <?php if ($item['icon_id'] > 0): ?>
+                        <img src="../../../../assets/img/icons/<?php echo $item['icon_id']; ?>.png" 
+                             alt="Item Icon" 
+                             class="weapon-main-image"
+                             onerror="this.src='../../../../assets/img/icons/0.png'">
+                    <?php else: ?>
+                        <img src="../../../../assets/img/icons/0.png" 
+                             alt="No Icon" 
+                             class="weapon-main-image">
+                    <?php endif; ?>
+                </div>
+                <div class="icon-id-display mt-1 text-center">
+                    <span>Icon ID: <?php echo htmlspecialchars($item['icon_id']); ?></span>
+                </div>
             </div>
-            <div class="icon-id-display">
-                <span>Icon ID: <?php echo htmlspecialchars($item['icon_id']); ?></span>
-            </div>
-        </div>
-        
-        <!-- Column 2: Basic Information -->
-        <div class="weapon-info-col">
-            <div class="weapon-basic-info">
-                <h2>Basic Information</h2>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label>Name ID:</label>
-                        <span><?php echo htmlspecialchars($item['name_id']); ?></span>
-                    </div>
-                    <div class="info-item">
-                        <label>Sprite ID:</label>
-                        <span><?php echo htmlspecialchars($item['sprite_id']); ?></span>
-                    </div>
-                    <div class="info-item">
-                        <label>Description ID:</label>
-                        <span><?php echo htmlspecialchars($item['desc_id']); ?></span>
-                    </div>
-                    <div class="info-item">
-                        <label>Real Description:</label>
-                        <span><?php echo htmlspecialchars($item['real_desc'] ?: 'None'); ?></span>
-                    </div>
-                    <div class="info-item">
-                        <label>Material:</label>
-                        <span><?php echo normalizeEnumText($item['material']); ?></span>
-                    </div>
-                    <div class="info-item">
-                        <label>Item Category:</label>
-                        <span><?php echo normalizeEnumText($item['item_category']); ?></span>
+            
+            <!-- Column 2: Basic Information -->
+            <div class="weapon-info-wrap">
+                <div class="weapon-basic-info">
+                    <h2>Basic Information</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Name ID:</label>
+                            <span><?php echo htmlspecialchars($item['name_id']); ?></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Sprite ID:</label>
+                            <span><?php echo htmlspecialchars($item['sprite_id']); ?></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Description ID:</label>
+                            <span><?php echo htmlspecialchars($item['desc_id']); ?></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Real Description:</label>
+                            <span><?php echo htmlspecialchars($item['real_desc'] ?: 'None'); ?></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Material:</label>
+                            <span><?php echo normalizeEnumText($item['material']); ?></span>
+                        </div>
+                        <div class="info-item">
+                            <label>Item Category:</label>
+                            <span><?php echo normalizeEnumText($item['item_category']); ?></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="detail-section">
-        <h2>Name & Description</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Name (Korean):</label>
-                <span><?php echo htmlspecialchars($item['desc_kr'] ?: 'None'); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Name (English):</label>
-                <span><?php echo htmlspecialchars($item['desc_en'] ?: 'Not translated'); ?></span>
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Name & Description</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Name (Korean):</label>
+                    <span><?php echo htmlspecialchars($item['desc_kr'] ?: 'None'); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Name (English):</label>
+                    <span><?php echo htmlspecialchars($item['desc_en'] ?: 'Not translated'); ?></span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="detail-section">
-        <h2>Item Properties</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Body Part:</label>
-                <span><?php echo normalizeEnumText($item['body_part']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Level Range:</label>
-                <span><?php echo formatLevelRange($item['level_limit_min'], $item['level_limit_max']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Weight (1000ea):</label>
-                <span><?php echo formatWeight($item['weight_1000ea']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Real Weight:</label>
-                <span><?php echo formatWeight($item['real_weight'], true); ?></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="detail-section">
-        <h2>Class Permissions</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Allowed Classes:</label>
-                <span><?php echo formatClassPermissions($item); ?></span>
-            </div>
-        </div>
-        
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Prince:</label>
-                <span><?php echo formatBoolean($item['prince_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Knight:</label>
-                <span><?php echo formatBoolean($item['knight_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Elf:</label>
-                <span><?php echo formatBoolean($item['elf_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Magician:</label>
-                <span><?php echo formatBoolean($item['magician_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Dark Elf:</label>
-                <span><?php echo formatBoolean($item['darkelf_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Dragon Knight:</label>
-                <span><?php echo formatBoolean($item['dragonknight_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Illusionist:</label>
-                <span><?php echo formatBoolean($item['illusionist_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Warrior:</label>
-                <span><?php echo formatBoolean($item['warrior_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Fencer:</label>
-                <span><?php echo formatBoolean($item['fencer_permit']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Lancer:</label>
-                <span><?php echo formatBoolean($item['lancer_permit']); ?></span>
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Item Properties</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Body Part:</label>
+                    <span><?php echo normalizeEnumText($item['body_part']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Level Range:</label>
+                    <span><?php echo formatLevelRange($item['level_limit_min'], $item['level_limit_max']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Weight (1000ea):</label>
+                    <span><?php echo formatWeight($item['weight_1000ea']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Real Weight:</label>
+                    <span><?php echo formatWeight($item['real_weight'], true); ?></span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="detail-section">
-        <h2>Combat Stats</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>AC:</label>
-                <span><?php echo htmlspecialchars($item['ac']); ?></span>
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Class Permissions</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Allowed Classes:</label>
+                    <span><?php echo formatClassPermissions($item); ?></span>
+                </div>
             </div>
-            <div class="detail-item">
-                <label>Weapon Type:</label>
-                <span><?php echo normalizeEnumText($item['extended_weapon_type']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Damage:</label>
-                <span><?php echo formatDamage($item['large_damage'], $item['small_damage']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Hit Bonus:</label>
-                <span><?php echo htmlspecialchars($item['hit_bonus']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Damage Bonus:</label>
-                <span><?php echo htmlspecialchars($item['damage_bonus']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Spell Range:</label>
-                <span><?php echo htmlspecialchars($item['spell_range']); ?></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="detail-section">
-        <h2>Enchanting & Enhancement</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Max Enchant:</label>
-                <span><?php echo htmlspecialchars($item['max_enchant']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Enchant Type:</label>
-                <span><?php echo htmlspecialchars($item['enchant_type']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Can Set Mage Enchant:</label>
-                <span><?php echo formatBoolean($item['can_set_mage_enchant']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Element Enchant Table:</label>
-                <span><?php echo htmlspecialchars($item['element_enchant_table']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Accessory Enchant Table:</label>
-                <span><?php echo htmlspecialchars($item['accessory_enchant_table']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Forced Elemental Enchant:</label>
-                <span><?php echo htmlspecialchars($item['forced_elemental_enchant']); ?></span>
+            
+            <div class="class-grid mt-2">
+                <div class="class-item <?php echo $item['prince_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Prince</span>
+                    <span class="status"><?php echo $item['prince_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['knight_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Knight</span>
+                    <span class="status"><?php echo $item['knight_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['elf_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Elf</span>
+                    <span class="status"><?php echo $item['elf_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['magician_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Magician</span>
+                    <span class="status"><?php echo $item['magician_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['darkelf_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Dark Elf</span>
+                    <span class="status"><?php echo $item['darkelf_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['dragonknight_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Dragon Knight</span>
+                    <span class="status"><?php echo $item['dragonknight_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['illusionist_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Illusionist</span>
+                    <span class="status"><?php echo $item['illusionist_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['warrior_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Warrior</span>
+                    <span class="status"><?php echo $item['warrior_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['fencer_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Fencer</span>
+                    <span class="status"><?php echo $item['fencer_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
+                <div class="class-item <?php echo $item['lancer_permit'] === 'true' ? 'allowed' : 'restricted' ?>">
+                    <span>Lancer</span>
+                    <span class="status"><?php echo $item['lancer_permit'] === 'true' ? '✓' : '✗' ?></span>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="detail-section">
-        <h2>Special Properties</h2>
-        <div class="detail-grid">
-            <div class="detail-item">
-                <label>Cost:</label>
-                <span><?php echo number_format($item['cost']); ?></span>
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Combat Stats</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>AC:</label>
+                    <span><?php echo htmlspecialchars($item['ac']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Weapon Type:</label>
+                    <span><?php echo normalizeEnumText($item['extended_weapon_type']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Damage:</label>
+                    <span><?php echo formatDamage($item['large_damage'], $item['small_damage']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Hit Bonus:</label>
+                    <span><?php echo htmlspecialchars($item['hit_bonus']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Damage Bonus:</label>
+                    <span><?php echo htmlspecialchars($item['damage_bonus']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Spell Range:</label>
+                    <span><?php echo htmlspecialchars($item['spell_range']); ?></span>
+                </div>
             </div>
-            <div class="detail-item">
-                <label>Merge:</label>
-                <span><?php echo formatBoolean($item['merge']); ?></span>
+        </div>
+    </div>
+
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Enchanting & Enhancement</h2>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label>Max Enchant:</label>
+                    <span><?php echo htmlspecialchars($item['max_enchant']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Enchant Type:</label>
+                    <span><?php echo htmlspecialchars($item['enchant_type']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Can Set Mage Enchant:</label>
+                    <span><?php echo formatBoolean($item['can_set_mage_enchant']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Element Enchant Table:</label>
+                    <span><?php echo htmlspecialchars($item['element_enchant_table']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Accessory Enchant Table:</label>
+                    <span><?php echo htmlspecialchars($item['accessory_enchant_table']); ?></span>
+                </div>
+                <div class="detail-item">
+                    <label>Forced Elemental Enchant:</label>
+                    <span><?php echo htmlspecialchars($item['forced_elemental_enchant']); ?></span>
+                </div>
             </div>
-            <div class="detail-item">
-                <label>Is Elven:</label>
-                <span><?php echo formatBoolean($item['is_elven']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Energy Lost:</label>
-                <span><?php echo formatBoolean($item['energy_lost']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>PSS Event Item:</label>
-                <span><?php echo formatBoolean($item['pss_event_item']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Market Searching Item:</label>
-                <span><?php echo formatBoolean($item['market_searching_item']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>PSS Heal Item:</label>
-                <span><?php echo formatBoolean($item['pss_heal_item']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Interaction Type:</label>
-                <span><?php echo htmlspecialchars($item['interaction_type']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Probability:</label>
-                <span><?php echo htmlspecialchars($item['prob']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>BM Prob Open:</label>
-                <span><?php echo htmlspecialchars($item['bm_prob_open']); ?></span>
-            </div>
-            <div class="detail-item">
-                <label>Use Interval:</label>
-                <span><?php echo number_format($item['useInterval']); ?></span>
+        </div>
+    </div>
+
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Special Properties</h2>
+            <div class="advanced-grid">
+                <div class="advanced-item">
+                    <label>Cost:</label>
+                    <span><?php echo number_format($item['cost']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>Merge:</label>
+                    <span><?php echo formatBoolean($item['merge']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>Is Elven:</label>
+                    <span><?php echo formatBoolean($item['is_elven']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>Energy Lost:</label>
+                    <span><?php echo formatBoolean($item['energy_lost']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>PSS Event Item:</label>
+                    <span><?php echo formatBoolean($item['pss_event_item']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>Market Searching Item:</label>
+                    <span><?php echo formatBoolean($item['market_searching_item']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>PSS Heal Item:</label>
+                    <span><?php echo formatBoolean($item['pss_heal_item']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>Interaction Type:</label>
+                    <span><?php echo htmlspecialchars($item['interaction_type']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>Probability:</label>
+                    <span><?php echo htmlspecialchars($item['prob']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>BM Prob Open:</label>
+                    <span><?php echo htmlspecialchars($item['bm_prob_open']); ?></span>
+                </div>
+                <div class="advanced-item">
+                    <label>Use Interval:</label>
+                    <span><?php echo number_format($item['useInterval']); ?></span>
+                </div>
             </div>
         </div>
     </div>
 
     <?php if (!empty($item['equip_bonus_list'])): ?>
-    <div class="detail-section">
-        <h2>Equipment Bonuses</h2>
-        <div class="detail-item">
-            <label>Bonus List:</label>
-            <div class="detail-text"><?php echo formatComplexText($item['equip_bonus_list']); ?></div>
-        </div>
-        
-        <div class="detail-item">
-            <label>Raw Bonus Data:</label>
-            <div class="detail-text" style="white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%; font-family: monospace; padding: 10px; border-radius: 4px;"><?php echo htmlspecialchars($item['equip_bonus_list']); ?></div>
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Equipment Bonuses</h2>
+            <div class="detail-item">
+                <label>Bonus List:</label>
+                <div class="description-text"><?php echo formatComplexText($item['equip_bonus_list']); ?></div>
+            </div>
+            
+            <div class="detail-item mt-2">
+                <label>Raw Bonus Data:</label>
+                <div class="description-text" style="font-family: monospace;"><?php echo htmlspecialchars($item['equip_bonus_list']); ?></div>
+            </div>
         </div>
     </div>
     <?php endif; ?>
 
     <?php if (!empty($item['armor_series_info'])): ?>
-    <div class="detail-section">
-        <h2>Armor Series Information</h2>
-        <div class="detail-item">
-            <label>Series Info:</label>
-            <div class="detail-text"><?php echo formatComplexText($item['armor_series_info']); ?></div>
-        </div>
-        
-        <div class="detail-item">
-            <label>Raw Series Data:</label>
-            <div class="detail-text" style="white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%; font-family: monospace; padding: 10px; border-radius: 4px;"><?php echo htmlspecialchars($item['armor_series_info']); ?></div>
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Armor Series Information</h2>
+            <div class="detail-item">
+                <label>Series Info:</label>
+                <div class="description-text"><?php echo formatComplexText($item['armor_series_info']); ?></div>
+            </div>
+            
+            <div class="detail-item mt-2">
+                <label>Raw Series Data:</label>
+                <div class="description-text" style="font-family: monospace;"><?php echo htmlspecialchars($item['armor_series_info']); ?></div>
+            </div>
         </div>
     </div>
     <?php endif; ?>
 
     <?php if (!empty($item['lucky_bag_reward_list'])): ?>
-    <div class="detail-section">
-        <h2>Lucky Bag Rewards</h2>
-        <div class="detail-item">
-            <label>Reward List:</label>
-            <div class="detail-text"><?php echo formatComplexText($item['lucky_bag_reward_list']); ?></div>
-        </div>
-        
-        <div class="detail-item">
-            <label>Raw Reward Data:</label>
-            <div class="detail-text" style="white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%; font-family: monospace; padding: 10px; border-radius: 4px;"><?php echo htmlspecialchars($item['lucky_bag_reward_list']); ?></div>
+    <div class="detail-container">
+        <div class="detail-content">
+            <h2 class="section-title">Lucky Bag Rewards</h2>
+            <div class="detail-item">
+                <label>Reward List:</label>
+                <div class="description-text"><?php echo formatComplexText($item['lucky_bag_reward_list']); ?></div>
+            </div>
+            
+            <div class="detail-item mt-2">
+                <label>Raw Reward Data:</label>
+                <div class="description-text" style="font-family: monospace;"><?php echo htmlspecialchars($item['lucky_bag_reward_list']); ?></div>
+            </div>
         </div>
     </div>
     <?php endif; ?>
-</div>
 
 <?php require_once __DIR__ . '/../common/detail_footer.php'; ?>

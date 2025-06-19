@@ -6,3 +6,4 @@ require_once __DIR__ . '/../../../includes/header.php';
 ?>
 <!-- Include detail view specific styles -->
 <link rel="stylesheet" href="/l1jdb_database/assets/css/detail_views/detail_view.css">
+<link rel="stylesheet" href="/l1jdb_database/assets/css/detail_views/item_detail.css">

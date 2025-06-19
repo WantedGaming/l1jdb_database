@@ -84,6 +84,12 @@ $table_display_name = isset($table_display_names[$table]) ? $table_display_names
             <span>Spawn Details</span>
         </div>
         <h1>
+            <?php if (!empty($npc['spriteId'])): ?>
+                <img src="/l1jdb_database/assets/img/icons/ms<?php echo $npc['spriteId']; ?>.png" 
+                     onerror="this.src='/l1jdb_database/assets/img/icons/0.png';" 
+                     alt="NPC Sprite" 
+                     class="npc-detail-sprite">
+            <?php endif; ?>
             <?php echo htmlspecialchars($spawn['name']); ?> 
             <small>(ID: <?php echo $spawn['id']; ?>)</small>
         </h1>
@@ -101,7 +107,15 @@ $table_display_name = isset($table_display_names[$table]) ? $table_display_names
             <button class="form-tab active" data-tab="general-info">General Info</button>
             <button class="form-tab" data-tab="location-info">Location Details</button>
             <button class="form-tab" data-tab="respawn-info">Respawn Settings</button>
-            <button class="form-tab" data-tab="npc-info">NPC Information</button>
+            <button class="form-tab" data-tab="npc-info">
+                <?php if (!empty($npc['spriteId'])): ?>
+                <img src="/l1jdb_database/assets/img/icons/ms<?php echo $npc['spriteId']; ?>.png" 
+                     onerror="this.src='/l1jdb_database/assets/img/icons/0.png';" 
+                     alt="NPC Sprite" 
+                     class="tab-sprite">
+                <?php endif; ?>
+                NPC Information
+            </button>
         </div>
         
         <!-- General Info Tab -->
@@ -124,6 +138,12 @@ $table_display_name = isset($table_display_names[$table]) ? $table_display_names
                     <div class="form-group">
                         <label>NPC Name:</label>
                         <div class="form-control-static">
+                            <?php if (!empty($npc['spriteId'])): ?>
+                                <img src="/l1jdb_database/assets/img/icons/ms<?php echo $npc['spriteId']; ?>.png" 
+                                     onerror="this.src='/l1jdb_database/assets/img/icons/0.png';" 
+                                     alt="NPC Sprite" 
+                                     class="npc-sprite inline-sprite">
+                            <?php endif; ?>
                             <?php echo htmlspecialchars($spawn['npc_name'] ?? 'Unknown NPC'); ?>
                         </div>
                     </div>
@@ -267,8 +287,16 @@ $table_display_name = isset($table_display_names[$table]) ? $table_display_names
         <div class="form-tab-content" id="npc-info">
             <?php if ($npc): ?>
                 <div class="field-group">
-                    <h3>NPC Basic Information</h3>
-                    <div class="form-grid-2">
+                <h3>
+                    <?php if (!empty($npc['spriteId'])): ?>
+                    <img src="/l1jdb_database/assets/img/icons/ms<?php echo $npc['spriteId']; ?>.png" 
+                         onerror="this.src='/l1jdb_database/assets/img/icons/0.png';" 
+                         alt="NPC Sprite" 
+                         class="npc-sprite inline-sprite">
+                <?php endif; ?>
+                NPC Basic Information
+            </h3>
+            <div class="form-grid-2">
                         <div class="form-group">
                             <label>NPC ID:</label>
                             <div class="form-control-static"><?php echo $npc['npcid']; ?></div>
@@ -353,6 +381,33 @@ $table_display_name = isset($table_display_names[$table]) ? $table_display_names
         </div>
     </div>
 </div>
+
+<style>
+/* NPC Sprite Styles */
+.npc-detail-sprite {
+    width: 48px;  /* Increased from 32px */
+    height: 48px;  /* Increased from 32px */
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 10px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.inline-sprite {
+    width: 36px;  /* Increased from 24px */
+    height: 36px;  /* Increased from 24px */
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.tab-sprite {
+    width: 28px;  /* Increased from 20px */
+    height: 28px;  /* Increased from 20px */
+    margin-right: 5px;
+    vertical-align: middle;
+}
+</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 // Include database functions
 require_once 'db_functions.php';
+require_once '../../includes/functions.php';
 
 // Initialize response array
 $response = ['success' => false, 'data' => [], 'pagination' => [], 'message' => ''];
@@ -81,11 +82,56 @@ try {
     $dataResult = $dataStmt->get_result();
     
     $spawns = [];
+    $npcIds = [];
+    
+    // First pass to collect all NPC IDs
     while ($row = $dataResult->fetch_assoc()) {
         $spawns[] = $row;
+        if (!empty($row['npc_templateid'])) {
+            $npcIds[] = $row['npc_templateid'];
+        }
     }
     
     $dataStmt->close();
+    
+    // Get sprite information for all NPCs in one query
+    $spriteData = [];
+    if (!empty($npcIds)) {
+        try {
+            // Get the sprite information
+            $npcSql = "SELECT npcid, spriteId FROM npc WHERE npcid IN (" . implode(',', array_map('intval', $npcIds)) . ")";
+            $npcResult = $conn->query($npcSql);
+            
+            while ($npcRow = $npcResult->fetch_assoc()) {
+                $spriteId = $npcRow['spriteId'];
+                $npcId = $npcRow['npcid'];
+                
+                // Build paths for PNG and GIF
+                $pngPath = '/assets/img/icons/ms' . $spriteId . '.png';
+                $gifPath = '/assets/img/icons/ms' . $spriteId . '.gif';
+                
+                // Check which file exists
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/l1jdb_database' . $pngPath)) {
+                    $spriteData[$npcId] = '/l1jdb_database' . $pngPath;
+                } else if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/l1jdb_database' . $gifPath)) {
+                    $spriteData[$npcId] = '/l1jdb_database' . $gifPath;
+                } else {
+                    $spriteData[$npcId] = '/l1jdb_database/assets/img/icons/0.png'; // Default
+                }
+            }
+        } catch (Exception $e) {
+            // Silently fail and use defaults
+        }
+    }
+    
+    // Add sprite paths to spawns
+    foreach ($spawns as &$spawn) {
+        if (!empty($spawn['npc_templateid']) && isset($spriteData[$spawn['npc_templateid']])) {
+            $spawn['sprite_path'] = $spriteData[$spawn['npc_templateid']];
+        } else {
+            $spawn['sprite_path'] = '/l1jdb_database/assets/img/icons/0.png'; // Default image
+        }
+    }
     
     // Prepare the response
     $response['success'] = true;

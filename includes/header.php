@@ -14,6 +14,7 @@ function getPageHeader($title = '') {
     <title><?php echo htmlspecialchars($siteTitle); ?></title>
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/base.css">
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/detail_views/item_detail.css">
 </head>
 <body>
     <header class="header">

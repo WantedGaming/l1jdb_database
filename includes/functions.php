@@ -474,4 +474,90 @@ function getUpdateIcon($category, $itemName, $itemId = null) {
 function getItemIcon($category, $itemId) {
     return getUpdateIcon($category, '', $itemId);
 }
+
+// Function to get NPC sprite image path
+function getNpcSprite($npcTemplateId, $fallback = true) {
+    global $pdo;
+    
+    try {
+        $sql = "SELECT spriteId FROM npc WHERE npcid = :npc_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':npc_id' => $npcTemplateId]);
+        $result = $stmt->fetch();
+        
+        if ($result && $result['spriteId']) {
+            $spriteId = $result['spriteId'];
+            $pngPath = '/assets/img/icons/ms' . $spriteId . '.png';
+            $gifPath = '/assets/img/icons/ms' . $spriteId . '.gif';
+            
+            // Check if PNG exists (preferred)
+            if (file_exists(__DIR__ . '/..' . $pngPath)) {
+                return $pngPath;
+            } 
+            // Check if GIF exists (fallback)
+            else if (file_exists(__DIR__ . '/..' . $gifPath)) {
+                return $gifPath;
+            }
+        }
+        
+        // If fallback is enabled, return a default sprite image
+        if ($fallback) {
+            return '/assets/img/icons/0.png';
+        }
+        
+        return null;
+    } catch (PDOException $e) {
+        // Return default on error if fallback is enabled
+        if ($fallback) {
+            return '/assets/img/icons/0.png';
+        }
+        return null;
+    }
+}
+
+// Function to get sprite IDs for multiple NPCs
+function getNpcSpritesForMultipleIds($npcIds) {
+    global $pdo;
+    
+    if (empty($npcIds)) {
+        return [];
+    }
+    
+    try {
+        // Prepare placeholders for the IN clause
+        $placeholders = implode(',', array_fill(0, count($npcIds), '?'));
+        
+        $sql = "SELECT npcid, spriteId FROM npc WHERE npcid IN ($placeholders)";
+        $stmt = $pdo->prepare($sql);
+        
+        // Bind the IDs as parameters
+        $types = str_repeat('i', count($npcIds));
+        $stmt->bind_param($types, ...$npcIds);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $sprites = [];
+        
+        while ($row = $result->fetch_assoc()) {
+            $npcId = $row['npcid'];
+            $spriteId = $row['spriteId'];
+            
+            $pngPath = '/assets/img/icons/ms' . $spriteId . '.png';
+            $gifPath = '/assets/img/icons/ms' . $spriteId . '.gif';
+            
+            // Check which file exists
+            if (file_exists(__DIR__ . '/..' . $pngPath)) {
+                $sprites[$npcId] = $pngPath;
+            } else if (file_exists(__DIR__ . '/..' . $gifPath)) {
+                $sprites[$npcId] = $gifPath;
+            } else {
+                $sprites[$npcId] = '/assets/img/icons/0.png'; // Default
+            }
+        }
+        
+        return $sprites;
+    } catch (Exception $e) {
+        return [];
+    }
+}
 ?>

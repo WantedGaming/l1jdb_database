@@ -1,0 +1,380 @@
+/* 
+ * ITEM DETAIL VIEW STYLES
+ * No duplicate CSS, no on-page CSS
+ */
+
+/* Detail Container */
+.detail-container {
+    background-color: var(--primary);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.detail-content {
+    padding: 1.5rem;
+}
+
+/* Flex Layout */
+.flex {
+    display: flex;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+/* Image Card */
+.weapon-image-card {
+    flex: 0 0 auto;
+    margin-right: 2rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--secondary);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.weapon-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    min-height: 100px;
+    padding: 1rem;
+}
+
+.weapon-main-image {
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 100px;
+    object-fit: contain;
+}
+
+/* Info Wrap */
+.weapon-info-wrap {
+    flex: 1;
+    min-width: 300px;
+}
+
+.weapon-basic-info h2, .section-title {
+    color: var(--accent);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: var(--secondary);
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+
+.info-item label {
+    font-weight: 500;
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.info-item span {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+/* Stats Sections */
+.stats-wrapper {
+    width: 100%;
+}
+
+.stats-grid, .bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.bonus-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+.bonus-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: var(--secondary);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bonus-item label {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.bonus-positive {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+/* Class Restrictions */
+.class-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.class-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.class-item.allowed {
+    background-color: rgba(46, 204, 113, 0.2);
+    border: 1px solid #2ecc71;
+}
+
+.class-item.restricted {
+    background-color: rgba(231, 76, 60, 0.2);
+    border: 1px solid #e74c3c;
+}
+
+.class-item .status {
+    font-weight: bold;
+}
+
+.class-item.allowed .status {
+    color: #2ecc71;
+}
+
+.class-item.restricted .status {
+    color: #e74c3c;
+}
+
+/* Description Section */
+.description-text {
+    color: var(--text);
+    font-size: 1rem;
+    padding: 1rem;
+    background-color: var(--secondary);
+    border-radius: 6px;
+    border: 1px solid var(--primary);
+    line-height: 1.5;
+    word-break: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Advanced Properties */
+.advanced-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.advanced-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: var(--secondary);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.advanced-item label {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.advanced-item span {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+/* Dropped By Section */
+.dropped-by-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.monster-card {
+    background-color: var(--secondary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px solid var(--primary);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.monster-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(253, 127, 68, 0.2);
+    border-color: var(--accent);
+}
+
+.monster-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.monster-image {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary);
+    border-radius: 6px;
+    border: 1px solid var(--secondary);
+    flex-shrink: 0;
+}
+
+.monster-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.monster-details h4 {
+    color: var(--accent);
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+}
+
+.monster-level {
+    color: var(--text);
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.drop-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.drop-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.drop-stat-label {
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.drop-stat-value {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.no-drops-message {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text);
+    opacity: 0.7;
+    font-style: italic;
+    background-color: var(--secondary);
+    border-radius: 8px;
+    border: 1px solid var(--primary);
+}
+
+.stat-card {
+    background-color: var(--secondary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+    color: var(--accent);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--primary);
+    padding-bottom: 0.5rem;
+}
+
+.stat-values {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: var(--primary);
+    border-radius: 4px;
+}
+
+.stat-value {
+    font-weight: bold;
+    color: var(--accent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .weapon-image-card {
+        margin-right: 0;
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+    
+    .weapon-image-container {
+        min-height: 120px;
+    }
+    
+    .info-grid, .stats-grid, .bonus-grid, .class-grid, .advanced-grid, .dropped-by-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-item, .drop-stat {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .monster-card {
+        padding: 1.25rem;
+    }
+    
+    .monster-info {
+        gap: 0.75rem;
+    }
+    
+    .monster-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .detail-content {
+        padding: 1rem;
+    }
+    
+    .description-text {
+        max-height: 200px;
+    }
+}

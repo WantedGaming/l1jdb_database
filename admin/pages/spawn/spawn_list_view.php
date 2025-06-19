@@ -29,6 +29,7 @@ require_once '../../includes/header.php';
                 <tr>
                     <th class="table-cell-id">ID</th>
                     <th class="table-cell-id">NPC ID</th>
+                    <th class="table-cell-icon">Icon</th>
                     <th class="table-cell-name">Name</th>
                     <th>Location</th>
                     <th>Count</th>
@@ -246,6 +247,21 @@ require_once '../../includes/header.php';
 </div>
 
 <style>
+/* NPC Sprite Styles */
+.table-cell-icon {
+    width: 60px;  /* Increased from 40px */
+    text-align: center;
+}
+
+.npc-sprite {
+    width: 48px;  /* Increased from 32px */
+    height: 48px;  /* Increased from 32px */
+    object-fit: contain;
+    vertical-align: middle;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
 /* Modal Styles */
 .modal {
     display: none;
@@ -413,7 +429,7 @@ function renderSpawns(spawns) {
     if (spawns.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="7" class="admin-empty">
+                <td colspan="8" class="admin-empty">
                     <h3>No Spawns Found</h3>
                     <p>Try adjusting your search criteria</p>
                 </td>
@@ -428,11 +444,15 @@ function renderSpawns(spawns) {
         const locationText = `Map: ${spawn.mapid}, X: ${spawn.locx}, Y: ${spawn.locy}`;
         const respawnText = `${spawn.min_respawn_delay} - ${spawn.max_respawn_delay} sec`;
         const npcName = spawn.npc_name || 'Unknown NPC';
+        const spritePath = spawn.sprite_path || '/assets/img/icons/0.png';
         
         html += `
             <tr class="clickable-row" data-id="${spawn.id}" data-table="${currentTable}">
                 <td class="table-cell-id">${spawn.id}</td>
                 <td class="table-cell-id">${spawn.npc_templateid}</td>
+                <td class="table-cell-icon">
+                    <img src="${spritePath}" alt="NPC Sprite" class="npc-sprite" onerror="this.src='/assets/img/icons/0.png'">
+                </td>
                 <td class="table-cell-name">${npcName} (${spawn.name})</td>
                 <td>${locationText}</td>
                 <td class="table-cell-number">${spawn.count}</td>
