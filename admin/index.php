@@ -26,7 +26,6 @@ require_once 'includes/header.php';
 
 <!-- Quick Actions Section -->
 <section class="admin-quick-actions">
-        
     <div class="admin-dashboard-grid">
         <!-- Binary Data Management -->
         <div class="dashboard-card">
@@ -49,26 +48,73 @@ require_once 'includes/header.php';
             </div>
         </div>
 
-        <!-- Weapons Management -->
+        <!-- Game Content Management -->
         <div class="dashboard-card">
             <div class="dashboard-card-header">
                 <span class="admin-icon admin-icon-monsters"></span>
-                <h3>Weapons Management</h3>
+                <h3>Game Content Management</h3>
             </div>
             <div class="dashboard-card-content">
-                <p>Comprehensive weapon database management with detailed statistics and properties.</p>
+                <p>Manage weapons, monsters, and all game content with comprehensive CRUD operations.</p>
                 <div class="dashboard-card-links">
-                    <a href="/l1jdb_database/admin/pages/weapon/weapon_list.php" class="admin-btn admin-btn-secondary admin-btn-small">View Weapons</a>
-                    <a href="/l1jdb_database/admin/pages/weapon/weapon_add.php" class="admin-btn admin-btn-primary admin-btn-small">Add New</a>
+                    <a href="/l1jdb_database/admin/pages/weapon/weapon_list.php" class="admin-btn admin-btn-secondary admin-btn-small">Weapons</a>
+                    <a href="/l1jdb_database/admin/pages/monster/monster_list.php" class="admin-btn admin-btn-secondary admin-btn-small">Monsters</a>
+                    <a href="/l1jdb_database/admin/pages/weapon/weapon_add.php" class="admin-btn admin-btn-primary admin-btn-small">Add Weapon</a>
+                    <a href="/l1jdb_database/admin/pages/monster/monster_add.php" class="admin-btn admin-btn-primary admin-btn-small">Add Monster</a>
+                </div>
+                <div class="dashboard-quick-links">
+                    <a href="/l1jdb_database/admin/pages/weapon/weapon_list.php">All Weapons</a>
+                    <a href="/l1jdb_database/admin/pages/monster/monster_list.php">All Monsters</a>
+                    <a href="/l1jdb_database/pages/weapons/weapon_list.php" target="_blank">Public Weapons</a>
+                    <a href="/l1jdb_database/pages/monsters/monster_list.php" target="_blank">Public Monsters</a>
                 </div>
                 <div class="dashboard-stats-mini">
                     <div class="mini-stat">
                         <span class="mini-stat-number">150+</span>
-                        <span class="mini-stat-label">Total Weapons</span>
+                        <span class="mini-stat-label">Weapons</span>
                     </div>
                     <div class="mini-stat">
-                        <span class="mini-stat-number">12</span>
+                        <span class="mini-stat-number">500+</span>
+                        <span class="mini-stat-label">Monsters</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-number">18</span>
                         <span class="mini-stat-label">Categories</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Content Creation -->
+        <div class="dashboard-card">
+            <div class="dashboard-card-header">
+                <span class="admin-icon admin-icon-spawn"></span>
+                <h3>Quick Content Creation</h3>
+            </div>
+            <div class="dashboard-card-content">
+                <p>Rapidly create new game content with streamlined forms and smart defaults.</p>
+                <div class="dashboard-card-links">
+                    <a href="/l1jdb_database/admin/pages/weapon/weapon_add.php" class="admin-btn admin-btn-primary admin-btn-small">🗡️ New Weapon</a>
+                    <a href="/l1jdb_database/admin/pages/monster/monster_add.php" class="admin-btn admin-btn-primary admin-btn-small">👹 New Monster</a>
+                </div>
+                <div class="dashboard-quick-links">
+                    <a href="/l1jdb_database/admin/pages/weapon/weapon_list.php?sort=item_id&order=desc">Recent Weapons</a>
+                    <a href="/l1jdb_database/admin/pages/monster/monster_list.php?sort=npcid&order=desc">Recent Monsters</a>
+                    <a href="/l1jdb_database/admin/pages/weapon/weapon_list.php?grade=MYTH">Myth Weapons</a>
+                    <a href="/l1jdb_database/admin/pages/monster/monster_list.php?undead=UNDEAD_BOSS">Boss Monsters</a>
+                </div>
+                <div class="dashboard-stats-mini">
+                    <div class="mini-stat">
+                        <span class="mini-stat-number">⚡</span>
+                        <span class="mini-stat-label">Fast Entry</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-number">🎯</span>
+                        <span class="mini-stat-label">Smart Forms</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-number">📊</span>
+                        <span class="mini-stat-label">Live Preview</span>
                     </div>
                 </div>
             </div>
