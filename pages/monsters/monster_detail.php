@@ -271,6 +271,22 @@ renderHero('monsters', $monsterName, $heroText);
                     <div class="weapon-basic-info">
                         <h2>Basic</h2>
                         <div class="info-grid">
+							<div class="info-item">
+                                <label>NPC ID:</label>
+                                <span><?= $monster['npcid'] ?></span>
+                            </div>
+							<div class="info-item">
+                                <label>Class ID:</label>
+                                <span><?= $monster['classId'] ?></span>
+                            </div>
+							<div class="info-item">
+                                <label>Spirte ID:</label>
+                                <span><?= $monster['spriteId'] ?></span>
+                            </div>
+							<div class="info-item">
+                                <label>Desc ID:</label>
+                                <span><?= $monster['desc_id'] ?></span>
+                            </div>
                             <div class="info-item">
                                 <label>Level:</label>
                                 <span><?= $monster['lvl'] ?></span>
