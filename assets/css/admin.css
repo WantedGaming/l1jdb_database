@@ -1718,3 +1718,370 @@
     gap: 0.75rem;
     flex-wrap: wrap;
 }
+
+/* ===========================
+   ADMIN LAYOUT FIXES - ENHANCED SPACING AND COLOR CONSISTENCY
+   =========================== */
+
+/* ===== ENHANCED ADMIN STATS CARD SPACING ===== */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem; /* Increased from 1.5rem */
+    margin: 2rem 0; /* Added more vertical spacing */
+    padding: 1rem 0; /* Added padding for better visual separation */
+}
+
+.stat-card {
+    background: var(--primary);
+    border: 1px solid var(--secondary);
+    border-radius: 12px; /* More rounded corners */
+    padding: 2rem 1.5rem; /* Increased padding */
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add hover effects for better interactivity */
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(253, 127, 68, 0.2);
+    border-color: var(--accent);
+}
+
+/* Enhanced stat card styling */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), #e06b3c);
+}
+
+.stat-card h3 {
+    color: var(--accent);
+    margin: 0 0 1.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.stat-number {
+    font-size: 2.2rem; /* Slightly larger */
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    display: block;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text);
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+/* ===== TABLE RESPONSIVE IMPROVEMENTS ===== */
+.table-responsive {
+    overflow-x: auto;
+    background: var(--primary);
+    border-radius: 12px;
+    border: 1px solid var(--secondary);
+    margin: 2rem 0; /* Better vertical spacing */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced table row spacing */
+.admin-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 4px; /* Reduced from 8px for better density */
+    min-width: 800px;
+}
+
+.admin-table thead th {
+    background: var(--secondary);
+    color: var(--accent);
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--accent);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.admin-table tbody tr {
+    background: var(--primary);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(253, 127, 68, 0.08);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-table tbody td {
+    padding: 1rem;
+    border-bottom: none;
+    vertical-align: middle;
+}
+
+.admin-table tbody td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.admin-table tbody td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* ===== ENHANCED FILTER SECTION SPACING ===== */
+.admin-filters {
+    background: var(--primary);
+    border: 1px solid var(--secondary);
+    border-radius: 12px;
+    padding: 2.5rem; /* Increased padding */
+    margin: 2.5rem 0; /* Increased vertical margin */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.admin-filters h3 {
+    color: var(--accent);
+    margin: 0 0 2rem 0; /* Increased bottom margin */
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.admin-filters h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), #e06b3c);
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem; /* Increased gap */
+    align-items: end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Increased gap */
+}
+
+.filter-group label {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* ===== IMPROVED ADMIN BREADCRUMB SPACING ===== */
+.admin-breadcrumb {
+    margin: 1.5rem 0 2rem 0; /* Better spacing */
+    padding: 1rem;
+    background: rgba(253, 127, 68, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+}
+
+/* ===== ENHANCED ADMIN HEADER SPACING ===== */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem; /* Increased margin */
+    padding-bottom: 1.5rem; /* Increased padding */
+    border-bottom: 2px solid var(--secondary);
+}
+
+.admin-header h1 {
+    color: var(--accent);
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.admin-header-actions {
+    display: flex;
+    gap: 1rem; /* Increased gap */
+    flex-wrap: wrap;
+}
+
+/* ===== ENHANCED RESULTS INFO STYLING ===== */
+.results-info {
+    color: var(--text);
+    margin: 2rem 0 1.5rem 0; /* Better spacing */
+    padding: 1.25rem;
+    background: var(--secondary);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    font-weight: 500;
+}
+
+/* ===== ENHANCED PAGINATION SPACING ===== */
+.admin-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem; /* Increased gap */
+    margin: 3rem 0 2rem 0; /* Better vertical spacing */
+    flex-wrap: wrap;
+    padding: 1.5rem;
+    background: rgba(253, 127, 68, 0.03);
+    border-radius: 12px;
+}
+
+.admin-btn-page {
+    padding: 0.75rem 1rem; /* Increased padding */
+    background: var(--secondary);
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 8px; /* More rounded */
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    border: 1px solid var(--primary);
+    font-weight: 500;
+}
+
+.admin-btn-page:hover {
+    background: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-btn-page.active {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(253, 127, 68, 0.3);
+}
+
+/* ===== ENHANCED ADMIN CONTENT WRAPPER ===== */
+.admin-content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem; /* Increased padding */
+    min-height: calc(100vh - 150px);
+}
+
+/* ===== ENHANCED ADMIN MESSAGE STYLING ===== */
+.admin-message {
+    padding: 1.25rem 1.5rem; /* Increased padding */
+    border-radius: 10px; /* More rounded */
+    margin: 1.5rem 0 2rem 0; /* Better spacing */
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Increased gap */
+    border: 1px solid;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== RESPONSIVE IMPROVEMENTS ===== */
+@media (max-width: 1200px) {
+    .admin-stats {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .filter-form {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-content-wrapper {
+        padding: 2rem 1.5rem;
+    }
+    
+    .admin-stats {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1.25rem;
+        margin: 1.5rem 0;
+    }
+    
+    .stat-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .admin-filters {
+        padding: 2rem 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .filter-form {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .admin-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .admin-header-actions {
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    
+    .admin-pagination {
+        gap: 0.5rem;
+        margin: 2rem 0 1.5rem 0;
+        padding: 1rem;
+    }
+    
+    .admin-btn-page {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-content-wrapper {
+        padding: 1.5rem 1rem;
+    }
+    
+    .admin-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1.25rem 1rem;
+    }
+    
+    .admin-filters {
+        padding: 1.5rem 1rem;
+    }
+}
