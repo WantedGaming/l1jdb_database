@@ -615,6 +615,16 @@
     object-fit: contain;
 }
 
+/* Monster list page - larger icons */
+.monster-list-table .icon-cell {
+    width: 120px;
+}
+
+.monster-list-table .icon-cell img {
+    width: 100px;
+    height: 100px;
+}
+
 .name-cell {
     font-weight: 500;
     color: var(--accent);

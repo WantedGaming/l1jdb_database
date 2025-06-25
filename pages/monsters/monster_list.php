@@ -169,7 +169,7 @@ $weakAttrs = $weakAttrStmt->fetchAll(PDO::FETCH_COLUMN);
             </div>
             
             <!-- Monsters Table -->
-            <div class="weapons-table">
+            <div class="weapons-table monster-list-table">
                 <table>
                     <thead>
                         <tr>
@@ -180,30 +180,24 @@ $weakAttrs = $weakAttrStmt->fetchAll(PDO::FETCH_COLUMN);
                             <th>MP</th>
                             <th>AC</th>
                             <th>Experience</th>
-                            <th>Undead</th>
-                            <th>Aggressive</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($monsters as $monster): ?>
-                            <tr>
+                            <tr class="clickable-row" data-href="monster_detail.php?id=<?= $monster['npcid'] ?>" style="cursor: pointer;">
                                 <td class="icon-cell">
                                     <img src="<?= SITE_URL ?>/assets/img/icons/ms<?= $monster['spriteId'] ?>.png" 
                                          alt="Icon" 
                                          onerror="this.src='<?= SITE_URL ?>/assets/img/icons/ms<?= $monster['spriteId'] ?>.gif'; this.onerror=function(){this.src='<?= SITE_URL ?>/assets/img/placeholders/monsters.png';}">
                                 </td>
                                 <td class="name-cell">
-                                    <a href="monster_detail.php?id=<?= $monster['npcid'] ?>" class="weapon-link">
-                                        <?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?>
-                                    </a>
+                                    <?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?>
                                 </td>
                                 <td><?= $monster['lvl'] ?></td>
                                 <td><?= number_format($monster['hp']) ?></td>
                                 <td><?= number_format($monster['mp']) ?></td>
                                 <td><?= $monster['ac'] ?></td>
                                 <td><?= number_format($monster['exp']) ?></td>
-                                <td><?= $monster['undead'] == 'NONE' ? '-' : ucfirst(strtolower($monster['undead'])) ?></td>
-                                <td><?= $monster['is_agro'] == 'true' ? 'Yes' : 'No' ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -247,5 +241,30 @@ $weakAttrs = $weakAttrStmt->fetchAll(PDO::FETCH_COLUMN);
         </div>
     </div>
 </main>
+
+<script>
+// Make table rows clickable
+document.addEventListener('DOMContentLoaded', function() {
+    const clickableRows = document.querySelectorAll('.clickable-row');
+    
+    clickableRows.forEach(function(row) {
+        row.addEventListener('click', function() {
+            const href = this.getAttribute('data-href');
+            if (href) {
+                window.location.href = href;
+            }
+        });
+        
+        // Add hover effect
+        row.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'var(--secondary)';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+});
+</script>
 
 <?php getPageFooter(); ?>
