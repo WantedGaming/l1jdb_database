@@ -264,6 +264,10 @@ renderHero('monsters', $monsterName, $heroText);
                              onerror="this.src='<?= SITE_URL ?>/assets/img/icons/ms<?= $monster['spriteId'] ?>.gif'; this.onerror=function(){this.src='<?= SITE_URL ?>/assets/img/placeholders/monsters.png';}"
                              class="weapon-main-image">
                     </div>
+                    <div class="info-item">
+                        <label>Type:</label>
+                        <span><?= $monster['impl'] ?></span>
+                    </div>
                 </div>
                 
                 <!-- Column 2: Basic Information -->
