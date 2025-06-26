@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/header.php';
+require_once '../includes/config.php';
 ?>
 
 <!-- Admin Hero Section -->
@@ -179,6 +180,58 @@ require_once 'includes/header.php';
                     <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php?table=spawnlist">Regular Spawns</a>
                     <a href="/l1jdb_database/admin/pages/spawn/boss/boss_list_view.php">Boss Spawns</a>
                     <a href="/l1jdb_database/admin/pages/spawn/spawn_list_view.php?table=spawnlist_clandungeon">Clan Dungeon</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commands Management -->
+        <div class="dashboard-card">
+            <div class="dashboard-card-header">
+                <span class="admin-icon admin-icon-commands"></span>
+                <h3>In-Game Commands</h3>
+            </div>
+            <div class="dashboard-card-content">
+                <p>Manage all in-game admin commands and their access levels.</p>
+                <div class="dashboard-card-links">
+                    <a href="/l1jdb_database/admin/pages/commands/commands_list_view.php" class="admin-btn admin-btn-secondary admin-btn-small">View Commands</a>
+                    <a href="/l1jdb_database/admin/pages/commands/command_add.php" class="admin-btn admin-btn-primary admin-btn-small">Add Command</a>
+                </div>
+                <div class="dashboard-quick-links">
+                    <a href="/l1jdb_database/admin/pages/commands/commands_list_view.php?language=english">English Commands</a>
+                    <a href="/l1jdb_database/admin/pages/commands/commands_list_view.php?language=korean">Korean Commands</a>
+                    <a href="/l1jdb_database/admin/pages/commands/commands_list_view.php?access_level=9999">Admin Commands</a>
+                </div>
+                <div class="dashboard-stats-mini">
+                    <div class="mini-stat">
+                        <span class="mini-stat-number">
+                            <?php 
+                            try {
+                                $total_commands = $pdo->query("SELECT COUNT(*) FROM commands")->fetchColumn();
+                                echo $total_commands . '+';
+                            } catch(PDOException $e) {
+                                echo '200+';
+                            }
+                            ?>
+                        </span>
+                        <span class="mini-stat-label">Commands</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-number">
+                            <?php 
+                            try {
+                                $korean_commands = $pdo->query("SELECT COUNT(*) FROM commands WHERE name REGEXP '[가-힣]'")->fetchColumn();
+                                echo $korean_commands;
+                            } catch(PDOException $e) {
+                                echo '100+';
+                            }
+                            ?>
+                        </span>
+                        <span class="mini-stat-label">Korean</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="mini-stat-number">🔐</span>
+                        <span class="mini-stat-label">Admin Access</span>
+                    </div>
                 </div>
             </div>
         </div>

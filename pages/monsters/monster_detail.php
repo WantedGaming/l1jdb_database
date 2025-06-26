@@ -237,11 +237,11 @@ $dropsData = getMonsterDrops($pdo, $monsterId);
 
 // Call page header with monster name
 $monsterName = cleanDescriptionPrefix($monster['desc_en']);
+
 getPageHeader($monsterName);
 
 // Create monster description for hero
 $heroText = 'Level ' . $monster['lvl'] . ' Monster';
-
 // Render hero section
 renderHero('monsters', $monsterName, $heroText);
 ?>

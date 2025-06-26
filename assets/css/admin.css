@@ -1259,6 +1259,7 @@
 .admin-icon-drops::before { content: '💎'; }
 .admin-icon-beginner::before { content: '🗺️'; }
 .admin-icon-stats::before { content: '📈'; }
+.admin-icon-commands::before { content: '⌨️'; }
 
 /* ===== ADMIN FILTERS ===== */
 .admin-filters {

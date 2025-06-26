@@ -43,6 +43,7 @@ require_once 'auth_check.php';
                 
                 <a href="/l1jdb_database/admin/pages/weapon/weapon_list.php">Weapons</a>
                 <a href="/l1jdb_database/admin/pages/monster/monster_list.php">Monsters</a>
+                <a href="/l1jdb_database/admin/pages/commands/commands_list_view.php">Commands</a>
                 <a href="/l1jdb_database/admin/tools/">Tools</a>
             </nav>
             
