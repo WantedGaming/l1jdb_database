@@ -14,26 +14,37 @@ $db_pass = '';
  * Get base path for the website
  */
 function getBasePath() {
-    // Check if we're in a subdirectory
-    $scriptName = $_SERVER['SCRIPT_NAME'];
-    $requestUri = $_SERVER['REQUEST_URI'];
+    // Simple approach: count how many levels deep we are from the project root
+    $currentFile = $_SERVER['SCRIPT_FILENAME'];
+    $currentDir = dirname($currentFile);
     
-    // Remove the script name from the request URI to get the base path
-    $basePath = str_replace(basename($scriptName), '', $scriptName);
+    // Count levels by looking for includes/functions.php
+    $levels = 0;
+    $testDir = $currentDir;
     
-    // Clean up the path
-    $basePath = rtrim($basePath, '/');
-    
-    // For index.php in root, return just /
-    if (basename($_SERVER['SCRIPT_NAME']) === 'index.php' && dirname($_SERVER['SCRIPT_NAME']) !== '/') {
-        $basePath = dirname($_SERVER['SCRIPT_NAME']) . '/';
-    } else if (empty($basePath)) {
-        $basePath = '/';
-    } else {
-        $basePath .= '/';
+    while ($levels < 10) { // Safety limit
+        if (file_exists($testDir . '/includes/functions.php')) {
+            break;
+        }
+        $testDir = dirname($testDir);
+        $levels++;
+        
+        // If we reach system root, something went wrong
+        if ($testDir === dirname($testDir)) {
+            $levels = 0;
+            break;
+        }
     }
     
-    return $basePath;
+    // Build relative path
+    if ($levels === 0) {
+        // We're in the project root
+        $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+        return rtrim($scriptDir, '/') . '/';
+    } else {
+        // We're in subdirectories, go back up
+        return str_repeat('../', $levels);
+    }
 }
 
 /**
