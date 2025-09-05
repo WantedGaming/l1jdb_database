@@ -194,7 +194,7 @@ function cleanDescriptionPrefix($desc) {
     return preg_replace('/^\\\\a[HFGEJ]/', '', $desc);
 }
 
-// Item normalization function
+// Item normalization functions
 function normalizeItemType($type) {
     $types = [
         'ARROW' => 'Arrow',
@@ -217,6 +217,130 @@ function normalizeItemType($type) {
         'MAGIC_DOLL' => 'Magic Doll'
     ];
     return $types[$type] ?? $type;
+}
+
+function normalizeItemUseType($useType) {
+    $useTypes = [
+        'NONE' => 'None',
+        'NORMAL' => 'Normal',
+        'WAND1' => 'Wand (Single Use)',
+        'WAND' => 'Wand',
+        'SPELL_LONG' => 'Long Range Spell',
+        'NTELE' => 'Normal Teleport',
+        'IDENTIFY' => 'Identify',
+        'RES' => 'Resurrection',
+        'TELEPORT' => 'Teleport',
+        'INVISABLE' => 'Invisibility',
+        'LETTER' => 'Letter',
+        'LETTER_W' => 'Letter (W)',
+        'CHOICE' => 'Choice',
+        'INSTRUMENT' => 'Instrument',
+        'SOSC' => 'SoSC',
+        'SPELL_SHORT' => 'Short Range Spell',
+        'T_SHIRT' => 'T-Shirt',
+        'CLOAK' => 'Cloak',
+        'GLOVE' => 'Glove',
+        'BOOTS' => 'Boots',
+        'HELMET' => 'Helmet',
+        'RING' => 'Ring',
+        'AMULET' => 'Amulet',
+        'SHIELD' => 'Shield',
+        'GARDER' => 'Garter',
+        'DAI' => 'Dai',
+        'ZEL' => 'Zel',
+        'BLANK' => 'Blank',
+        'BTELE' => 'Battle Teleport',
+        'SPELL_BUFF' => 'Spell Buff',
+        'CCARD' => 'C Card',
+        'CCARD_W' => 'C Card (W)',
+        'VCARD' => 'V Card',
+        'VCARD_W' => 'V Card (W)',
+        'WCARD' => 'W Card',
+        'WCARD_W' => 'W Card (W)',
+        'BELT' => 'Belt',
+        'SPELL_LONG2' => 'Long Range Spell 2',
+        'EARRING' => 'Earring',
+        'FISHING_ROD' => 'Fishing Rod',
+        'RON' => 'Ron',
+        'RON_2' => 'Ron 2',
+        'ACCZEL' => 'Acceleration',
+        'PAIR' => 'Pair',
+        'HEALING' => 'Healing',
+        'SHOULDER' => 'Shoulder',
+        'BADGE' => 'Badge',
+        'POTENTIAL_SCROLL' => 'Potential Scroll',
+        'SPELLMELT' => 'Spell Melt',
+        'ELIXER_RON' => 'Elixir Ron',
+        'INVENTORY_BONUS' => 'Inventory Bonus',
+        'TAM_FRUIT' => 'Tam Fruit',
+        'RACE_TICKET' => 'Race Ticket',
+        'PAIR_2' => 'Pair 2',
+        'MAGICDOLL' => 'Magic Doll',
+        'SENTENCE' => 'Sentence',
+        'SHOULDER_2' => 'Shoulder 2',
+        'BADGE_2' => 'Badge 2',
+        'PET_POTION' => 'Pet Potion',
+        'GARDER_2' => 'Garter 2',
+        'DOMINATION_POLY' => 'Domination Poly',
+        'PENDANT' => 'Pendant',
+        'SHOVEL' => 'Shovel',
+        'LEV_100_POLY' => 'Level 100 Poly',
+        'SMELTING' => 'Smelting',
+        'PURIFY' => 'Purify',
+        'CHARGED_MAP_TIME' => 'Charged Map Time'
+    ];
+    return $useTypes[$useType] ?? $useType;
+}
+
+function normalizeItemMaterial($material) {
+    $materials = [
+        'NONE(-)' => 'None',
+        'LIQUID(액체)' => 'Liquid',
+        'WAX(밀랍)' => 'Wax',
+        'VEGGY(식물성)' => 'Vegetal',
+        'FLESH(동물성)' => 'Flesh',
+        'PAPER(종이)' => 'Paper',
+        'CLOTH(천)' => 'Cloth',
+        'LEATHER(가죽)' => 'Leather',
+        'WOOD(나무)' => 'Wood',
+        'BONE(뼈)' => 'Bone',
+        'DRAGON_HIDE(용비늘)' => 'Dragon Hide',
+        'IRON(철)' => 'Iron',
+        'METAL(금속)' => 'Metal',
+        'COPPER(구리)' => 'Copper',
+        'SILVER(은)' => 'Silver',
+        'GOLD(금)' => 'Gold',
+        'PLATINUM(백금)' => 'Platinum',
+        'MITHRIL(미스릴)' => 'Mithril',
+        'PLASTIC(블랙미스릴)' => 'Black Mithril',
+        'GLASS(유리)' => 'Glass',
+        'GEMSTONE(보석)' => 'Gemstone',
+        'MINERAL(광석)' => 'Mineral',
+        'ORIHARUKON(오리하루콘)' => 'Oriharukon',
+        'DRANIUM(드라니움)' => 'Dranium'
+    ];
+    return $materials[$material] ?? $material;
+}
+
+function normalizeElement($element) {
+    $elements = [
+        'EARTH' => 'Earth',
+        'AIR' => 'Air',
+        'WATER' => 'Water',
+        'FIRE' => 'Fire',
+        'NONE' => 'None'
+    ];
+    return $elements[$element] ?? $element;
+}
+
+function normalizeAlignment($alignment) {
+    $alignments = [
+        'CAOTIC' => 'Chaotic',
+        'NEUTRAL' => 'Neutral',
+        'LAWFUL' => 'Lawful',
+        'NONE' => 'None'
+    ];
+    return $alignments[$alignment] ?? $alignment;
 }
 
 // Armor normalization functions

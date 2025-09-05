@@ -200,8 +200,56 @@ function getSpawnTypeLabel($type) {
     return $labels[$type] ?? 'Unknown';
 }
 
+// Function to get drops from monsters on this map
+function getMapDrops($pdo, $mapId) {
+    // First get all monsters that spawn on this map
+    $monsters = getMapMonsters($pdo, $mapId);
+    
+    if (empty($monsters)) {
+        return [];
+    }
+    
+    // Get unique monster IDs
+    $monsterIds = array_unique(array_column($monsters, 'npc_templateid'));
+    $placeholders = str_repeat('?,', count($monsterIds) - 1) . '?';
+    
+    // Query drops from all monsters on this map
+    $sql = "SELECT DISTINCT d.*, 
+                   w.desc_en as item_name, w.iconId as item_icon, 'weapon' as item_type
+            FROM droplist d 
+            LEFT JOIN weapon w ON d.itemId = w.item_id 
+            WHERE d.mobId IN ($placeholders) AND w.item_id IS NOT NULL
+            
+            UNION ALL
+            
+            SELECT DISTINCT d.*, 
+                   a.desc_en as item_name, a.iconId as item_icon, 'armor' as item_type
+            FROM droplist d 
+            LEFT JOIN armor a ON d.itemId = a.item_id 
+            WHERE d.mobId IN ($placeholders) AND a.item_id IS NOT NULL
+            
+            UNION ALL
+            
+            SELECT DISTINCT d.*, 
+                   e.desc_en as item_name, e.iconId as item_icon, 'etcitem' as item_type
+            FROM droplist d 
+            LEFT JOIN etcitem e ON d.itemId = e.item_id 
+            WHERE d.mobId IN ($placeholders) AND e.item_id IS NOT NULL
+            
+            ORDER BY chance DESC";
+    
+    $stmt = $pdo->prepare($sql);
+    // Execute with monster IDs repeated for each UNION
+    $executeParams = array_merge($monsterIds, $monsterIds, $monsterIds);
+    $stmt->execute($executeParams);
+    return $stmt->fetchAll();
+}
+
 // Get monster data
 $monsters = getMapMonsters($pdo, $mapId);
+
+// Get drops data
+$dropsData = getMapDrops($pdo, $mapId);
 
 // Call page header with map name
 $mapName = $map['locationname'] ?: $map['desc_kr'] ?: 'Map ' . $map['mapid'];
@@ -227,18 +275,18 @@ renderHero('maps', $mapName, $heroText);
                 <a href="map_list.php" class="back-btn">&larr; Back to Maps</a>
             </div>
             
+			<div class="weapon-info-col">
             <!-- Map Image Row -->
-            <div class="weapon-detail-row">
+            <div class="map-image-row">
                 <!-- Full Width Image -->
-                <div class="weapon-image-col" style="grid-column: 1 / -1; max-width: none;">
-                    <div class="weapon-image-container">
-                        <img src="<?= SITE_URL ?>/assets/img/icons/<?= $map['pngId'] ?: 'default-map' ?>.png" 
-                             alt="<?= htmlspecialchars($mapName) ?>" 
-                             onerror="this.src='<?= SITE_URL ?>/assets/img/icons/<?= $map['pngId'] ?: 'default-map' ?>.jpeg'; this.onerror=function(){this.src='<?= SITE_URL ?>/assets/img/placeholders/noimage.png';}"
-                             class="weapon-main-image"  style="max-width: 1600px; max-height: 800px;">
-                    </div>
+                <div class="map-image-container" style="display: flex; justify-content: center; align-items: center; background: var(--card-bg); border-radius: var(--border-radius); padding: 2rem; box-shadow: var(--shadow);">
+                    <img src="<?= SITE_URL ?>/assets/img/icons/<?= $map['pngId'] ?: 'default-map' ?>.png" 
+                         alt="<?= htmlspecialchars($mapName) ?>" 
+                         onerror="this.src='<?= SITE_URL ?>/assets/img/icons/<?= $map['pngId'] ?: 'default-map' ?>.jpeg'; this.onerror=function(){this.src='<?= SITE_URL ?>/assets/img/placeholders/noimage.png';}"
+                         class="map-main-image">
                 </div>
             </div>
+			</div>
             
             <!-- Map Information and Zone Properties Row -->
             <div class="weapon-detail-row" style="margin-top: 2rem;">
@@ -248,12 +296,20 @@ renderHero('maps', $mapName, $heroText);
                         <h2>Map Information</h2>
                         <div class="info-grid">
                             <div class="info-item">
+                                <label>Map ID:</label>
+                                <span><?= $map['mapid'] ?></span>
+                            </div>
+                            <div class="info-item">
                                 <label>English Name:</label>
                                 <span><?= htmlspecialchars($map['locationname'] ?: 'N/A') ?></span>
                             </div>
                             <div class="info-item">
                                 <label>Map Type:</label>
                                 <span><?= $map['dungeon'] ? 'Dungeon' : 'Open World' ?></span>
+                            </div>
+                            <div class="info-item">
+                                <label>Zone Types:</label>
+                                <span><?= implode(', ', getZoneTypes($map)) ?></span>
                             </div>
                             <?php if ($map['startX'] || $map['endX'] || $map['startY'] || $map['endY']): ?>
                             <div class="info-item">
@@ -282,10 +338,6 @@ renderHero('maps', $mapName, $heroText);
                     <div class="weapon-basic-info">
                         <h2>Zone Properties</h2>
                         <div class="info-grid">
-                            <div class="info-item">
-                                <label>Zone Types:</label>
-                                <span><?= implode(', ', getZoneTypes($map)) ?></span>
-                            </div>
                             <?php if ($map['dmgModiPc2Npc'] != 0): ?>
                             <div class="info-item">
                                 <label>PC → NPC Damage:</label>
@@ -321,43 +373,46 @@ renderHero('maps', $mapName, $heroText);
                 </div>
             </div>
             
-            <!-- Features and Restrictions Section -->
-            <div class="weapon-section">
-                <h2>Map Features & Restrictions</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Allowed Features</h3>
-                        <div class="stat-values">
+            <!-- Map Features & Restrictions Row -->
+            <div class="weapon-detail-row" style="margin-top: 2rem;">
+                <!-- Column 1: Map Features -->
+                <div class="weapon-info-col">
+                    <div class="weapon-basic-info">
+                        <h2>Map Features</h2>
+                        <div class="info-grid">
                             <?php 
                             $features = getMapFeatures($map);
                             if (!empty($features)): ?>
                                 <?php foreach ($features as $feature): ?>
-                                <div class="stat-item">
-                                    <span class="stat-value" style="color: #2ecc71;">✓ <?= $feature ?></span>
+                                <div class="info-item">
+                                    <span style="color: #2ecc71;">✓ <?= $feature ?></span>
                                 </div>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <div class="stat-item">
-                                    <span class="stat-value" style="color: #e74c3c;">No features allowed</span>
+                                <div class="info-item">
+                                    <span style="color: #e74c3c;">No features allowed</span>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
-                    
-                    <div class="stat-card">
-                        <h3>Restrictions</h3>
-                        <div class="stat-values">
+                </div>
+                
+                <!-- Column 2: Map Restrictions -->
+                <div class="weapon-info-col">
+                    <div class="weapon-basic-info">
+                        <h2>Map Restrictions</h2>
+                        <div class="info-grid">
                             <?php 
                             $restrictions = getMapRestrictions($map);
                             if (!empty($restrictions)): ?>
                                 <?php foreach ($restrictions as $restriction): ?>
-                                <div class="stat-item">
-                                    <span class="stat-value" style="color: #e74c3c;">✗ <?= $restriction ?></span>
+                                <div class="info-item">
+                                    <span style="color: #e74c3c;">✗ <?= $restriction ?></span>
                                 </div>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <div class="stat-item">
-                                    <span class="stat-value" style="color: #2ecc71;">No restrictions</span>
+                                <div class="info-item">
+                                    <span style="color: #2ecc71;">No restrictions</span>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -371,40 +426,100 @@ renderHero('maps', $mapName, $heroText);
                 <?php if (!empty($monsters)): ?>
                     <div class="dropped-by-grid">
                         <?php foreach ($monsters as $monster): ?>
-                            <div class="monster-card">
-                                <div class="monster-info">
-                                    <div class="monster-image">
-                                        <img src="<?= SITE_URL ?>/assets/img/icons/ms<?= $monster['spriteId'] ?>.png" 
-                                             alt="<?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?>"
-                                             onerror="this.src='<?= SITE_URL ?>/assets/img/icons/ms<?= $monster['spriteId'] ?>.gif'; this.onerror=function(){this.src='<?= SITE_URL ?>/assets/img/placeholders/monsters.png';}">
-                                    </div>
-                                    <div class="monster-details">
-                                        <h4>
-                                            <a href="../monsters/monster_detail.php?id=<?= $monster['npc_templateid'] ?>" 
-                                               class="weapon-link" 
-                                               title="<?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?> - Level <?= $monster['lvl'] ?> Monster">
+                            <a href="../monsters/monster_detail.php?id=<?= $monster['npc_templateid'] ?>" class="card-link" style="text-decoration: none; color: inherit;">
+                                <div class="monster-card" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+                                    <div class="monster-info">
+                                        <div class="monster-image">
+                                            <img src="<?= SITE_URL ?>/assets/img/icons/ms<?= $monster['spriteId'] ?>.png" 
+                                                 alt="<?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?>"
+                                                 onerror="this.src='<?= SITE_URL ?>/assets/img/icons/ms<?= $monster['spriteId'] ?>.gif'; this.onerror=function(){this.src='<?= SITE_URL ?>/assets/img/placeholders/monsters.png';}">
+                                        </div>
+                                        <div class="monster-details">
+                                            <h4 title="<?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?> - Level <?= $monster['lvl'] ?> Monster">
                                                 <?= htmlspecialchars(cleanDescriptionPrefix($monster['desc_en'])) ?>
-                                            </a>
-                                        </h4>
-                                        <div class="monster-level">Level <?= $monster['lvl'] ?></div>
+                                            </h4>
+                                            <div class="monster-level">Level <?= $monster['lvl'] ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="drop-stats">
+                                        <div class="drop-stat">
+                                            <span class="drop-stat-label">Spawn Type:</span>
+                                            <span class="drop-stat-value"><?= getSpawnTypeLabel($monster['spawn_type']) ?></span>
+                                        </div>
+                                        <div class="drop-stat">
+                                            <span class="drop-stat-label">Spawn Count:</span>
+                                            <span class="drop-stat-value"><?= $monster['spawn_count'] ?></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="drop-stats">
-                                    <div class="drop-stat">
-                                        <span class="drop-stat-label">Spawn Type:</span>
-                                        <span class="drop-stat-value"><?= getSpawnTypeLabel($monster['spawn_type']) ?></span>
-                                    </div>
-                                    <div class="drop-stat">
-                                        <span class="drop-stat-label">Spawn Count:</span>
-                                        <span class="drop-stat-value"><?= $monster['spawn_count'] ?></span>
-                                    </div>
-                                </div>
-                            </div>
+                            </a>
                         <?php endforeach; ?>
                     </div>
                 <?php else: ?>
                     <div class="no-drops-message">
                         No monsters spawn on this map.
+                    </div>
+                <?php endif; ?>
+            </div>
+            
+            <!-- Drops Section -->
+            <div class="weapon-section">
+                <h2>Drops</h2>
+                <?php if (!empty($dropsData)): ?>
+                    <div class="dropped-by-grid">
+                        <?php foreach ($dropsData as $drop): ?>
+                            <?php 
+                                // Get item link based on type
+                                $itemLink = '';
+                                
+                                if ($drop['item_type'] == 'weapon') {
+                                    $itemLink = '../weapons/weapon_detail.php?id=' . $drop['itemId'];
+                                } elseif ($drop['item_type'] == 'armor') {
+                                    $itemLink = '../armor/armor_detail.php?id=' . $drop['itemId'];
+                                } elseif ($drop['item_type'] == 'etcitem') {
+                                    $itemLink = '../items/items_detail.php?id=' . $drop['itemId'];
+                                }
+                            ?>
+                            <a href="<?= $itemLink ?>" class="card-link" style="text-decoration: none; color: inherit;">
+                                <div class="monster-card" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+                                    <div class="monster-info">
+                                        <div class="monster-image">
+                                            <img src="<?= SITE_URL ?>/assets/img/icons/<?= $drop['item_icon'] ?>.png" 
+                                                 alt="<?= htmlspecialchars(cleanDescriptionPrefix($drop['item_name'])) ?>"
+                                                 onerror="this.src='<?= SITE_URL ?>/assets/img/placeholders/0.png'">
+                                        </div>
+                                        <div class="monster-details">
+                                            <h4>
+                                                <?= htmlspecialchars(cleanDescriptionPrefix($drop['item_name'])) ?>
+                                            </h4>
+                                            <div class="monster-level"><?= ucfirst($drop['item_type']) ?></div>
+                                        </div>
+                                    </div>
+                                    <div class="drop-stats">
+                                        <div class="drop-stat">
+                                            <span class="drop-stat-label">Chance:</span>
+                                            <span class="drop-stat-value"><?= formatDropChance($drop['chance']) ?></span>
+                                        </div>
+                                        <?php if ($drop['min'] > 0 || $drop['max'] > 0): ?>
+                                        <div class="drop-stat">
+                                            <span class="drop-stat-label">Quantity:</span>
+                                            <span class="drop-stat-value"><?= $drop['min'] == $drop['max'] ? $drop['min'] : $drop['min'] . '-' . $drop['max'] ?></span>
+                                        </div>
+                                        <?php endif; ?>
+                                        <?php if ($drop['Enchant'] > 0): ?>
+                                        <div class="drop-stat">
+                                            <span class="drop-stat-label">Enchant:</span>
+                                            <span class="drop-stat-value">+<?= $drop['Enchant'] ?></span>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="no-drops-message">
+                        No drops available from monsters on this map.
                     </div>
                 <?php endif; ?>
             </div>

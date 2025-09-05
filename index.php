@@ -41,7 +41,7 @@ getPageHeader('Home');
                     </div>
                 </a>
 
-                <a href="<?php echo SITE_URL; ?>/pages/items/items_list.php" class="card">
+                <a href="<?php echo SITE_URL; ?>/pages/items/item_list.php" class="card">
                     <div class="card-header">
                         <h3 class="card-title">Items</h3>
                     </div>

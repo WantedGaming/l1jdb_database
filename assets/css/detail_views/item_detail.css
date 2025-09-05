@@ -221,6 +221,11 @@
     border: 1px solid var(--primary);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .monster-card:hover {
@@ -231,18 +236,19 @@
 
 .monster-info {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.75rem;
     margin-bottom: 1rem;
+    flex: 1;
 }
 
 .monster-image {
-    width: 80px;
-    height: 80px;
+    width: 160px;
+    height: 160px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--primary);
     border-radius: 6px;
     border: 1px solid var(--secondary);
     flex-shrink: 0;
@@ -254,23 +260,35 @@
     object-fit: contain;
 }
 
+.monster-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
 .monster-details h4 {
     color: var(--accent);
-    margin: 0 0 0.25rem 0;
+    margin: 0;
     font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .monster-level {
     color: var(--text);
     opacity: 0.8;
     font-size: 0.9rem;
+    margin: 0;
 }
 
 .drop-stats {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+    justify-content: center;
+    gap: 1.5rem;
     font-size: 0.9rem;
+    margin-top: 0.5rem;
+    width: 100%;
 }
 
 .drop-stat {
@@ -359,15 +377,16 @@
     
     .monster-card {
         padding: 1.25rem;
+        min-height: 250px;
     }
     
     .monster-info {
-        gap: 0.75rem;
+        gap: 0.5rem;
     }
     
     .monster-image {
-        width: 60px;
-        height: 60px;
+        width: 120px;
+        height: 120px;
     }
     
     .detail-content {
