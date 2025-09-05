@@ -1,96 +1,104 @@
 <?php
-require_once 'includes/header.php';
-
-// Get recent updates
-$recentUpdates = getRecentUpdates(5);
-
-getPageHeader('Home');
+require_once 'includes/functions.php';
 ?>
 
-<main>
-    <!-- Dynamic Hero Section -->
-    <?php renderHero('home'); ?>
+<?php echo generateHeader('L1j-R Database - Ultimate MMORPG Resource'); ?>
 
-    <div class="main">
-
-        <!-- Database Categories -->
-        <section class="database-categories">
-            <h2 class="section-title">Browse Database</h2>
-            <div class="cards-grid">
-                <a href="<?php echo SITE_URL; ?>/pages/weapons/weapon_list.php" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Weapons</h3>
-                    </div>
-                    <div class="card-image">
-                        <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/weapons.png" alt="Weapons" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-description">
-                        <p>Browse all weapons with detailed stats and requirements.</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/pages/armor/armor_list.php" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Armor</h3>
-                    </div>
-                    <div class="card-image">
-                        <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/armor.png" alt="Armor" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-description">
-                        <p>Explore armor protective gear with defense ratings and class requirements.</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/pages/items/item_list.php" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Items</h3>
-                    </div>
-                    <div class="card-image">
-                        <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/items.png" alt="Items" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-description">
-                        <p>Discover consumables, quest items, crafting materials, and other useful items.</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/pages/dolls/doll_list.php" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Magic Dolls</h3>
-                    </div>
-                    <div class="card-image">
-                        <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/dolls.png" alt="Dolls" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-description">
-                        <p>Summon powerful companions with unique abilities to aid your journey.</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/pages/maps/map_list.php" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Maps</h3>
-                    </div>
-                    <div class="card-image">
-                        <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/maps.png" alt="Maps" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-description">
-                        <p>Explore world maps with zone types and location details.</p>
-                    </div>
-                </a>
-
-                <a href="<?php echo SITE_URL; ?>/pages/monsters/monster_list.php" class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Monsters</h3>
-                    </div>
-                    <div class="card-image">
-                        <img src="<?php echo SITE_URL; ?>/assets/img/placeholders/monsters.png" alt="Monsters" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-description">
-                        <p>Study monster statistics, drops, locations, and combat strategies.</p>
-                    </div>
-                </a>
-            </div>
-        </section>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>L1j-R Database</h1>
+        <p>Your ultimate resource for weapons, armor, items, monsters, maps, and dolls</p>
+        <a href="#categories" class="hero-btn">Explore Database</a>
     </div>
-</main>
+</section>
 
-<?php getPageFooter(); ?>
+<!-- Categories Section -->
+<section class="categories" id="categories">
+    <div class="container">
+        <h2 class="section-title">Browse Categories</h2>
+        
+        <div class="cards-grid">
+            <?php $basePath = getBasePath(); ?>
+            <!-- Weapons Card -->
+            <a href="<?php echo $basePath; ?>categories/weapons/weapon-list.php" class="category-card">
+                <div class="card-header">
+                    <h3 class="card-title">Weapons</h3>
+                </div>
+                <div class="card-image-wrapper">
+                    <img src="<?php echo $basePath; ?>assets/img/placeholders/weapons.png" alt="Weapons" class="card-image">
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Discover powerful weapons and their stats</p>
+                </div>
+            </a>
+
+            <!-- Armor Card -->
+            <a href="<?php echo $basePath; ?>categories/armor/armor-list.php" class="category-card">
+                <div class="card-header">
+                    <h3 class="card-title">Armor</h3>
+                </div>
+                <div class="card-image-wrapper">
+                    <img src="<?php echo $basePath; ?>assets/img/placeholders/armor.png" alt="Armor" class="card-image">
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Browse defensive gear and protection</p>
+                </div>
+            </a>
+
+            <!-- Items Card -->
+            <a href="<?php echo $basePath; ?>categories/items/item-list.php" class="category-card">
+                <div class="card-header">
+                    <h3 class="card-title">Items</h3>
+                </div>
+                <div class="card-image-wrapper">
+                    <img src="<?php echo $basePath; ?>assets/img/placeholders/items.png" alt="Items" class="card-image">
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Explore consumables and special items</p>
+                </div>
+            </a>
+
+            <!-- Monsters Card -->
+            <a href="<?php echo $basePath; ?>categories/monsters/monster-list.php" class="category-card">
+                <div class="card-header">
+                    <h3 class="card-title">Monsters</h3>
+                </div>
+                <div class="card-image-wrapper">
+                    <img src="<?php echo $basePath; ?>assets/img/placeholders/monsters.png" alt="Monsters" class="card-image">
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Learn about creatures and their abilities</p>
+                </div>
+            </a>
+
+            <!-- Maps Card -->
+            <a href="<?php echo $basePath; ?>categories/maps/map-list.php" class="category-card">
+                <div class="card-header">
+                    <h3 class="card-title">Maps</h3>
+                </div>
+                <div class="card-image-wrapper">
+                    <img src="<?php echo $basePath; ?>assets/img/placeholders/maps.png" alt="Maps" class="card-image">
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Explore worlds and locations</p>
+                </div>
+            </a>
+
+            <!-- Dolls Card -->
+            <a href="<?php echo $basePath; ?>categories/dolls/doll-list.php" class="category-card">
+                <div class="card-header">
+                    <h3 class="card-title">Dolls</h3>
+                </div>
+                <div class="card-image-wrapper">
+                    <img src="<?php echo $basePath; ?>assets/img/placeholders/dolls.png" alt="Dolls" class="card-image">
+                </div>
+                <div class="card-content">
+                    <p class="card-description">Collection of magical dolls and companions</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<?php echo generateFooter(); ?>

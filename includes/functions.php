@@ -1,687 +1,267 @@
 <?php
-require_once 'config.php';
+/**
+ * L1j-R Database Functions
+ * Common functions for the MMORPG database website
+ */
 
-function getRecentUpdates($limit = 5) {
-    global $pdo;
+// Database connection settings (adjust as needed)
+$db_host = 'localhost';
+$db_name = 'l1j_remastered';
+$db_user = 'root';
+$db_pass = '';
+
+/**
+ * Get base path for the website
+ */
+function getBasePath() {
+    // Check if we're in a subdirectory
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $requestUri = $_SERVER['REQUEST_URI'];
     
-    try {
-        // Try to get real database activity first
-        $sql = "SELECT entity_type as category, entity_name as item_name, 
-                       CONCAT(UPPER(activity_type), ' - ', COALESCE(details, 'Database update')) as description,
-                       timestamp as updated_at, entity_id as item_id, icon_id
-                FROM database_activity 
-                ORDER BY timestamp DESC 
-                LIMIT :limit";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-        $result = $stmt->fetchAll();
-        
-        if (empty($result)) {
-            // Fallback to placeholder data with example items that have icons
-            $result = [
-                ['category' => 'weapons', 'item_name' => 'Executioner\'s Sword', 'description' => 'Added new legendary weapon', 'updated_at' => date('Y-m-d H:i:s'), 'item_id' => 2],
-                ['category' => 'armor', 'item_name' => 'Plate Mail', 'description' => 'Updated defense values', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day')), 'item_id' => 20],
-                ['category' => 'items', 'item_name' => 'Health Potion', 'description' => 'Modified healing amount', 'updated_at' => date('Y-m-d H:i:s', strtotime('-2 days')), 'item_id' => 40017],
-                ['category' => 'monsters', 'item_name' => 'Orc Warrior', 'description' => 'Updated spawn rates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-3 days')), 'item_id' => null],
-                ['category' => 'maps', 'item_name' => 'Talking Island', 'description' => 'Fixed portal coordinates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-4 days')), 'item_id' => null]
-            ];
-        }
-        
-        // Add item icons to the results
-        foreach ($result as &$update) {
-            // If icon_id is provided from database, use it directly
-            if (isset($update['icon_id']) && !empty($update['icon_id'])) {
-                $update['icon'] = $update['icon_id'] . '.png';
-            }
-            // When using placeholder data or no icon_id, ensure we use the right icon ID from the item database
-            else if (isset($update['item_id'])) {
-                $iconId = $update['item_id'];
-                
-                // Get actual item info from database if possible
-                if ($update['category'] === 'armor') {
-                    $sql = "SELECT iconId FROM armor WHERE item_id = :item_id";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute([':item_id' => $iconId]);
-                    $itemInfo = $stmt->fetch();
-                    if ($itemInfo && !empty($itemInfo['iconId'])) {
-                        $iconId = $itemInfo['iconId'];
-                    }
-                } else if ($update['category'] === 'weapons') {
-                    $sql = "SELECT iconId FROM weapon WHERE item_id = :item_id";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute([':item_id' => $iconId]);
-                    $itemInfo = $stmt->fetch();
-                    if ($itemInfo && !empty($itemInfo['iconId'])) {
-                        $iconId = $itemInfo['iconId'];
-                    }
-                } else if ($update['category'] === 'items') {
-                    $sql = "SELECT iconId FROM etcitem WHERE item_id = :item_id";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute([':item_id' => $iconId]);
-                    $itemInfo = $stmt->fetch();
-                    if ($itemInfo && !empty($itemInfo['iconId'])) {
-                        $iconId = $itemInfo['iconId'];
-                    }
-                }
-                
-                $update['icon'] = $iconId . '.png';
-            } else {
-                $update['icon'] = getUpdateIcon($update['category'], $update['item_name'], $update['item_id'] ?? null);
-            }
-            
-            // Remove icon_id from the final result as it's not needed anymore
-            if (isset($update['icon_id'])) {
-                unset($update['icon_id']);
-            }
-        }
-        
-        return $result;
-    } catch(PDOException $e) {
-        // Return placeholder data on error
-        $result = [
-            ['category' => 'weapons', 'item_name' => 'Executioner\'s Sword', 'description' => 'Added new legendary weapon', 'updated_at' => date('Y-m-d H:i:s'), 'item_id' => 2, 'icon' => '2.png'],
-            ['category' => 'armor', 'item_name' => 'Plate Mail', 'description' => 'Updated defense values', 'updated_at' => date('Y-m-d H:i:s', strtotime('-1 day')), 'item_id' => 20, 'icon' => '20.png'],
-            ['category' => 'items', 'item_name' => 'Health Potion', 'description' => 'Modified healing amount', 'updated_at' => date('Y-m-d H:i:s', strtotime('-2 days')), 'item_id' => 40017, 'icon' => '40017.png'],
-            ['category' => 'monsters', 'item_name' => 'Orc Warrior', 'description' => 'Updated spawn rates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-3 days')), 'item_id' => null, 'icon' => '45037.png'],
-            ['category' => 'maps', 'item_name' => 'Talking Island', 'description' => 'Fixed portal coordinates', 'updated_at' => date('Y-m-d H:i:s', strtotime('-4 days')), 'item_id' => null, 'icon' => '40030.png']
-        ];
-        
-        return $result;
-    }
-}
-
-function isAdmin() {
-    return isset($_SESSION['user_id']) && isset($_SESSION['access_level']) && $_SESSION['access_level'] == 1;
-}
-
-function requireAuth() {
-    if (!isset($_SESSION['user_id'])) {
-        header('Location: ' . SITE_URL . '/admin/login.php');
-        exit;
-    }
-}
-
-function requireAdmin() {
-    requireAuth();
-    if (!isAdmin()) {
-        header('Location: ' . SITE_URL . '/admin/access_denied.php');
-        exit;
-    }
-}
-
-function logAdminActivity($action, $table_name, $record_id = null, $details = null) {
-    global $pdo;
+    // Remove the script name from the request URI to get the base path
+    $basePath = str_replace(basename($scriptName), '', $scriptName);
     
-    if (!isset($_SESSION['user_id'])) return;
+    // Clean up the path
+    $basePath = rtrim($basePath, '/');
     
-    $sql = "INSERT INTO admin_activity (admin_username, activity_type, description, entity_type, entity_id, ip_address, user_agent, timestamp) 
-            VALUES (:admin_username, :activity_type, :description, :entity_type, :entity_id, :ip_address, :user_agent, NOW())";
-    
-    try {
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([
-            ':admin_username' => $_SESSION['username'] ?? 'unknown',
-            ':activity_type' => $action,
-            ':description' => $details ?? $action,
-            ':entity_type' => $table_name,
-            ':entity_id' => $record_id,
-            ':ip_address' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-            ':user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
-        ]);
-    } catch(PDOException $e) {
-        // Log error silently
-    }
-}
-
-// Weapon normalization functions
-function normalizeWeaponType($type) {
-    $types = [
-        'SWORD' => 'Sword',
-        'DAGGER' => 'Dagger',
-        'TOHAND_SWORD' => 'Two-Handed Sword',
-        'BOW' => 'Bow',
-        'SPEAR' => 'Spear',
-        'BLUNT' => 'Blunt',
-        'STAFF' => 'Staff',
-        'STING' => 'Sting',
-        'ARROW' => 'Arrow',
-        'GAUNTLET' => 'Gauntlet',
-        'CLAW' => 'Claw',
-        'EDORYU' => 'Edoryu',
-        'SINGLE_BOW' => 'Single Bow',
-        'SINGLE_SPEAR' => 'Single Spear',
-        'TOHAND_BLUNT' => 'Two-Handed Blunt',
-        'TOHAND_STAFF' => 'Two-Handed Staff',
-        'KEYRINGK' => 'Kiringku',
-        'CHAINSWORD' => 'Chain Sword'
-    ];
-    return $types[$type] ?? $type;
-}
-
-function normalizeWeaponMaterial($material) {
-    $materials = [
-        'NONE(-)' => 'None',
-        'LIQUID(액체)' => 'Liquid',
-        'WAX(밀랍)' => 'Wax',
-        'VEGGY(식물성)' => 'Vegetal',
-        'FLESH(동물성)' => 'Flesh',
-        'PAPER(종이)' => 'Paper',
-        'CLOTH(천)' => 'Cloth',
-        'LEATHER(가죽)' => 'Leather',
-        'WOOD(나무)' => 'Wood',
-        'BONE(뼈)' => 'Bone',
-        'DRAGON_HIDE(용비늘)' => 'Dragon Hide',
-        'IRON(철)' => 'Iron',
-        'METAL(금속)' => 'Metal',
-        'COPPER(구리)' => 'Copper',
-        'SILVER(은)' => 'Silver',
-        'GOLD(금)' => 'Gold',
-        'PLATINUM(백금)' => 'Platinum',
-        'MITHRIL(미스릴)' => 'Mithril',
-        'PLASTIC(블랙미스릴)' => 'Black Mithril',
-        'GLASS(유리)' => 'Glass',
-        'GEMSTONE(보석)' => 'Gemstone',
-        'MINERAL(광석)' => 'Mineral',
-        'ORIHARUKON(오리하루콘)' => 'Oriharukon',
-        'DRANIUM(드라니움)' => 'Dranium'
-    ];
-    return $materials[$material] ?? $material;
-}
-
-function cleanDescriptionPrefix($desc) {
-    return preg_replace('/^\\\\a[HFGEJ]/', '', $desc);
-}
-
-// Item normalization functions
-function normalizeItemType($type) {
-    $types = [
-        'ARROW' => 'Arrow',
-        'WAND' => 'Wand',
-        'LIGHT' => 'Light',
-        'GEM' => 'Gem',
-        'TOTEM' => 'Totem',
-        'FIRE_CRACKER' => 'Fire Cracker',
-        'POTION' => 'Potion',
-        'FOOD' => 'Food',
-        'SCROLL' => 'Scroll',
-        'QUEST_ITEM' => 'Quest Item',
-        'SPELL_BOOK' => 'Spell Book',
-        'PET_ITEM' => 'Pet Item',
-        'OTHER' => 'Other',
-        'MATERIAL' => 'Material',
-        'EVENT' => 'Event',
-        'STING' => 'Sting',
-        'TREASURE_BOX' => 'Treasure Box',
-        'MAGIC_DOLL' => 'Magic Doll'
-    ];
-    return $types[$type] ?? $type;
-}
-
-function normalizeItemUseType($useType) {
-    $useTypes = [
-        'NONE' => 'None',
-        'NORMAL' => 'Normal',
-        'WAND1' => 'Wand (Single Use)',
-        'WAND' => 'Wand',
-        'SPELL_LONG' => 'Long Range Spell',
-        'NTELE' => 'Normal Teleport',
-        'IDENTIFY' => 'Identify',
-        'RES' => 'Resurrection',
-        'TELEPORT' => 'Teleport',
-        'INVISABLE' => 'Invisibility',
-        'LETTER' => 'Letter',
-        'LETTER_W' => 'Letter (W)',
-        'CHOICE' => 'Choice',
-        'INSTRUMENT' => 'Instrument',
-        'SOSC' => 'SoSC',
-        'SPELL_SHORT' => 'Short Range Spell',
-        'T_SHIRT' => 'T-Shirt',
-        'CLOAK' => 'Cloak',
-        'GLOVE' => 'Glove',
-        'BOOTS' => 'Boots',
-        'HELMET' => 'Helmet',
-        'RING' => 'Ring',
-        'AMULET' => 'Amulet',
-        'SHIELD' => 'Shield',
-        'GARDER' => 'Garter',
-        'DAI' => 'Dai',
-        'ZEL' => 'Zel',
-        'BLANK' => 'Blank',
-        'BTELE' => 'Battle Teleport',
-        'SPELL_BUFF' => 'Spell Buff',
-        'CCARD' => 'C Card',
-        'CCARD_W' => 'C Card (W)',
-        'VCARD' => 'V Card',
-        'VCARD_W' => 'V Card (W)',
-        'WCARD' => 'W Card',
-        'WCARD_W' => 'W Card (W)',
-        'BELT' => 'Belt',
-        'SPELL_LONG2' => 'Long Range Spell 2',
-        'EARRING' => 'Earring',
-        'FISHING_ROD' => 'Fishing Rod',
-        'RON' => 'Ron',
-        'RON_2' => 'Ron 2',
-        'ACCZEL' => 'Acceleration',
-        'PAIR' => 'Pair',
-        'HEALING' => 'Healing',
-        'SHOULDER' => 'Shoulder',
-        'BADGE' => 'Badge',
-        'POTENTIAL_SCROLL' => 'Potential Scroll',
-        'SPELLMELT' => 'Spell Melt',
-        'ELIXER_RON' => 'Elixir Ron',
-        'INVENTORY_BONUS' => 'Inventory Bonus',
-        'TAM_FRUIT' => 'Tam Fruit',
-        'RACE_TICKET' => 'Race Ticket',
-        'PAIR_2' => 'Pair 2',
-        'MAGICDOLL' => 'Magic Doll',
-        'SENTENCE' => 'Sentence',
-        'SHOULDER_2' => 'Shoulder 2',
-        'BADGE_2' => 'Badge 2',
-        'PET_POTION' => 'Pet Potion',
-        'GARDER_2' => 'Garter 2',
-        'DOMINATION_POLY' => 'Domination Poly',
-        'PENDANT' => 'Pendant',
-        'SHOVEL' => 'Shovel',
-        'LEV_100_POLY' => 'Level 100 Poly',
-        'SMELTING' => 'Smelting',
-        'PURIFY' => 'Purify',
-        'CHARGED_MAP_TIME' => 'Charged Map Time'
-    ];
-    return $useTypes[$useType] ?? $useType;
-}
-
-function normalizeItemMaterial($material) {
-    $materials = [
-        'NONE(-)' => 'None',
-        'LIQUID(액체)' => 'Liquid',
-        'WAX(밀랍)' => 'Wax',
-        'VEGGY(식물성)' => 'Vegetal',
-        'FLESH(동물성)' => 'Flesh',
-        'PAPER(종이)' => 'Paper',
-        'CLOTH(천)' => 'Cloth',
-        'LEATHER(가죽)' => 'Leather',
-        'WOOD(나무)' => 'Wood',
-        'BONE(뼈)' => 'Bone',
-        'DRAGON_HIDE(용비늘)' => 'Dragon Hide',
-        'IRON(철)' => 'Iron',
-        'METAL(금속)' => 'Metal',
-        'COPPER(구리)' => 'Copper',
-        'SILVER(은)' => 'Silver',
-        'GOLD(금)' => 'Gold',
-        'PLATINUM(백금)' => 'Platinum',
-        'MITHRIL(미스릴)' => 'Mithril',
-        'PLASTIC(블랙미스릴)' => 'Black Mithril',
-        'GLASS(유리)' => 'Glass',
-        'GEMSTONE(보석)' => 'Gemstone',
-        'MINERAL(광석)' => 'Mineral',
-        'ORIHARUKON(오리하루콘)' => 'Oriharukon',
-        'DRANIUM(드라니움)' => 'Dranium'
-    ];
-    return $materials[$material] ?? $material;
-}
-
-function normalizeElement($element) {
-    $elements = [
-        'EARTH' => 'Earth',
-        'AIR' => 'Air',
-        'WATER' => 'Water',
-        'FIRE' => 'Fire',
-        'NONE' => 'None'
-    ];
-    return $elements[$element] ?? $element;
-}
-
-function normalizeAlignment($alignment) {
-    $alignments = [
-        'CAOTIC' => 'Chaotic',
-        'NEUTRAL' => 'Neutral',
-        'LAWFUL' => 'Lawful',
-        'NONE' => 'None'
-    ];
-    return $alignments[$alignment] ?? $alignment;
-}
-
-// Armor normalization functions
-function normalizeArmorType($type) {
-    $types = [
-        'NONE' => 'None',
-        'HELMET' => 'Helmet',
-        'ARMOR' => 'Armor',
-        'T_SHIRT' => 'T-Shirt',
-        'CLOAK' => 'Cloak',
-        'GLOVE' => 'Gloves',
-        'BOOTS' => 'Boots',
-        'SHIELD' => 'Shield',
-        'AMULET' => 'Amulet',
-        'RING' => 'Ring',
-        'BELT' => 'Belt',
-        'RING_2' => 'Ring (2nd)',
-        'EARRING' => 'Earring',
-        'GARDER' => 'Garter',
-        'RON' => 'Ron',
-        'PAIR' => 'Pair',
-        'SENTENCE' => 'Sentence',
-        'SHOULDER' => 'Shoulder',
-        'BADGE' => 'Badge',
-        'PENDANT' => 'Pendant'
-    ];
-    return $types[$type] ?? $type;
-}
-
-function normalizeArmorMaterial($material) {
-    $materials = [
-        'NONE(-)' => 'None',
-        'LIQUID(액체)' => 'Liquid',
-        'WAX(밀랍)' => 'Wax',
-        'VEGGY(식물성)' => 'Vegetal',
-        'FLESH(동물성)' => 'Flesh',
-        'PAPER(종이)' => 'Paper',
-        'CLOTH(천)' => 'Cloth',
-        'LEATHER(가죽)' => 'Leather',
-        'WOOD(나무)' => 'Wood',
-        'BONE(뼈)' => 'Bone',
-        'DRAGON_HIDE(용비늘)' => 'Dragon Hide',
-        'IRON(철)' => 'Iron',
-        'METAL(금속)' => 'Metal',
-        'COPPER(구리)' => 'Copper',
-        'SILVER(은)' => 'Silver',
-        'GOLD(금)' => 'Gold',
-        'PLATINUM(백금)' => 'Platinum',
-        'MITHRIL(미스릴)' => 'Mithril',
-        'PLASTIC(블랙미스릴)' => 'Black Mithril',
-        'GLASS(유리)' => 'Glass',
-        'GEMSTONE(보석)' => 'Gemstone',
-        'MINERAL(광석)' => 'Mineral',
-        'ORIHARUKON(오리하루콘)' => 'Oriharukon',
-        'DRANIUM(드라니움)' => 'Dranium'
-    ];
-    return $materials[$material] ?? $material;
-}
-
-// Grade normalization function
-function normalizeGrade($grade) {
-    $grades = [
-        'ONLY' => 'Only',
-        'MYTH' => 'Mythic',
-        'LEGEND' => 'Legendary', 
-        'HERO' => 'Hero',
-        'RARE' => 'Rare',
-        'ADVANC' => 'Advanced',
-        'NORMAL' => 'Normal'
-    ];
-    return $grades[strtoupper($grade)] ?? $grade;
-}
-
-// Function to display grade only if it's above normal
-function displayGrade($grade) {
-    $normalizedGrade = normalizeGrade($grade);
-    
-    // Don't display grade if it's normal or empty
-    if (empty($grade) || strtoupper($grade) === 'NORMAL') {
-        return '';
-    }
-    
-    // Return the grade with appropriate CSS class
-    $cssClass = 'grade-' . strtolower($grade);
-    return '<span class="' . $cssClass . '">' . $normalizedGrade . '</span>';
-}
-
-// Function to get grade CSS class
-function getGradeClass($grade) {
-    if (empty($grade)) {
-        return 'grade-normal';
-    }
-    return 'grade-' . strtolower($grade);
-}
-
-// Function to get monster image path
-function getMonsterImagePath($spriteId) {
-    return 'ms' . $spriteId . '.png';
-}
-
-// Function to get monsters that drop a specific item
-function getMonstersByItemDrop($itemId) {
-    global $pdo;
-    
-    try {
-        $sql = "SELECT DISTINCT n.npcid, n.desc_en, n.spriteId, n.lvl, d.chance, d.min, d.max, d.Enchant
-                FROM droplist d 
-                INNER JOIN npc n ON d.mobId = n.npcid 
-                WHERE d.itemId = :itemId 
-                AND n.impl IN ('L1Monster', 'L1BlackKnight', 'L1Doppelganger')
-                ORDER BY n.lvl ASC, n.desc_en ASC";
-        
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':itemId' => $itemId]);
-        return $stmt->fetchAll();
-    } catch(PDOException $e) {
-        return [];
-    }
-}
-
-// Function to format drop chance percentage
-function formatDropChance($chance) {
-    // 1000000 = 100%, 500000 = 50%, 100000 = 10%, 10000 = 1%
-    $percentage = ($chance / 10000);
-    
-    if ($percentage >= 1) {
-        return number_format($percentage, ($percentage == floor($percentage) ? 0 : 2)) . '%';
+    // For index.php in root, return just /
+    if (basename($_SERVER['SCRIPT_NAME']) === 'index.php' && dirname($_SERVER['SCRIPT_NAME']) !== '/') {
+        $basePath = dirname($_SERVER['SCRIPT_NAME']) . '/';
+    } else if (empty($basePath)) {
+        $basePath = '/';
     } else {
-        return number_format($percentage, 3) . '%';
-    }
-}
-
-// Magic Doll specific functions
-function cleanDollName($name) {
-    if (empty($name)) return 'Unknown Doll';
-    return preg_replace('/^Magic Doll:\s*/i', '', $name);
-}
-
-function getDollGradeDisplay($grade) {
-    $gradeMap = [
-        0 => 'Common',
-        1 => 'Uncommon',
-        2 => 'Rare',
-        3 => 'Epic',
-        4 => 'Legendary',
-        5 => 'Mythic'
-    ];
-    return $gradeMap[$grade] ?? 'Unknown';
-}
-
-function getDollGradeClass($grade) {
-    $gradeClasses = [
-        0 => 'grade-common',
-        1 => 'grade-uncommon',
-        2 => 'grade-rare',
-        3 => 'grade-epic',
-        4 => 'grade-legendary',
-        5 => 'grade-mythic'
-    ];
-    return $gradeClasses[$grade] ?? 'grade-common';
-}
-
-// Function to get icon for recent updates
-function getUpdateIcon($category, $itemName, $itemId = null) {
-    global $pdo;
-    
-    // Default category icons
-    $categoryIcons = [
-        'weapons' => '2.png',      // Sword icon
-        'armor' => '20.png',       // Armor icon
-        'items' => '40017.png',    // Potion icon
-        'dolls' => '49150.png',    // Magic doll icon
-        'monsters' => 'ms45037.png', // Monster icon (using ms prefix)
-        'maps' => '40030.png'      // Map/scroll icon
-    ];
-    
-    // If we have an item ID, try to get the specific icon
-    if ($itemId && ($category === 'weapons' || $category === 'armor' || $category === 'items' || $category === 'dolls')) {
-        try {
-            $iconPath = null;
-            
-            switch ($category) {
-                case 'weapons':
-                    $sql = "SELECT iconId FROM weapon WHERE item_id = :item_id";
-                    break;
-                case 'armor':
-                    $sql = "SELECT iconId FROM armor WHERE item_id = :item_id";
-                    break;
-                case 'items':
-                    $sql = "SELECT iconId FROM etcitem WHERE item_id = :item_id";
-                    break;
-                case 'dolls':
-                    $sql = "SELECT iconId FROM etcitem WHERE item_id = :item_id";
-                    break;
-            }
-            
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([':item_id' => $itemId]);
-            $result = $stmt->fetch();
-            
-            if ($result && $result['iconId']) {
-                $iconPath = $result['iconId'] . '.png';
-                // Check if the icon file exists
-                if (file_exists(__DIR__ . '/../assets/img/icons/' . $iconPath)) {
-                    return $iconPath;
-                }
-            }
-        } catch (PDOException $e) {
-            // Fall back to category icon
-        }
-    } else if ($itemId && $category === 'monsters') {
-        // For monsters, use the ms prefix with spriteId
-        try {
-            $sql = "SELECT spriteId FROM npc WHERE npcid = :npc_id";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([':npc_id' => $itemId]);
-            $result = $stmt->fetch();
-            
-            if ($result && $result['spriteId']) {
-                $iconPath = 'ms' . $result['spriteId'] . '.png';
-                // Check if the icon file exists
-                if (file_exists(__DIR__ . '/../assets/img/icons/' . $iconPath)) {
-                    return $iconPath;
-                }
-            }
-        } catch (PDOException $e) {
-            // Fall back to category icon
-        }
-    } else if ($itemId && $category === 'maps') {
-        // For maps, check for pngId
-        try {
-            $sql = "SELECT pngId FROM mapids WHERE mapid = :map_id";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([':map_id' => $itemId]);
-            $result = $stmt->fetch();
-            
-            if ($result && $result['pngId']) {
-                $iconPath = $result['pngId'] . '.png';
-                // Check if the icon file exists
-                if (file_exists(__DIR__ . '/../assets/img/icons/' . $iconPath)) {
-                    return $iconPath;
-                }
-            }
-            return 'default-map.png';
-        } catch (PDOException $e) {
-            // Fall back to category icon
-        }
+        $basePath .= '/';
     }
     
-    // Return category default icon
-    return $categoryIcons[$category] ?? '0.png';
+    return $basePath;
 }
 
-// Function to get item icon path for any category
-function getItemIcon($category, $itemId) {
-    return getUpdateIcon($category, '', $itemId);
-}
-
-// Function to get NPC sprite image path
-function getNpcSprite($npcTemplateId, $fallback = true) {
-    global $pdo;
+/**
+ * Get database connection
+ */
+function getDBConnection() {
+    global $db_host, $db_name, $db_user, $db_pass;
     
     try {
-        $sql = "SELECT spriteId FROM npc WHERE npcid = :npc_id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':npc_id' => $npcTemplateId]);
-        $result = $stmt->fetch();
-        
-        if ($result && $result['spriteId']) {
-            $spriteId = $result['spriteId'];
-            $pngPath = '/assets/img/icons/ms' . $spriteId . '.png';
-            $gifPath = '/assets/img/icons/ms' . $spriteId . '.gif';
-            
-            // Check if PNG exists (preferred)
-            if (file_exists(__DIR__ . '/..' . $pngPath)) {
-                return $pngPath;
-            } 
-            // Check if GIF exists (fallback)
-            else if (file_exists(__DIR__ . '/..' . $gifPath)) {
-                return $gifPath;
-            }
-        }
-        
-        // If fallback is enabled, return a default sprite image
-        if ($fallback) {
-            return '/assets/img/icons/0.png';
-        }
-        
-        return null;
-    } catch (PDOException $e) {
-        // Return default on error if fallback is enabled
-        if ($fallback) {
-            return '/assets/img/icons/0.png';
-        }
-        return null;
+        $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $pdo;
+    } catch(PDOException $e) {
+        die("Connection failed: " . $e->getMessage());
     }
 }
 
-// Function to get sprite IDs for multiple NPCs
-function getNpcSpritesForMultipleIds($npcIds) {
-    global $pdo;
+/**
+ * Generate page header HTML
+ */
+function generateHeader($title = "L1j-R Database") {
+    // Get the base path for assets
+    $basePath = getBasePath();
     
-    if (empty($npcIds)) {
-        return [];
+    $html = '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>' . htmlspecialchars($title) . '</title>
+    <link rel="stylesheet" href="' . $basePath . 'assets/css/style.css">
+    <link rel="icon" type="image/x-icon" href="' . $basePath . 'assets/img/favicon/favicon.ico">
+</head>
+<body>
+    <header class="header">
+        <div class="nav-container">
+            <a href="' . $basePath . '" class="logo">L1j-R Database</a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="' . $basePath . '">Home</a></li>
+                    <li><a href="' . $basePath . 'categories/weapons/weapon-list.php">Weapons</a></li>
+                    <li><a href="' . $basePath . 'categories/armor/armor-list.php">Armor</a></li>
+                    <li><a href="' . $basePath . 'categories/items/item-list.php">Items</a></li>
+                    <li><a href="' . $basePath . 'categories/monsters/monster-list.php">Monsters</a></li>
+                    <li><a href="' . $basePath . 'categories/maps/map-list.php">Maps</a></li>
+                    <li><a href="' . $basePath . 'categories/dolls/doll-list.php">Dolls</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>';
+    
+    return $html;
+}
+
+/**
+ * Generate page footer HTML
+ */
+function generateFooter() {
+    $basePath = getBasePath();
+    
+    $html = '
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; ' . date('Y') . ' L1j-R Database. All rights reserved.</p>
+            <p>Your ultimate MMORPG database resource</p>
+        </div>
+    </footer>
+    <script src="' . $basePath . 'assets/js/main.js"></script>
+</body>
+</html>';
+    
+    return $html;
+}
+
+/**
+ * Generate breadcrumb navigation
+ */
+function generateBreadcrumb($items) {
+    $basePath = getBasePath();
+    
+    $html = '<div class="breadcrumb">
+        <div class="breadcrumb-nav">
+            <a href="' . $basePath . '">Home</a> > ';
+    
+    $total = count($items);
+    $current = 0;
+    
+    foreach($items as $link => $text) {
+        $current++;
+        if($current == $total) {
+            $html .= '<span>' . htmlspecialchars($text) . '</span>';
+        } else {
+            $html .= '<a href="' . htmlspecialchars($link) . '">' . htmlspecialchars($text) . '</a> > ';
+        }
+    }
+    
+    $html .= '</div>
+    </div>';
+    
+    return $html;
+}
+
+/**
+ * Sanitize input data
+ */
+function sanitizeInput($data) {
+    return htmlspecialchars(strip_tags(trim($data)));
+}
+
+/**
+ * Format number with commas
+ */
+function formatNumber($number) {
+    return number_format($number);
+}
+
+/**
+ * Get category data
+ */
+function getCategoryData($category, $limit = null) {
+    $pdo = getDBConnection();
+    
+    $sql = "SELECT * FROM $category";
+    if ($limit) {
+        $sql .= " LIMIT " . intval($limit);
     }
     
     try {
-        // Prepare placeholders for the IN clause
-        $placeholders = implode(',', array_fill(0, count($npcIds), '?'));
-        
-        $sql = "SELECT npcid, spriteId FROM npc WHERE npcid IN ($placeholders)";
         $stmt = $pdo->prepare($sql);
-        
-        // Bind the IDs as parameters
-        $types = str_repeat('i', count($npcIds));
-        $stmt->bind_param($types, ...$npcIds);
         $stmt->execute();
-        
-        $result = $stmt->get_result();
-        $sprites = [];
-        
-        while ($row = $result->fetch_assoc()) {
-            $npcId = $row['npcid'];
-            $spriteId = $row['spriteId'];
-            
-            $pngPath = '/assets/img/icons/ms' . $spriteId . '.png';
-            $gifPath = '/assets/img/icons/ms' . $spriteId . '.gif';
-            
-            // Check which file exists
-            if (file_exists(__DIR__ . '/..' . $pngPath)) {
-                $sprites[$npcId] = $pngPath;
-            } else if (file_exists(__DIR__ . '/..' . $gifPath)) {
-                $sprites[$npcId] = $gifPath;
-            } else {
-                $sprites[$npcId] = '/assets/img/icons/0.png'; // Default
-            }
-        }
-        
-        return $sprites;
-    } catch (Exception $e) {
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
         return [];
     }
+}
+
+/**
+ * Get single item by ID
+ */
+function getItemById($category, $id) {
+    $pdo = getDBConnection();
+    
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM $category WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        return null;
+    }
+}
+
+/**
+ * Search items in category
+ */
+function searchItems($category, $query, $limit = 50) {
+    $pdo = getDBConnection();
+    
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM $category WHERE name LIKE ? LIMIT ?");
+        $stmt->execute(['%' . $query . '%', $limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        return [];
+    }
+}
+
+/**
+ * Get total count for category
+ */
+function getCategoryCount($category) {
+    $pdo = getDBConnection();
+    
+    try {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM $category");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    } catch(PDOException $e) {
+        return 0;
+    }
+}
+
+/**
+ * Generate pagination links
+ */
+function generatePagination($currentPage, $totalPages, $baseUrl) {
+    if ($totalPages <= 1) return '';
+    
+    $html = '<div class="pagination">';
+    
+    // Previous button
+    if ($currentPage > 1) {
+        $html .= '<a href="' . $baseUrl . '?page=' . ($currentPage - 1) . '" class="page-btn">« Previous</a>';
+    }
+    
+    // Page numbers
+    for ($i = max(1, $currentPage - 2); $i <= min($totalPages, $currentPage + 2); $i++) {
+        if ($i == $currentPage) {
+            $html .= '<span class="page-btn active">' . $i . '</span>';
+        } else {
+            $html .= '<a href="' . $baseUrl . '?page=' . $i . '" class="page-btn">' . $i . '</a>';
+        }
+    }
+    
+    // Next button
+    if ($currentPage < $totalPages) {
+        $html .= '<a href="' . $baseUrl . '?page=' . ($currentPage + 1) . '" class="page-btn">Next »</a>';
+    }
+    
+    $html .= '</div>';
+    
+    return $html;
+}
+
+/**
+ * Get placeholder image path for category
+ */
+function getPlaceholderImage($category) {
+    $basePath = getBasePath();
+    
+    $images = [
+        'weapons' => $basePath . 'assets/img/placeholders/weapons.png',
+        'armor' => $basePath . 'assets/img/placeholders/armor.png',
+        'items' => $basePath . 'assets/img/placeholders/items.png',
+        'monsters' => $basePath . 'assets/img/placeholders/monsters.png',
+        'maps' => $basePath . 'assets/img/placeholders/maps.png',
+        'dolls' => $basePath . 'assets/img/placeholders/dolls.png'
+    ];
+    
+    return isset($images[$category]) ? $images[$category] : $basePath . 'assets/img/placeholders/noimage.png';
 }
 ?>
