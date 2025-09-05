@@ -550,6 +550,151 @@ body {
     cursor: default;
 }
 
+/* Weapon List Specific Styles */
+.weapon-hero {
+    height: 400px;
+    background-image: linear-gradient(rgba(15, 15, 15, 0.6), rgba(15, 15, 15, 0.6)), url('../img/placeholders/hero-background.png');
+    background-size: cover;
+    background-position: center 75%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.filter-container {
+    background-color: var(--primary);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.filter-form {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group label {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.filter-input, .filter-select {
+    padding: 10px;
+    border: 2px solid var(--secondary);
+    border-radius: 5px;
+    background-color: var(--secondary);
+    color: var(--text);
+    font-size: 14px;
+    min-width: 150px;
+}
+
+.filter-input:focus, .filter-select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    background-color: var(--accent);
+    color: var(--text);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    height: fit-content;
+}
+
+.filter-btn:hover {
+    background-color: #e66d38;
+}
+
+.clear-btn {
+    background-color: var(--secondary);
+    border: 2px solid var(--accent);
+}
+
+.clear-btn:hover {
+    background-color: var(--accent);
+}
+
+.weapons-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--primary);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    margin: 20px 0;
+}
+
+.weapons-table th {
+    background-color: var(--secondary);
+    color: var(--text);
+    padding: 15px 10px;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 2px solid var(--accent);
+}
+
+.weapons-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--secondary);
+    color: var(--text);
+    vertical-align: middle;
+}
+
+.weapons-table tr:hover {
+    background-color: var(--secondary);
+    transition: background-color 0.3s ease;
+}
+
+.weapon-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    display: block;
+}
+
+.weapon-name {
+    font-weight: 500;
+    color: var(--accent);
+}
+
+.weapon-id {
+    color: #cccccc;
+    font-size: 14px;
+}
+
+.weapon-material {
+    color: var(--text);
+    font-size: 14px;
+}
+
+.weapon-weight {
+    color: #cccccc;
+    text-align: right;
+}
+
+.weapon-damage {
+    color: var(--accent);
+    font-weight: 500;
+    text-align: center;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .detail-content {
@@ -567,5 +712,32 @@ body {
     
     .page-btn {
         margin: 2px;
+    }
+    
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        width: 100%;
+    }
+    
+    .filter-input, .filter-select {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .weapons-table {
+        font-size: 14px;
+    }
+    
+    .weapons-table th, .weapons-table td {
+        padding: 8px 5px;
+    }
+    
+    .weapon-icon {
+        width: 24px;
+        height: 24px;
     }
 }

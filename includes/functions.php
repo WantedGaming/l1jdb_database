@@ -275,4 +275,118 @@ function getPlaceholderImage($category) {
     
     return isset($images[$category]) ? $images[$category] : $basePath . 'assets/img/placeholders/noimage.png';
 }
+
+/**
+ * Normalize material text by removing Korean text and cleaning up
+ */
+function normalizeMaterial($material) {
+    // Remove Korean text in parentheses
+    $normalized = preg_replace('/\([^)]*\)/', '', $material);
+    
+    // Trim and return
+    return trim($normalized);
+}
+
+/**
+ * Get weapons with filtering and pagination
+ */
+function getWeapons($filters = [], $page = 1, $limit = 20) {
+    $pdo = getDBConnection();
+    
+    $sql = "SELECT iconId, desc_en, item_id, material, weight, dmg_small, dmg_large, type FROM weapon WHERE 1=1";
+    $params = [];
+    
+    // Apply filters
+    if (!empty($filters['name'])) {
+        $sql .= " AND desc_en LIKE ?";
+        $params[] = '%' . $filters['name'] . '%';
+    }
+    
+    if (!empty($filters['class'])) {
+        $sql .= " AND type = ?";
+        $params[] = $filters['class'];
+    }
+    
+    if (!empty($filters['material'])) {
+        $sql .= " AND material LIKE ?";
+        $params[] = '%' . $filters['material'] . '%';
+    }
+    
+    // Add pagination - use direct values instead of parameters for LIMIT/OFFSET
+    $offset = ($page - 1) * $limit;
+    $sql .= " ORDER BY desc_en ASC LIMIT " . intval($limit) . " OFFSET " . intval($offset);
+    
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        error_log("getWeapons error: " . $e->getMessage());
+        return [];
+    }
+}
+
+/**
+ * Get total count of weapons with filters
+ */
+function getWeaponsCount($filters = []) {
+    $pdo = getDBConnection();
+    
+    $sql = "SELECT COUNT(*) FROM weapon WHERE 1=1";
+    $params = [];
+    
+    // Apply filters
+    if (!empty($filters['name'])) {
+        $sql .= " AND desc_en LIKE ?";
+        $params[] = '%' . $filters['name'] . '%';
+    }
+    
+    if (!empty($filters['class'])) {
+        $sql .= " AND type = ?";
+        $params[] = $filters['class'];
+    }
+    
+    if (!empty($filters['material'])) {
+        $sql .= " AND material LIKE ?";
+        $params[] = '%' . $filters['material'] . '%';
+    }
+    
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchColumn();
+    } catch(PDOException $e) {
+        return 0;
+    }
+}
+
+/**
+ * Get distinct weapon classes
+ */
+function getWeaponClasses() {
+    $pdo = getDBConnection();
+    
+    try {
+        $stmt = $pdo->prepare("SELECT DISTINCT type FROM weapon ORDER BY type");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    } catch(PDOException $e) {
+        return [];
+    }
+}
+
+/**
+ * Get distinct weapon materials
+ */
+function getWeaponMaterials() {
+    $pdo = getDBConnection();
+    
+    try {
+        $stmt = $pdo->prepare("SELECT DISTINCT material FROM weapon ORDER BY material");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    } catch(PDOException $e) {
+        return [];
+    }
+}
 ?>
