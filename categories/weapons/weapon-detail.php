@@ -42,25 +42,11 @@ $basePath = getBasePath();
         <!-- First Row: Image Card (Left) + Basic Details (Right) - Equal Weight -->
         <div class="cards-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
             <!-- Left Column: Image Card -->
-            <div class="category-card">
-                <div class="card-header">
-                    <h2 class="card-title"><?php echo htmlspecialchars($weapon['desc_en']); ?></h2>
-                </div>
-                <div class="card-image-wrapper">
-                    <img src="<?php echo $basePath; ?>assets/img/icons/<?php echo htmlspecialchars($weapon['iconId']); ?>.png" 
-                         alt="<?php echo htmlspecialchars($weapon['desc_en']); ?>" 
-                         class="card-image"
-                         onerror="this.src='<?php echo $basePath; ?>assets/img/placeholders/noimage.png'">
-                </div>
-                <div class="card-content">
-                    <div class="card-description">
-                        <?php echo htmlspecialchars($weapon['desc_en']); ?>
-                    </div>
-                    <div class="card-description">
-                        <strong>Small Damage:</strong> <?php echo number_format($weapon['dmg_small']); ?><br>
-                        <strong>Large Damage:</strong> <?php echo number_format($weapon['dmg_large']); ?>
-                    </div>
-                </div>
+            <div class="category-card" style="display: flex; align-items: center; justify-content: center; min-height: 400px; padding: 20px;">
+                <img src="<?php echo $basePath; ?>assets/img/icons/<?php echo htmlspecialchars($weapon['iconId']); ?>.png" 
+                     alt="<?php echo htmlspecialchars($weapon['desc_en']); ?>" 
+                     style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain;"
+                     onerror="this.src='<?php echo $basePath; ?>assets/img/placeholders/noimage.png'">
             </div>
             
             <!-- Right Column: Basic Details -->
