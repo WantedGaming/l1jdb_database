@@ -159,7 +159,11 @@ $basePath = getBasePath();
                                      class="weapon-icon"
                                      onerror="this.src='<?php echo $basePath; ?>assets/img/placeholders/noimage.png'">
                             </td>
-                            <td class="weapon-name"><?php echo htmlspecialchars($weapon['desc_en']); ?></td>
+                            <td class="weapon-name">
+                                <a href="weapon-detail.php?id=<?php echo $weapon['item_id']; ?>" style="color: var(--accent); text-decoration: none;">
+                                    <?php echo htmlspecialchars($weapon['desc_en']); ?>
+                                </a>
+                            </td>
                             <td class="weapon-id"><?php echo htmlspecialchars($weapon['item_id']); ?></td>
                             <td class="weapon-material"><?php echo htmlspecialchars(normalizeMaterial($weapon['material'])); ?></td>
                             <td class="weapon-weight"><?php echo number_format($weapon['weight']); ?></td>

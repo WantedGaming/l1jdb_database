@@ -429,4 +429,19 @@ function getWeaponClasses() {
         'lancer' => 'Lancer'
     ];
 }
+
+/**
+ * Get single weapon by item_id
+ */
+function getWeaponById($itemId) {
+    $pdo = getDBConnection();
+    
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM weapon WHERE item_id = ?");
+        $stmt->execute([$itemId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        return null;
+    }
+}
 ?>
