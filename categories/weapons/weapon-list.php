@@ -10,6 +10,9 @@ $filters = [];
 if (!empty($_GET['name'])) {
     $filters['name'] = sanitizeInput($_GET['name']);
 }
+if (!empty($_GET['type'])) {
+    $filters['type'] = sanitizeInput($_GET['type']);
+}
 if (!empty($_GET['class'])) {
     $filters['class'] = sanitizeInput($_GET['class']);
 }
@@ -23,12 +26,14 @@ $totalWeapons = getWeaponsCount($filters);
 $totalPages = ceil($totalWeapons / $itemsPerPage);
 
 // Get filter options
+$weaponTypes = getWeaponTypes();
 $weaponClasses = getWeaponClasses();
 $weaponMaterials = getWeaponMaterials();
 
 // Build query string for pagination
 $queryParams = [];
 if (!empty($filters['name'])) $queryParams['name'] = $filters['name'];
+if (!empty($filters['type'])) $queryParams['type'] = $filters['type'];
 if (!empty($filters['class'])) $queryParams['class'] = $filters['class'];
 if (!empty($filters['material'])) $queryParams['material'] = $filters['material'];
 $queryString = !empty($queryParams) ? '&' . http_build_query($queryParams) : '';
@@ -69,13 +74,26 @@ $basePath = getBasePath();
                 </div>
                 
                 <div class="filter-group">
+                    <label for="type">Type</label>
+                    <select id="type" name="type" class="filter-select">
+                        <option value="">All Types</option>
+                        <?php foreach ($weaponTypes as $type): ?>
+                            <option value="<?php echo htmlspecialchars($type); ?>" 
+                                    <?php echo (isset($filters['type']) && $filters['type'] === $type) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars(normalizeType($type)); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
                     <label for="class">Class</label>
                     <select id="class" name="class" class="filter-select">
                         <option value="">All Classes</option>
-                        <?php foreach ($weaponClasses as $class): ?>
-                            <option value="<?php echo htmlspecialchars($class); ?>" 
-                                    <?php echo (isset($filters['class']) && $filters['class'] === $class) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($class); ?>
+                        <?php foreach ($weaponClasses as $classKey => $className): ?>
+                            <option value="<?php echo htmlspecialchars($classKey); ?>" 
+                                    <?php echo (isset($filters['class']) && $filters['class'] === $classKey) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($className); ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -94,8 +112,10 @@ $basePath = getBasePath();
                     </select>
                 </div>
                 
-                <button type="submit" class="filter-btn">Filter</button>
-                <a href="weapon-list.php" class="filter-btn clear-btn">Clear</a>
+                <div class="filter-buttons">
+                    <button type="submit" class="filter-btn">Filter</button>
+                    <a href="weapon-list.php" class="filter-btn clear-btn">Clear</a>
+                </div>
             </form>
         </div>
 

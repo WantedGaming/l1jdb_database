@@ -578,22 +578,37 @@ body {
     display: flex;
     gap: 15px;
     align-items: end;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
-    max-width: 800px;
+    max-width: 1200px;
     width: 100%;
+    overflow-x: auto;
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    flex: 0 0 auto;
+    min-width: 120px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+    flex: 0 0 auto;
 }
 
 .filter-group label {
     color: var(--text);
     font-weight: 500;
     font-size: 14px;
+}
+
+.filter-input {
+    min-width: 160px;
+    width: 160px;
 }
 
 .filter-input, .filter-select {
@@ -603,7 +618,8 @@ body {
     background-color: var(--secondary);
     color: var(--text);
     font-size: 14px;
-    min-width: 150px;
+    min-width: 120px;
+    width: 120px;
 }
 
 .filter-input:focus, .filter-select:focus {
@@ -730,15 +746,23 @@ body {
     .filter-form {
         flex-direction: column;
         align-items: stretch;
+        flex-wrap: wrap;
+        overflow-x: visible;
     }
     
     .filter-group {
         width: 100%;
+        min-width: auto;
     }
     
     .filter-input, .filter-select {
         min-width: auto;
         width: 100%;
+    }
+    
+    .filter-buttons {
+        width: 100%;
+        justify-content: center;
     }
     
     .weapons-table {

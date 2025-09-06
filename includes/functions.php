@@ -288,6 +288,20 @@ function normalizeMaterial($material) {
 }
 
 /**
+ * Normalize weapon type text for display
+ */
+function normalizeType($type) {
+    // Convert underscores to spaces and capitalize properly
+    $normalized = str_replace('_', ' ', $type);
+    $normalized = ucwords(strtolower($normalized));
+    
+    // Handle special cases
+    $normalized = str_replace('Tohand', 'Two-Hand', $normalized);
+    
+    return $normalized;
+}
+
+/**
  * Get weapons with filtering and pagination
  */
 function getWeapons($filters = [], $page = 1, $limit = 20) {
@@ -302,9 +316,13 @@ function getWeapons($filters = [], $page = 1, $limit = 20) {
         $params[] = '%' . $filters['name'] . '%';
     }
     
-    if (!empty($filters['class'])) {
+    if (!empty($filters['type'])) {
         $sql .= " AND type = ?";
-        $params[] = $filters['class'];
+        $params[] = $filters['type'];
+    }
+    
+    if (!empty($filters['class'])) {
+        $sql .= " AND use_" . $filters['class'] . " = 1";
     }
     
     if (!empty($filters['material'])) {
@@ -341,9 +359,13 @@ function getWeaponsCount($filters = []) {
         $params[] = '%' . $filters['name'] . '%';
     }
     
-    if (!empty($filters['class'])) {
+    if (!empty($filters['type'])) {
         $sql .= " AND type = ?";
-        $params[] = $filters['class'];
+        $params[] = $filters['type'];
+    }
+    
+    if (!empty($filters['class'])) {
+        $sql .= " AND use_" . $filters['class'] . " = 1";
     }
     
     if (!empty($filters['material'])) {
@@ -361,9 +383,9 @@ function getWeaponsCount($filters = []) {
 }
 
 /**
- * Get distinct weapon classes
+ * Get distinct weapon types
  */
-function getWeaponClasses() {
+function getWeaponTypes() {
     $pdo = getDBConnection();
     
     try {
@@ -388,5 +410,23 @@ function getWeaponMaterials() {
     } catch(PDOException $e) {
         return [];
     }
+}
+
+/**
+ * Get weapon classes based on use_* columns
+ */
+function getWeaponClasses() {
+    return [
+        'royal' => 'Royal',
+        'knight' => 'Knight', 
+        'mage' => 'Mage',
+        'elf' => 'Elf',
+        'darkelf' => 'Dark Elf',
+        'dragonknight' => 'Dragon Knight',
+        'illusionist' => 'Illusionist',
+        'warrior' => 'Warrior',
+        'fencer' => 'Fencer',
+        'lancer' => 'Lancer'
+    ];
 }
 ?>
